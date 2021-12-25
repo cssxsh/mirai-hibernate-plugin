@@ -3,6 +3,7 @@ package xyz.cssxsh.mirai.plugin
 import net.mamoe.mirai.console.plugin.jvm.*
 import java.io.*
 import java.sql.*
+import kotlin.reflect.full.*
 
 /**
  * @since 2.0.1
@@ -36,11 +37,12 @@ interface MiraiHibernateLoader {
     companion object {
         @JvmStatic
         operator fun invoke(plugin: JvmPlugin): MiraiHibernateLoader {
-            return if (plugin is MiraiHibernateLoader) plugin else Impl(plugin = plugin)
+            return (plugin::class.findAnnotation<MiraiHibernate>() ?: return Impl(plugin = plugin))
+                .loader.objectInstance ?: throw NotImplementedError("Loader is not object instance.")
         }
     }
 
-    class Impl(
+    data class Impl(
         override val autoScan: Boolean,
         override val packageName: String,
         override val classLoader: ClassLoader,
