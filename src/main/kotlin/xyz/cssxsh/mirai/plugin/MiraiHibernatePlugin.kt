@@ -16,13 +16,13 @@ object MiraiHibernatePlugin : KotlinPlugin(
 ) {
     override fun onEnable() {
 
-        MessageRecorder.registerTo(globalEventChannel())
+        MiraiHibernateRecorder.registerTo(globalEventChannel())
 
-        val meta = useSession {  session -> session.doReturningWork { connection -> connection.metaData } }
+        val meta = useSession { session -> session.doReturningWork { connection -> connection.metaData } }
         logger.info { "Database ${meta.url} by ${meta.driverName}." }
     }
 
     override fun onDisable() {
-        MessageRecorder.cancelAll()
+        MiraiHibernateRecorder.cancelAll()
     }
 }

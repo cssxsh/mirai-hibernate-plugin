@@ -9,25 +9,27 @@ import javax.persistence.*
 @Table(name = "message_record")
 data class MessageRecord(
     @Id
-    @Column(name = "id", nullable = false)
+    @Column(name = "id", nullable = false, updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
-    @Column(name = "bot", nullable = false)
+    @Column(name = "bot", nullable = false, updatable = false)
     val bot: Long,
-    @Column(name = "from_id", nullable = false)
+    @Column(name = "from_id", nullable = false, updatable = false)
     val fromId: Long,
-    @Column(name = "target_id", nullable = true)
+    @Column(name = "target_id", nullable = true, updatable = false)
     val targetId: Long,
-    @Column(name = "ids", nullable = true)
+    @Column(name = "ids", nullable = true, updatable = false)
     val ids: String,
-    @Column(name = "internal_ids", nullable = true)
+    @Column(name = "internal_ids", nullable = true, updatable = false)
     val internalIds: String,
-    @Column(name = "time", nullable = false)
+    @Column(name = "time", nullable = false, updatable = false)
     val time: Int,
-    @Column(name = "kind", nullable = false)
+    @Column(name = "kind", nullable = false, updatable = false)
     val kind: Int,
-    @Column(name = "code", nullable = false)
-    val code: String
+    @Column(name = "code", nullable = false, updatable = false)
+    val code: String,
+    @Column(name = "recall", nullable = false)
+    val recall: Boolean = false
 ) {
     constructor(source: MessageSource, message: MessageChain) : this(
         bot = source.botId,
