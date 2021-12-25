@@ -9,14 +9,13 @@ import java.net.*
 
 class MiraiHibernateConfiguration(private val loader: MiraiHibernateLoader) :
     Configuration(
-        BootstrapServiceRegistryBuilder().applyClassLoader(MiraiHibernatePlugin::class.java.classLoader).build()
+        BootstrapServiceRegistryBuilder()
+            .applyClassLoader(MiraiHibernatePlugin::class.java.classLoader)
+            .build()
     ) {
     constructor(plugin: JvmPlugin) : this(loader = MiraiHibernateLoader(plugin = plugin))
 
     init {
-        if (loader.autoScan) {
-            scan()
-        }
         load()
     }
 
@@ -32,7 +31,6 @@ class MiraiHibernateConfiguration(private val loader: MiraiHibernateLoader) :
                 val name = entry.name.removeSuffix(".class").replace('/', '.')
                 val clazz = loader.classLoader.loadClass(name)
                 if (clazz.isAnnotationPresent(javax.persistence.Entity::class.java)) {
-                    println(clazz.name)
                     addAnnotatedClass(clazz)
                 }
             }
