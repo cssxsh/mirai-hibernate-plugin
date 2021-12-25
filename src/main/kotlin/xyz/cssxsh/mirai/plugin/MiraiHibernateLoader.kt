@@ -37,8 +37,9 @@ interface MiraiHibernateLoader {
     companion object {
         @JvmStatic
         operator fun invoke(plugin: JvmPlugin): MiraiHibernateLoader {
-            return (plugin::class.findAnnotation<MiraiHibernate>() ?: return Impl(plugin = plugin))
-                .loader.objectInstance ?: throw NotImplementedError("Loader is not object instance.")
+            return with(plugin::class.findAnnotation<MiraiHibernate>() ?: return Impl(plugin = plugin)) {
+                loader.objectInstance ?: loader.createInstance()
+            }
         }
     }
 
