@@ -5,43 +5,32 @@ import org.hibernate.boot.registry.*
 import org.hibernate.cfg.*
 import org.hibernate.dialect.function.*
 import org.hibernate.type.*
-import java.io.*
 import java.net.*
-import java.sql.*
 
-class MiraiHibernateConfiguration(private val plugin: JvmPlugin, annotated: Boolean = true) :
-    Configuration(BootstrapServiceRegistryBuilder().applyClassLoader(MiraiHibernatePlugin::class.java.classLoader).build()) {
-
-    private val default = """
-                hibernate.connection.url=jdbc:sqlite:${plugin.dataFolder.resolve("hibernate.sqlite").toURI().toASCIIString()}
-                hibernate.connection.driver_class=org.sqlite.JDBC
-                hibernate.dialect=org.sqlite.hibernate.dialect.SQLiteDialect
-                hibernate.connection.provider_class=org.hibernate.connection.C3P0ConnectionProvider
-                hibernate.connection.isolation=${Connection.TRANSACTION_READ_UNCOMMITTED}
-                hibernate.hbm2ddl.auto=update
-                hibernate-connection-autocommit=${true}
-                hibernate.connection.show_sql=${false}
-                hibernate.autoReconnect=${true}
-                hibernate.current_session_context_class=thread
-            """.trimIndent()
-
-    private val classLoader: ClassLoader = plugin::class.java.classLoader
-
-    private val packageName: String = plugin::class.java.packageName
+class MiraiHibernateConfiguration(private val loader: MiraiHibernateLoader) :
+    Configuration(
+        BootstrapServiceRegistryBuilder().applyClassLoader(MiraiHibernatePlugin::class.java.classLoader).build()
+    ) {
+    constructor(plugin: JvmPlugin) : this(loader = MiraiHibernateLoader(plugin = plugin))
 
     init {
-        if (annotated) {
+        if (loader.autoScan) {
             scan()
         }
+        load()
     }
 
+    /**
+     * @see [javax.persistence.Entity]
+     */
     private fun scan() {
-        val path = packageName.replace('.', '/')
-        val resource = classLoader.getResource(path)!!
+        val path = loader.packageName.replace('.', '/')
+        val resource = loader.classLoader.getResource(path)!!
         val jar = (resource.openConnection()!! as JarURLConnection).jarFile
         for (entry in jar.entries()) {
             if (entry.name.startsWith(path) && entry.name.endsWith(".class")) {
-                val clazz = classLoader.loadClass(entry.name.removeSuffix(".class").replace('/', '.'))
+                val name = entry.name.removeSuffix(".class").replace('/', '.')
+                val clazz = loader.classLoader.loadClass(name)
                 if (clazz.isAnnotationPresent(javax.persistence.Entity::class.java)) {
                     println(clazz.name)
                     addAnnotatedClass(clazz)
@@ -50,9 +39,9 @@ class MiraiHibernateConfiguration(private val plugin: JvmPlugin, annotated: Bool
         }
     }
 
-    fun load(hibernate: File = plugin.configFolder.resolve("hibernate.properties")) {
-        println(System.currentTimeMillis())
-        hibernate.apply { if (exists().not()) writeText(default) }.reader().use(properties::load)
+    private fun load() {
+        if (loader.autoScan) scan()
+        loader.configuration.apply { if (exists().not()) writeText(loader.default) }.reader().use(properties::load)
         val url = requireNotNull(getProperty("hibernate.connection.url")) { "hibernate.connection.url cannot is null" }
         when {
             url.startsWith("jdbc:sqlite") -> {

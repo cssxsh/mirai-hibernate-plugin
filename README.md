@@ -28,7 +28,8 @@ dependencies {
 使用扩展函数 `JvmPlugin.factory` 可以获取通过 [MiraiHibernateConfiguration](src/main/kotlin/xyz/cssxsh/mirai/plugin/MiraiHibernateConfiguration.kt)
 配置的，对应于 `JvmPlugin` 的 `SessionFactory`,   
 `MiraiHibernateConfiguration` 将会读取(生成)在 `configFolder` 目录下的 `hibernate.properties` 作为配置文件  
-并且自动扫描加载 `JvmPlugin` 所在类包下的被 `javax.persistence.Entity` 标记的实体类
+并且自动扫描加载 `JvmPlugin` 所在类包下的被 `javax.persistence.Entity` 标记的实体类  
+`JvmPlugin` 可以通过实现 `MiraiHibernateLoader` 调整加载行为  
 
 ### 示例代码
 

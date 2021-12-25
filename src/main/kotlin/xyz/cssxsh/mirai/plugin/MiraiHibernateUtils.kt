@@ -16,7 +16,7 @@ private val factories = WeakHashMap<JvmPlugin, SessionFactory>()
 
 val JvmPlugin.factory: SessionFactory by ReadOnlyProperty<JvmPlugin, SessionFactory> { thisRef, _ ->
     factories.getOrPut(thisRef) {
-        MiraiHibernateConfiguration(plugin = thisRef).apply { load() }.buildSessionFactory()
+        MiraiHibernateConfiguration(plugin = thisRef).buildSessionFactory()
     }
 }
 
