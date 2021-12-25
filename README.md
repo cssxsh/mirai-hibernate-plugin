@@ -29,17 +29,17 @@ dependencies {
 
 ## 一些方法和类说明
 
-* `JvmPlugin.factory`
-  可以获取通过 [MiraiHibernateConfiguration](src/main/kotlin/xyz/cssxsh/mirai/plugin/MiraiHibernateConfiguration.kt)
-  配置的，对应于 `JvmPlugin` 的 `SessionFactory`,   
-  `MiraiHibernateConfiguration` 将会读取(生成)在 `configFolder` 目录下的 `hibernate.properties` 作为配置文件  
+* `JvmPlugin.factory`  
+  获取通过 [MiraiHibernateConfiguration](src/main/kotlin/xyz/cssxsh/mirai/plugin/MiraiHibernateConfiguration.kt)
+  配置的，对应于 `JvmPlugin` 的 `SessionFactory`  
+  默认将会读取(生成)在 `configFolder` 目录下的 `hibernate.properties` 作为配置文件  
   并且自动扫描加载 `JvmPlugin` 所在类包下的被 `javax.persistence.Entity` 标记的实体类  
   可以通过注解 `MiraiHibernate` 调整加载行为
 
 * `MiraiHibernateRecorder`  
   是本插件自带的消息记录器，通过对 `MessageEvent` 和 `MessagePostSendEvent` 记录，保存消息历史到数据库
 
-* `CriteriaBuilder.rand`
+* `CriteriaBuilder.rand`  
   `MiraiHibernateConfiguration` 中会对 Sqlite 的 `random` 进行别名注册为 `rand` 统一SQL语句的中的随机函数名
 
 ### 示例代码
