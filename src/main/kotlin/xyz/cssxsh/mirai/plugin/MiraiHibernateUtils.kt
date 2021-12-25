@@ -4,21 +4,13 @@ import net.mamoe.mirai.console.plugin.jvm.*
 import org.hibernate.*
 import org.hibernate.query.Query
 import org.hibernate.query.criteria.internal.*
-import java.util.*
 import javax.persistence.criteria.*
-import kotlin.properties.*
 
 internal val logger get() = MiraiHibernatePlugin.logger
 
 internal val currentSession get() = MiraiHibernatePlugin.factory.currentSession
 
-private val factories = WeakHashMap<JvmPlugin, SessionFactory>()
-
-val JvmPlugin.factory: SessionFactory by ReadOnlyProperty<JvmPlugin, SessionFactory> { thisRef, _ ->
-    factories.getOrPut(thisRef) {
-        MiraiHibernateConfiguration(plugin = thisRef).buildSessionFactory()
-    }
-}
+val JvmPlugin.factory: SessionFactory get() = MiraiSessionCache[this]
 
 internal fun <R> useSession(lock: Any? = null, block: (session: Session) -> R): R {
     return if (lock == null) {
@@ -37,5 +29,3 @@ inline fun <reified T> Session.withCriteria(block: CriteriaBuilder.(criteria: Cr
 
 inline fun <reified T> Session.withCriteriaUpdate(block: CriteriaBuilder.(criteria: CriteriaUpdate<T>) -> Unit): Query<*> =
     createQuery(with(criteriaBuilder) { createCriteriaUpdate(T::class.java).also { block(it) } })
-
-
