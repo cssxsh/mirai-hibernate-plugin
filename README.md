@@ -53,4 +53,4 @@ dependencies {
 ### 手动安装
 
 1. 运行 [Mirai Console](https://github.com/mamoe/mirai-console) 生成`plugins`文件夹
-1. 从 [Releases](https://github.com/cssxsh/mirai-hibernate-plugin/releases) 下载`jar`并将其放入`plugins`文件夹中
+1. 从 [Maven Central](https://repo1.maven.org/maven2/xyz/cssxsh/mirai/mirai-hibernate-plugin/) 下载`jar`并将其放入`plugins`文件夹中
