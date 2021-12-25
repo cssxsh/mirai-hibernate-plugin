@@ -34,6 +34,7 @@ interface MiraiHibernateLoader {
     val default: String
 
     companion object {
+        @JvmStatic
         operator fun invoke(plugin: JvmPlugin): MiraiHibernateLoader {
             return if (plugin is MiraiHibernateLoader) plugin else Impl(plugin = plugin)
         }
