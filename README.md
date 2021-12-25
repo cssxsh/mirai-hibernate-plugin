@@ -2,7 +2,7 @@
 
 > Mirai Hibernate 前置插件
 
-Mirai-Console的前置插件，用于使用 Hibernate ORM 框架的初始化
+[Mirai Console](https://github.com/mamoe/mirai-console) 的前置插件，用于 Hibernate ORM 框架的初始化
 
 [![maven-central](https://img.shields.io/maven-central/v/xyz.cssxsh.mirai/mirai-hibernate-plugin)](https://search.maven.org/artifact/xyz.cssxsh.mirai/mirai-hibernate-plugin)
 
@@ -12,6 +12,8 @@ Mirai-Console的前置插件，用于使用 Hibernate ORM 框架的初始化
 
 * MySql `mysql:mysql-connector-java:8.0.26`
 * Sqlite `org.xerial:sqlite-jdbc:3.36.0.3`
+
+需要其他数据库驱动支持请将 **数据库驱动Jar包** 放到 `plugins` 目录中一同被 `mirai-console` 加载
 
 ## 在插件项目中引用
 
