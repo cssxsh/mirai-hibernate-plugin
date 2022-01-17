@@ -13,7 +13,7 @@ import xyz.cssxsh.mirai.plugin.*
 @MiraiHibernate(loader = MiraiHibernatePluginTest.Loader::class)
 object MiraiHibernatePluginTest : KotlinPlugin(
     JvmPluginDescription(
-        id = "mirai-hibernate-test",
+        id = "xyz.cssxsh.mirai.plugin.mirai-hibernate-text",
         name = "mirai-hibernate-test",
         version = "0.0.0"
     ) {
