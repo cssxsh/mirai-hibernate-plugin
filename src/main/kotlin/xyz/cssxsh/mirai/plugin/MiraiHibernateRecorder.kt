@@ -184,4 +184,17 @@ object MiraiHibernateRecorder : SimpleListenerHost() {
         }
     }
 
+    /**
+     * 发送到群 [contact] 或 从 [contact] 收到 的消息
+     */
+    operator fun get(contact: Contact, start: Int, end: Int): List<MessageRecord> {
+        return when (contact) {
+            is Bot -> get(bot = contact, start = start, end = end)
+            is Group -> get(group = contact, start = start, end = end)
+            is Friend -> get(friend = contact, start = start, end = end)
+            is Member -> get(member = contact, start = start, end = end)
+            is Stranger -> get(stranger = contact, start = start, end = end)
+            else -> throw IllegalStateException("不支持查询的联系人")
+        }
+    }
 }
