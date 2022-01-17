@@ -50,8 +50,8 @@ object MiraiHibernateRecorder : SimpleListenerHost() {
                     val record = criteria.from(MessageRecord::class.java)
                     criteria.set(record.get("recall"), true)
                         .where(
-                            equal(record.get<Long>("ids"), messageIds.joinToString()),
-                            equal(record.get<Long>("internalIds"), messageInternalIds.joinToString()),
+                            equal(record.get<String>("ids"), messageIds.joinToString()),
+                            equal(record.get<String>("internalIds"), messageInternalIds.joinToString()),
                             equal(record.get<Int>("time"), messageTime)
                         )
                 }.executeUpdate()
