@@ -5,7 +5,9 @@ import org.hibernate.boot.registry.*
 import org.hibernate.cfg.*
 import org.hibernate.dialect.function.*
 import org.hibernate.type.*
+import java.io.*
 import java.net.*
+import java.sql.*
 
 class MiraiHibernateConfiguration(private val loader: MiraiHibernateLoader) :
     Configuration(
@@ -16,6 +18,8 @@ class MiraiHibernateConfiguration(private val loader: MiraiHibernateLoader) :
     constructor(plugin: JvmPlugin) : this(loader = MiraiHibernateLoader(plugin = plugin))
 
     init {
+        setProperty("hibernate.connection.provider_class", "org.hibernate.connection.C3P0ConnectionProvider")
+        setProperty("hibernate.connection.isolation", "${Connection.TRANSACTION_READ_UNCOMMITTED}")
         load()
     }
 
@@ -24,14 +28,29 @@ class MiraiHibernateConfiguration(private val loader: MiraiHibernateLoader) :
      */
     private fun scan() {
         val path = loader.packageName.replace('.', '/')
-        val resource = loader.classLoader.getResource(path)!!
-        val jar = (resource.openConnection()!! as JarURLConnection).jarFile
-        for (entry in jar.entries()) {
-            if (entry.name.startsWith(path) && entry.name.endsWith(".class")) {
-                val name = entry.name.removeSuffix(".class").replace('/', '.')
-                val clazz = loader.classLoader.loadClass(name)
-                if (clazz.isAnnotationPresent(javax.persistence.Entity::class.java)) {
-                    addAnnotatedClass(clazz)
+        val connection = loader.classLoader.getResource(path)?.openConnection() ?: throw IOException(path)
+        when (connection) {
+            is JarURLConnection -> {
+                for (entry in connection.jarFile.entries()) {
+                    if (entry.name.startsWith(path) && entry.name.endsWith(".class")) {
+                        val name = entry.name.removeSuffix(".class").replace('/', '.')
+                        val clazz = loader.classLoader.loadClass(name)
+                        if (clazz.isAnnotationPresent(javax.persistence.Entity::class.java)) {
+                            addAnnotatedClass(clazz)
+                        }
+                    }
+                }
+            }
+            else -> {
+                // XXX: FileURLConnection
+                connection.inputStream.reader().forEachLine { filename ->
+                    if (filename.endsWith(".class")) {
+                        val name = filename.removeSuffix(".class")
+                        val clazz = loader.classLoader.loadClass("${loader.packageName}.${name}")
+                        if (clazz.isAnnotationPresent(javax.persistence.Entity::class.java)) {
+                            addAnnotatedClass(clazz)
+                        }
+                    }
                 }
             }
         }
