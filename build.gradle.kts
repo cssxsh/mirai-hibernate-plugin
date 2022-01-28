@@ -8,8 +8,7 @@ plugins {
 }
 
 group = "xyz.cssxsh.mirai"
-version = "1.0.4"
-
+version = "2.0.0"
 
 mavenCentralPublish {
     useCentralS01()
@@ -27,6 +26,7 @@ repositories {
 }
 
 dependencies {
+    compileOnly("net.mamoe:mirai-slf4j-bridge:1.2.0")
     // SQL/ORM
     api("org.hibernate:hibernate-core:5.6.4.Final")
     api("org.hibernate:hibernate-c3p0:5.6.4.Final")
