@@ -4,6 +4,7 @@ import org.hibernate.Session
 import org.hibernate.query.*
 import org.hibernate.query.criteria.internal.*
 import org.hibernate.query.criteria.internal.expression.function.*
+import java.sql.*
 import javax.persistence.criteria.*
 
 public fun CriteriaBuilder.rand(): BasicFunctionExpression<Double> = RandomFunction(this as CriteriaBuilderImpl)
@@ -13,3 +14,5 @@ public inline fun <reified T> Session.withCriteria(block: CriteriaBuilder.(crite
 
 public inline fun <reified T> Session.withCriteriaUpdate(block: CriteriaBuilder.(criteria: CriteriaUpdate<T>) -> Unit): Query<*> =
     createQuery(with(criteriaBuilder) { createCriteriaUpdate(T::class.java).also { block(it) } })
+
+public fun Session.getDatabaseMetaData(): DatabaseMetaData = doReturningWork { connection -> connection.metaData }

@@ -5,6 +5,7 @@ import org.hibernate.boot.registry.*
 import org.hibernate.cfg.*
 import org.hibernate.dialect.function.*
 import org.hibernate.type.*
+import xyz.cssxsh.hibernate.*
 import java.io.*
 import java.net.*
 import java.sql.*
@@ -67,9 +68,10 @@ public class MiraiHibernateConfiguration(private val loader: MiraiHibernateLoade
                 setProperty("hibernate.c3p0.max_size", "${1}")
                 // 设置 rand 别名
                 addSqlFunction("rand", NoArgSQLFunction("random", StandardBasicTypes.DOUBLE))
+                addAnnotatedClass(SqlitePragma::class.java)
             }
             url.startsWith("jdbc:mysql") -> {
-                //addAnnotatedClass(MySqlVariable::class.java)
+                addAnnotatedClass(MySqlVariable::class.java)
             }
         }
     }
