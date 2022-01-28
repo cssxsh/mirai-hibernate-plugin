@@ -5,10 +5,7 @@ import net.mamoe.mirai.contact.*
 import net.mamoe.mirai.message.code.*
 import net.mamoe.mirai.message.data.*
 import org.hibernate.*
-import org.hibernate.query.Query
-import org.hibernate.query.criteria.internal.*
 import xyz.cssxsh.mirai.plugin.entry.*
-import javax.persistence.criteria.*
 
 internal val logger get() = MiraiHibernatePlugin.logger
 
@@ -26,15 +23,15 @@ internal fun <R> useSession(lock: Any? = null, block: (session: Session) -> R): 
     }
 }
 
-public fun CriteriaBuilder.rand(): RandomFunction = RandomFunction(this as CriteriaBuilderImpl)
-
-public inline fun <reified T> Session.withCriteria(block: CriteriaBuilder.(criteria: CriteriaQuery<T>) -> Unit): Query<T> =
-    createQuery(with(criteriaBuilder) { createQuery(T::class.java).also { block(it) } })
-
-public inline fun <reified T> Session.withCriteriaUpdate(block: CriteriaBuilder.(criteria: CriteriaUpdate<T>) -> Unit): Query<*> =
-    createQuery(with(criteriaBuilder) { createCriteriaUpdate(T::class.java).also { block(it) } })
-
 public fun List<MessageRecord>.toForwardMessage(context: Contact) {
+    buildForwardMessage(context) {
+        for (record in this@toForwardMessage) {
+            record.fromId at record.time says MiraiCode.deserializeMiraiCode(record.code)
+        }
+    }
+}
+
+public fun Sequence<MessageRecord>.toForwardMessage(context: Contact) {
     buildForwardMessage(context) {
         for (record in this@toForwardMessage) {
             record.fromId at record.time says MiraiCode.deserializeMiraiCode(record.code)

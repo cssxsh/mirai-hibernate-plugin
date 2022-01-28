@@ -1,8 +1,8 @@
-package xyz.cssxsh.mirai.plugin
+package xyz.cssxsh.hibernate
 
 import org.hibernate.query.criteria.internal.*
 import org.hibernate.query.criteria.internal.expression.function.*
 import java.io.*
 
-public class RandomFunction(criteriaBuilder: CriteriaBuilderImpl) :
+internal class RandomFunction(criteriaBuilder: CriteriaBuilderImpl) :
     BasicFunctionExpression<Double>(criteriaBuilder, Double::class.java, "rand"), Serializable

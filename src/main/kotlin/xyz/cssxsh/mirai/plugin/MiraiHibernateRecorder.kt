@@ -7,6 +7,7 @@ import net.mamoe.mirai.event.*
 import net.mamoe.mirai.event.events.*
 import net.mamoe.mirai.message.data.*
 import net.mamoe.mirai.utils.*
+import xyz.cssxsh.hibernate.*
 import xyz.cssxsh.mirai.plugin.entry.*
 import java.sql.*
 import kotlin.coroutines.*

@@ -1,5 +1,6 @@
 package xyz.cssxsh.mirai.plugin
 
+import net.mamoe.mirai.console.command.BuiltInCommands
 import net.mamoe.mirai.console.extension.*
 import net.mamoe.mirai.console.plugin.jvm.*
 import net.mamoe.mirai.event.*
