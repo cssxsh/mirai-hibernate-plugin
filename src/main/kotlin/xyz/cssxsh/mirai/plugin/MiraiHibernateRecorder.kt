@@ -1,5 +1,6 @@
 package xyz.cssxsh.mirai.plugin
 
+import kotlinx.coroutines.*
 import net.mamoe.mirai.*
 import net.mamoe.mirai.contact.*
 import net.mamoe.mirai.event.*
@@ -63,10 +64,18 @@ object MiraiHibernateRecorder : SimpleListenerHost() {
         }
     }
 
+    private fun Throwable.causes() = sequence {
+        var cause = this@causes
+        while (isActive) {
+            yield(cause)
+            cause = cause.cause ?: break
+        }
+    }
+
     override fun handleException(context: CoroutineContext, exception: Throwable) {
-        when (exception) {
+        when (val cause = exception.causes().firstOrNull { it is SQLException } ?: exception) {
             is SQLException -> {
-                logger.warning({ "SQL" }, exception)
+                logger.warning({ "SQLException" }, cause)
             }
             else -> {
                 logger.warning(exception)
