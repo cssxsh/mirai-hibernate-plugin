@@ -14,7 +14,7 @@ internal val logger get() = MiraiHibernatePlugin.logger
 
 internal val currentSession get() = MiraiHibernatePlugin.factory.currentSession
 
-val JvmPlugin.factory: SessionFactory get() = MiraiSessionCache[this]
+public val JvmPlugin.factory: SessionFactory get() = MiraiSessionCache[this]
 
 internal fun <R> useSession(lock: Any? = null, block: (session: Session) -> R): R {
     return if (lock == null) {
@@ -26,15 +26,15 @@ internal fun <R> useSession(lock: Any? = null, block: (session: Session) -> R): 
     }
 }
 
-fun CriteriaBuilder.rand() = RandomFunction(this as CriteriaBuilderImpl)
+public fun CriteriaBuilder.rand(): RandomFunction = RandomFunction(this as CriteriaBuilderImpl)
 
-inline fun <reified T> Session.withCriteria(block: CriteriaBuilder.(criteria: CriteriaQuery<T>) -> Unit): Query<T> =
+public inline fun <reified T> Session.withCriteria(block: CriteriaBuilder.(criteria: CriteriaQuery<T>) -> Unit): Query<T> =
     createQuery(with(criteriaBuilder) { createQuery(T::class.java).also { block(it) } })
 
-inline fun <reified T> Session.withCriteriaUpdate(block: CriteriaBuilder.(criteria: CriteriaUpdate<T>) -> Unit): Query<*> =
+public inline fun <reified T> Session.withCriteriaUpdate(block: CriteriaBuilder.(criteria: CriteriaUpdate<T>) -> Unit): Query<*> =
     createQuery(with(criteriaBuilder) { createCriteriaUpdate(T::class.java).also { block(it) } })
 
-fun List<MessageRecord>.toForwardMessage(context: Contact) {
+public fun List<MessageRecord>.toForwardMessage(context: Contact) {
     buildForwardMessage(context) {
         for (record in this@toForwardMessage) {
             record.fromId at record.time says MiraiCode.deserializeMiraiCode(record.code)

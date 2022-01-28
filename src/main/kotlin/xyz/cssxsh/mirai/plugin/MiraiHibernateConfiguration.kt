@@ -9,13 +9,13 @@ import java.io.*
 import java.net.*
 import java.sql.*
 
-class MiraiHibernateConfiguration(private val loader: MiraiHibernateLoader) :
+public class MiraiHibernateConfiguration(private val loader: MiraiHibernateLoader) :
     Configuration(
         BootstrapServiceRegistryBuilder()
             .applyClassLoader(MiraiHibernatePlugin::class.java.classLoader)
             .build()
     ) {
-    constructor(plugin: JvmPlugin) : this(loader = MiraiHibernateLoader(plugin = plugin))
+    public constructor(plugin: JvmPlugin) : this(loader = MiraiHibernateLoader(plugin = plugin))
 
     init {
         setProperty("hibernate.connection.provider_class", "org.hibernate.connection.C3P0ConnectionProvider")

@@ -11,10 +11,10 @@ import xyz.cssxsh.mirai.plugin.entry.*
 import java.sql.*
 import kotlin.coroutines.*
 
-object MiraiHibernateRecorder : SimpleListenerHost() {
+public object MiraiHibernateRecorder : SimpleListenerHost() {
 
     @EventHandler
-    fun MessageEvent.record() {
+    internal fun MessageEvent.record() {
         useSession { session ->
             session.transaction.begin()
             try {
@@ -28,7 +28,7 @@ object MiraiHibernateRecorder : SimpleListenerHost() {
     }
 
     @EventHandler
-    fun MessagePostSendEvent<*>.record() {
+    internal fun MessagePostSendEvent<*>.record() {
         if (isFailure) return
         useSession { session ->
             session.transaction.begin()
@@ -43,7 +43,7 @@ object MiraiHibernateRecorder : SimpleListenerHost() {
     }
 
     @EventHandler
-    fun MessageRecallEvent.record() {
+    internal fun MessageRecallEvent.record() {
         useSession { session ->
             session.transaction.begin()
             try {
@@ -87,7 +87,7 @@ object MiraiHibernateRecorder : SimpleListenerHost() {
      * 与 [source] 对应的记录
      * @see [MessageRecord.code]
      */
-    operator fun get(source: MessageSource): List<MessageRecord> {
+    public operator fun get(source: MessageSource): List<MessageRecord> {
         return useSession { session ->
             session.withCriteria<MessageRecord> { criteria ->
                 val record = criteria.from(MessageRecord::class.java)
@@ -105,7 +105,7 @@ object MiraiHibernateRecorder : SimpleListenerHost() {
     /**
      * [bot] 发送的 或 [bot] 收到 的消息
      */
-    operator fun get(bot: Bot, start: Int, end: Int): List<MessageRecord> {
+    public operator fun get(bot: Bot, start: Int, end: Int): List<MessageRecord> {
         return useSession { session ->
             session.withCriteria<MessageRecord> { criteria ->
                 val record = criteria.from(MessageRecord::class.java)
@@ -121,7 +121,7 @@ object MiraiHibernateRecorder : SimpleListenerHost() {
     /**
      * 发送到群 [group] 或 从 [group] 收到 消息
      */
-    operator fun get(group: Group, start: Int, end: Int): List<MessageRecord> {
+    public operator fun get(group: Group, start: Int, end: Int): List<MessageRecord> {
         return useSession { session ->
             session.withCriteria<MessageRecord> { criteria ->
                 val record = criteria.from(MessageRecord::class.java)
@@ -138,7 +138,7 @@ object MiraiHibernateRecorder : SimpleListenerHost() {
     /**
      * 发送到群 [friend] 或 从 [friend] 收到 的消息
      */
-    operator fun get(friend: Friend, start: Int, end: Int): List<MessageRecord> {
+    public operator fun get(friend: Friend, start: Int, end: Int): List<MessageRecord> {
         return useSession { session ->
             session.withCriteria<MessageRecord> { criteria ->
                 val record = criteria.from(MessageRecord::class.java)
@@ -158,7 +158,7 @@ object MiraiHibernateRecorder : SimpleListenerHost() {
     /**
      * [member] 发送的消息
      */
-    operator fun get(member: Member, start: Int, end: Int): List<MessageRecord> {
+    public operator fun get(member: Member, start: Int, end: Int): List<MessageRecord> {
         return useSession { session ->
             session.withCriteria<MessageRecord> { criteria ->
                 val record = criteria.from(MessageRecord::class.java)
@@ -176,7 +176,7 @@ object MiraiHibernateRecorder : SimpleListenerHost() {
     /**
      * 发送到群 [stranger] 或 从 [stranger] 收到 的消息
      */
-    operator fun get(stranger: Stranger, start: Int, end: Int): List<MessageRecord> {
+    public operator fun get(stranger: Stranger, start: Int, end: Int): List<MessageRecord> {
         return useSession { session ->
             session.withCriteria<MessageRecord> { criteria ->
                 val record = criteria.from(MessageRecord::class.java)
@@ -196,7 +196,7 @@ object MiraiHibernateRecorder : SimpleListenerHost() {
     /**
      * 发送到群 [contact] 或 从 [contact] 收到 的消息
      */
-    operator fun get(contact: Contact, start: Int, end: Int): List<MessageRecord> {
+    public operator fun get(contact: Contact, start: Int, end: Int): List<MessageRecord> {
         return when (contact) {
             is Bot -> get(bot = contact, start = start, end = end)
             is Group -> get(group = contact, start = start, end = end)

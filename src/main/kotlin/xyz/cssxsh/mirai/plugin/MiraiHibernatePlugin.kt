@@ -5,7 +5,7 @@ import net.mamoe.mirai.console.plugin.jvm.*
 import net.mamoe.mirai.event.*
 import net.mamoe.mirai.utils.*
 
-object MiraiHibernatePlugin : KotlinPlugin(
+public object MiraiHibernatePlugin : KotlinPlugin(
     JvmPluginDescription(
         id = "xyz.cssxsh.mirai.plugin.mirai-hibernate-plugin",
         name = "mirai-hibernate-plugin",
@@ -16,14 +16,12 @@ object MiraiHibernatePlugin : KotlinPlugin(
         dependsOn("net.mamoe.mirai.mirai-slf4j-bridge", true)
     }
 ) {
+    /**
+     * @see [com.mchange.v2.log.MLogClasses.SLF4J_CNAME]
+     * @see [org.jboss.logging.LoggerProviders.LOGGING_PROVIDER_KEY]
+     */
     override fun PluginComponentStorage.onLoad() {
-        /**
-         * @see [com.mchange.v2.log.MLogClasses.SLF4J_CNAME]
-         */
         System.setProperty("com.mchange.v2.log.MLog", "com.mchange.v2.log.slf4j.Slf4jMLog")
-        /**
-         * @see [org.jboss.logging.LoggerProviders.LOGGING_PROVIDER_KEY]
-         */
         System.setProperty("org.jboss.logging.provider", "slf4j")
     }
 

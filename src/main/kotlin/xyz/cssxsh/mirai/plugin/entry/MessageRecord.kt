@@ -7,7 +7,7 @@ import javax.persistence.*
 
 @Entity
 @Table(name = "message_record")
-data class MessageRecord(
+public data class MessageRecord(
     @Id
     @Column(name = "id", nullable = false, updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,7 +31,7 @@ data class MessageRecord(
     @Column(name = "recall", nullable = false)
     val recall: Boolean = false
 ) {
-    constructor(source: MessageSource, message: MessageChain) : this(
+    public constructor(source: MessageSource, message: MessageChain) : this(
         bot = source.botId,
         fromId = source.fromId,
         targetId = source.targetId,
@@ -42,7 +42,10 @@ data class MessageRecord(
         code = message.serializeToMiraiCode()
     )
 
-    fun toMessageSource(): MessageSource {
+    /**
+     * [MessageSource.originalMessage] 来自 [MessageRecord.code] 的解码
+     */
+    public fun toMessageSource(): MessageSource {
         return Bot.getInstance(bot).buildMessageSource(MessageSourceKind.values()[kind]) {
             fromId = this@MessageRecord.fromId
             targetId = this@MessageRecord.targetId

@@ -5,52 +5,49 @@ import java.io.*
 import java.sql.*
 import kotlin.reflect.full.*
 
-/**
- * @since 2.0.1
- */
-interface MiraiHibernateLoader {
+public interface MiraiHibernateLoader {
     /**
      * 是否自动扫描已标记注解的类
      */
-    val autoScan: Boolean
+    public val autoScan: Boolean
 
     /**
      * 自动扫描 的 起始包
      */
-    val packageName: String
+    public val packageName: String
 
     /**
      * 自动扫描 的 类加载器
      */
-    val classLoader: ClassLoader
+    public val classLoader: ClassLoader
 
     /**
      * 文件
      */
-    val configuration: File
+    public val configuration: File
 
     /**
      * 默认配置
      */
-    val default: String
+    public val default: String
 
-    companion object {
+    public companion object {
         @JvmStatic
-        operator fun invoke(plugin: JvmPlugin): MiraiHibernateLoader {
+        public operator fun invoke(plugin: JvmPlugin): MiraiHibernateLoader {
             return with(plugin::class.findAnnotation<MiraiHibernate>() ?: return Impl(plugin = plugin)) {
                 loader.objectInstance ?: loader.createInstance()
             }
         }
     }
 
-    data class Impl(
+    public data class Impl(
         override val autoScan: Boolean,
         override val packageName: String,
         override val classLoader: ClassLoader,
         override val configuration: File,
         override val default: String
     ) : MiraiHibernateLoader {
-        constructor(plugin: JvmPlugin) : this(
+        public constructor(plugin: JvmPlugin) : this(
             autoScan = true,
             packageName = plugin::class.java.packageName,
             classLoader = plugin::class.java.classLoader,

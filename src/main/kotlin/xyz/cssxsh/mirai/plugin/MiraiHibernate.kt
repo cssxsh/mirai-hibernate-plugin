@@ -1,8 +1,8 @@
 package xyz.cssxsh.mirai.plugin
 
-import kotlin.reflect.KClass
+import kotlin.reflect.*
 
 @Target(AnnotationTarget.CLASS)
-annotation class MiraiHibernate(
+public annotation class MiraiHibernate(
     val loader: KClass<out MiraiHibernateLoader>
 )
