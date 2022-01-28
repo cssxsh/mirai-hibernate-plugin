@@ -10,6 +10,7 @@ import net.mamoe.mirai.utils.*
 import xyz.cssxsh.mirai.plugin.entry.*
 import java.sql.*
 import kotlin.coroutines.*
+import kotlin.streams.*
 
 public object MiraiHibernateRecorder : SimpleListenerHost() {
 
@@ -104,6 +105,8 @@ public object MiraiHibernateRecorder : SimpleListenerHost() {
 
     /**
      * [bot] 发送的 或 [bot] 收到 的消息
+     * @param start 开始时间
+     * @param end 结束时间
      */
     public operator fun get(bot: Bot, start: Int, end: Int): List<MessageRecord> {
         return useSession { session ->
@@ -114,12 +117,29 @@ public object MiraiHibernateRecorder : SimpleListenerHost() {
                         between(record.get("time"), start, end),
                         equal(record.get<Long>("bot"), bot.id)
                     )
+                    .orderBy(desc(record.get<Int>("time")))
             }.list()
         }
     }
 
     /**
+     * [bot] 发送的 或 [bot] 收到 的消息
+     */
+    public operator fun get(bot: Bot): Sequence<MessageRecord> {
+        return useSession { session ->
+            session.withCriteria<MessageRecord> { criteria ->
+                val record = criteria.from(MessageRecord::class.java)
+                criteria.select(record)
+                    .where(equal(record.get<Long>("bot"), bot.id))
+                    .orderBy(desc(record.get<Int>("time")))
+            }.stream().asSequence()
+        }
+    }
+
+    /**
      * 发送到群 [group] 或 从 [group] 收到 消息
+     * @param start 开始时间
+     * @param end 结束时间
      */
     public operator fun get(group: Group, start: Int, end: Int): List<MessageRecord> {
         return useSession { session ->
@@ -131,12 +151,32 @@ public object MiraiHibernateRecorder : SimpleListenerHost() {
                         equal(record.get<Int>("kind"), MessageSourceKind.GROUP.ordinal),
                         equal(record.get<Long>("targetId"), group.id)
                     )
+                    .orderBy(desc(record.get<Int>("time")))
             }.list()
         }
     }
 
     /**
+     * 发送到群 [group] 或 从 [group] 收到 消息
+     */
+    public operator fun get(group: Group): Sequence<MessageRecord> {
+        return useSession { session ->
+            session.withCriteria<MessageRecord> { criteria ->
+                val record = criteria.from(MessageRecord::class.java)
+                criteria.select(record)
+                    .where(
+                        equal(record.get<Int>("kind"), MessageSourceKind.GROUP.ordinal),
+                        equal(record.get<Long>("targetId"), group.id)
+                    )
+                    .orderBy(desc(record.get<Int>("time")))
+            }.stream().asSequence()
+        }
+    }
+
+    /**
      * 发送到群 [friend] 或 从 [friend] 收到 的消息
+     * @param start 开始时间
+     * @param end 结束时间
      */
     public operator fun get(friend: Friend, start: Int, end: Int): List<MessageRecord> {
         return useSession { session ->
@@ -151,12 +191,35 @@ public object MiraiHibernateRecorder : SimpleListenerHost() {
                             equal(record.get<Long>("targetId"), friend.id)
                         )
                     )
+                    .orderBy(desc(record.get<Int>("time")))
             }.list()
         }
     }
 
     /**
+     * 发送到群 [friend] 或 从 [friend] 收到 的消息
+     */
+    public operator fun get(friend: Friend): Sequence<MessageRecord> {
+        return useSession { session ->
+            session.withCriteria<MessageRecord> { criteria ->
+                val record = criteria.from(MessageRecord::class.java)
+                criteria.select(record)
+                    .where(
+                        equal(record.get<Int>("kind"), MessageSourceKind.FRIEND.ordinal),
+                        or(
+                            equal(record.get<Long>("fromId"), friend.id),
+                            equal(record.get<Long>("targetId"), friend.id)
+                        )
+                    )
+                    .orderBy(desc(record.get<Int>("time")))
+            }.stream().asSequence()
+        }
+    }
+
+    /**
      * [member] 发送的消息
+     * @param start 开始时间
+     * @param end 结束时间
      */
     public operator fun get(member: Member, start: Int, end: Int): List<MessageRecord> {
         return useSession { session ->
@@ -169,12 +232,33 @@ public object MiraiHibernateRecorder : SimpleListenerHost() {
                         equal(record.get<Long>("fromId"), member.id),
                         equal(record.get<Long>("targetId"), member.group.id)
                     )
+                    .orderBy(desc(record.get<Int>("time")))
             }.list()
         }
     }
 
     /**
+     * [member] 发送的消息
+     */
+    public operator fun get(member: Member): Sequence<MessageRecord> {
+        return useSession { session ->
+            session.withCriteria<MessageRecord> { criteria ->
+                val record = criteria.from(MessageRecord::class.java)
+                criteria.select(record)
+                    .where(
+                        equal(record.get<Int>("kind"), MessageSourceKind.GROUP.ordinal),
+                        equal(record.get<Long>("fromId"), member.id),
+                        equal(record.get<Long>("targetId"), member.group.id)
+                    )
+                    .orderBy(desc(record.get<Int>("time")))
+            }.stream().asSequence()
+        }
+    }
+
+    /**
      * 发送到群 [stranger] 或 从 [stranger] 收到 的消息
+     * @param start 开始时间
+     * @param end 结束时间
      */
     public operator fun get(stranger: Stranger, start: Int, end: Int): List<MessageRecord> {
         return useSession { session ->
@@ -189,12 +273,35 @@ public object MiraiHibernateRecorder : SimpleListenerHost() {
                             equal(record.get<Long>("targetId"), stranger.id)
                         )
                     )
+                    .orderBy(desc(record.get<Int>("time")))
             }.list()
         }
     }
 
     /**
+     * 发送到群 [stranger] 或 从 [stranger] 收到 的消息
+     */
+    public operator fun get(stranger: Stranger): Sequence<MessageRecord> {
+        return useSession { session ->
+            session.withCriteria<MessageRecord> { criteria ->
+                val record = criteria.from(MessageRecord::class.java)
+                criteria.select(record)
+                    .where(
+                        equal(record.get<Int>("kind"), MessageSourceKind.STRANGER.ordinal),
+                        or(
+                            equal(record.get<Long>("fromId"), stranger.id),
+                            equal(record.get<Long>("targetId"), stranger.id)
+                        )
+                    )
+                    .orderBy(desc(record.get<Int>("time")))
+            }.stream().asSequence()
+        }
+    }
+
+    /**
      * 发送到群 [contact] 或 从 [contact] 收到 的消息
+     * @param start 开始时间
+     * @param end 结束时间
      */
     public operator fun get(contact: Contact, start: Int, end: Int): List<MessageRecord> {
         return when (contact) {
@@ -203,7 +310,21 @@ public object MiraiHibernateRecorder : SimpleListenerHost() {
             is Friend -> get(friend = contact, start = start, end = end)
             is Member -> get(member = contact, start = start, end = end)
             is Stranger -> get(stranger = contact, start = start, end = end)
-            else -> throw IllegalStateException("不支持查询的联系人")
+            else -> throw IllegalStateException("不支持查询的联系人 $contact")
+        }
+    }
+
+    /**
+     * 发送到群 [contact] 或 从 [contact] 收到 的消息
+     */
+    public operator fun get(contact: Contact): Sequence<MessageRecord> {
+        return when (contact) {
+            is Bot -> get(bot = contact)
+            is Group -> get(group = contact)
+            is Friend -> get(friend = contact)
+            is Member -> get(member = contact)
+            is Stranger -> get(stranger = contact)
+            else -> throw IllegalStateException("不支持查询的联系人 $contact")
         }
     }
 }
