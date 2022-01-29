@@ -13,6 +13,13 @@ import java.sql.*
 import kotlin.coroutines.*
 import kotlin.streams.*
 
+/**
+ * 消息记录器 记录机器人发送、接受和撤销的消息
+ * @see MessageRecord
+ * @see MessageEvent
+ * @see MessagePostSendEvent
+ * @see MessageRecallEvent
+ */
 public object MiraiHibernateRecorder : SimpleListenerHost() {
 
     @EventHandler

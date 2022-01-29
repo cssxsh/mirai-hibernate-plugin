@@ -1,10 +1,9 @@
-package xyz.cssxsh.mirai.plugin.xyz.cssxsh.mirai.plugin
+package xyz.cssxsh.mirai.plugin
 
 import kotlinx.coroutines.*
 import net.mamoe.mirai.console.plugin.jvm.*
 import net.mamoe.mirai.event.*
 import net.mamoe.mirai.message.data.MessageSource.Key.recall
-import xyz.cssxsh.mirai.plugin.*
 
 /**
  * 也可以不注解 [MiraiHibernate]，这时 [loader] 会自动生成

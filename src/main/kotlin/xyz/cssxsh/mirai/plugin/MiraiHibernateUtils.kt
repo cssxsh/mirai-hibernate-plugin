@@ -9,8 +9,6 @@ import xyz.cssxsh.mirai.plugin.entry.*
 
 internal val logger get() = MiraiHibernatePlugin.logger
 
-internal val currentSession get() = MiraiHibernatePlugin.factory.currentSession
-
 public val JvmPlugin.factory: SessionFactory get() = MiraiSessionCache[this]
 
 internal fun <R> useSession(lock: Any? = null, block: (session: Session) -> R): R {

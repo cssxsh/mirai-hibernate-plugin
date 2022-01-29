@@ -3,13 +3,16 @@ package xyz.cssxsh.mirai.plugin
 import net.mamoe.mirai.console.plugin.jvm.*
 import org.hibernate.boot.registry.*
 import org.hibernate.cfg.*
-import org.hibernate.dialect.function.*
-import org.hibernate.type.*
 import xyz.cssxsh.hibernate.*
 import java.io.*
 import java.net.*
 import java.sql.*
 
+/**
+ * 适用于插件的 Hibernate [Configuration]
+ * @param loader 加载器，定义一些加载行为
+ * @see [Configuration.addRandFunction]
+ */
 public class MiraiHibernateConfiguration(private val loader: MiraiHibernateLoader) :
     Configuration(
         BootstrapServiceRegistryBuilder()
@@ -67,7 +70,7 @@ public class MiraiHibernateConfiguration(private val loader: MiraiHibernateLoade
                 setProperty("hibernate.c3p0.min_size", "${1}")
                 setProperty("hibernate.c3p0.max_size", "${1}")
                 // 设置 rand 别名
-                addSqlFunction("rand", NoArgSQLFunction("random", StandardBasicTypes.DOUBLE))
+                addRandFunction()
                 addAnnotatedClass(SqlitePragma::class.java)
             }
             url.startsWith("jdbc:mysql") -> {
