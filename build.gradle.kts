@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "xyz.cssxsh.mirai"
-version = "2.0.0"
+version = "2.0.1"
 
 mavenCentralPublish {
     useCentralS01()
@@ -42,7 +42,6 @@ kotlin {
 }
 
 mirai {
-    jvmTarget = JavaVersion.VERSION_11
     configureShadow {
         exclude("module-info.class")
     }
