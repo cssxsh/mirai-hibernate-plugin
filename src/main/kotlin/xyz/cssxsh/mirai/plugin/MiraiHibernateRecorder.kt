@@ -86,8 +86,14 @@ public object MiraiHibernateRecorder : SimpleListenerHost() {
             is SQLException -> {
                 logger.warning({ "SQLException" }, cause)
             }
+            is CancellationException -> {
+                // ignore ...
+            }
+            is ExceptionInEventHandlerException -> {
+                logger.warning({ "Exception in Recorder" }, cause.cause)
+            }
             else -> {
-                logger.warning(exception)
+                logger.warning({ "Exception in Recorder" }, exception)
             }
         }
     }
