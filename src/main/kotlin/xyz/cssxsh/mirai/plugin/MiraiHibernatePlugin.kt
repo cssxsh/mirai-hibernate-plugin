@@ -15,6 +15,7 @@ public object MiraiHibernatePlugin : KotlinPlugin(
         author("cssxsh")
 
         dependsOn("net.mamoe.mirai.mirai-slf4j-bridge", true)
+        dependsOn("xyz.cssxsh.mirai.plugin.mirai-administrator", true)
     }
 ) {
     /**
