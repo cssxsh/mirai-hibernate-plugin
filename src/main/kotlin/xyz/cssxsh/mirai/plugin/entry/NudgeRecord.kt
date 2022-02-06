@@ -16,10 +16,10 @@ public data class NudgeRecord(
     val bot: Long,
     @Column(name = "time", nullable = false, updatable = false)
     val time: Int,
-    @Column(name = "from", nullable = false, updatable = false)
-    val from: Long,
-    @Column(name = "target", nullable = false, updatable = false)
-    val target: Long,
+    @Column(name = "from_id", nullable = false, updatable = false)
+    val fromId: Long,
+    @Column(name = "target_id", nullable = false, updatable = false)
+    val targetId: Long,
     @Column(name = "kind", nullable = false, updatable = false)
     val kind: Int,
     @Column(name = "subject", nullable = false, updatable = false)
@@ -34,8 +34,8 @@ public data class NudgeRecord(
     public constructor(event: NudgeEvent, time: Int = (System.currentTimeMillis() / 1000).toInt()) : this(
         bot = event.bot.id,
         time = time,
-        from = event.from.id,
-        target = event.target.id,
+        fromId = event.from.id,
+        targetId = event.target.id,
         kind = when (event.subject) {
             is Group -> MessageSourceKind.GROUP.ordinal
             is Friend -> MessageSourceKind.FRIEND.ordinal

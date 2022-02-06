@@ -19,6 +19,7 @@ import kotlin.streams.*
  * @see MessageEvent
  * @see MessagePostSendEvent
  * @see MessageRecallEvent
+ * @see NudgeEvent
  */
 public object MiraiHibernateRecorder : SimpleListenerHost() {
 
