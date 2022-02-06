@@ -57,7 +57,7 @@ public object MiraiHibernateRecorder : SimpleListenerHost() {
             session.transaction.begin()
             try {
                 session.withCriteriaUpdate<MessageRecord> { criteria ->
-                    val record = criteria.from(MessageRecord::class.java)
+                    val record = criteria.from()
                     criteria.set(record.get("recall"), true)
                         .where(
                             equal(record.get<String>("ids"), messageIds.joinToString()),
@@ -65,6 +65,20 @@ public object MiraiHibernateRecorder : SimpleListenerHost() {
                             equal(record.get<Int>("time"), messageTime)
                         )
                 }.executeUpdate()
+                session.transaction.commit()
+            } catch (cause: Throwable) {
+                session.transaction.rollback()
+                throw cause
+            }
+        }
+    }
+
+    @EventHandler
+    internal fun NudgeEvent.record() {
+        useSession { session ->
+            session.transaction.begin()
+            try {
+                session.save(NudgeRecord(event = this))
                 session.transaction.commit()
             } catch (cause: Throwable) {
                 session.transaction.rollback()
@@ -105,7 +119,7 @@ public object MiraiHibernateRecorder : SimpleListenerHost() {
     public operator fun get(source: MessageSource): List<MessageRecord> {
         return useSession { session ->
             session.withCriteria<MessageRecord> { criteria ->
-                val record = criteria.from(MessageRecord::class.java)
+                val record = criteria.from<MessageRecord>()
                 criteria.select(record)
                     .where(
                         equal(record.get<Int>("kind"), source.kind.ordinal),
@@ -125,7 +139,7 @@ public object MiraiHibernateRecorder : SimpleListenerHost() {
     public operator fun get(bot: Bot, start: Int, end: Int): List<MessageRecord> {
         return useSession { session ->
             session.withCriteria<MessageRecord> { criteria ->
-                val record = criteria.from(MessageRecord::class.java)
+                val record = criteria.from<MessageRecord>()
                 criteria.select(record)
                     .where(
                         between(record.get("time"), start, end),
@@ -142,7 +156,7 @@ public object MiraiHibernateRecorder : SimpleListenerHost() {
     public operator fun get(bot: Bot): Sequence<MessageRecord> {
         return useSession { session ->
             session.withCriteria<MessageRecord> { criteria ->
-                val record = criteria.from(MessageRecord::class.java)
+                val record = criteria.from<MessageRecord>()
                 criteria.select(record)
                     .where(equal(record.get<Long>("bot"), bot.id))
                     .orderBy(desc(record.get<Int>("time")))
@@ -158,7 +172,7 @@ public object MiraiHibernateRecorder : SimpleListenerHost() {
     public operator fun get(group: Group, start: Int, end: Int): List<MessageRecord> {
         return useSession { session ->
             session.withCriteria<MessageRecord> { criteria ->
-                val record = criteria.from(MessageRecord::class.java)
+                val record = criteria.from<MessageRecord>()
                 criteria.select(record)
                     .where(
                         between(record.get("time"), start, end),
@@ -176,7 +190,7 @@ public object MiraiHibernateRecorder : SimpleListenerHost() {
     public operator fun get(group: Group): Sequence<MessageRecord> {
         return useSession { session ->
             session.withCriteria<MessageRecord> { criteria ->
-                val record = criteria.from(MessageRecord::class.java)
+                val record = criteria.from<MessageRecord>()
                 criteria.select(record)
                     .where(
                         equal(record.get<Int>("kind"), MessageSourceKind.GROUP.ordinal),
@@ -195,7 +209,7 @@ public object MiraiHibernateRecorder : SimpleListenerHost() {
     public operator fun get(friend: Friend, start: Int, end: Int): List<MessageRecord> {
         return useSession { session ->
             session.withCriteria<MessageRecord> { criteria ->
-                val record = criteria.from(MessageRecord::class.java)
+                val record = criteria.from<MessageRecord>()
                 criteria.select(record)
                     .where(
                         between(record.get("time"), start, end),
@@ -216,7 +230,7 @@ public object MiraiHibernateRecorder : SimpleListenerHost() {
     public operator fun get(friend: Friend): Sequence<MessageRecord> {
         return useSession { session ->
             session.withCriteria<MessageRecord> { criteria ->
-                val record = criteria.from(MessageRecord::class.java)
+                val record = criteria.from<MessageRecord>()
                 criteria.select(record)
                     .where(
                         equal(record.get<Int>("kind"), MessageSourceKind.FRIEND.ordinal),
@@ -238,7 +252,7 @@ public object MiraiHibernateRecorder : SimpleListenerHost() {
     public operator fun get(member: Member, start: Int, end: Int): List<MessageRecord> {
         return useSession { session ->
             session.withCriteria<MessageRecord> { criteria ->
-                val record = criteria.from(MessageRecord::class.java)
+                val record = criteria.from<MessageRecord>()
                 criteria.select(record)
                     .where(
                         between(record.get("time"), start, end),
@@ -257,7 +271,7 @@ public object MiraiHibernateRecorder : SimpleListenerHost() {
     public operator fun get(member: Member): Sequence<MessageRecord> {
         return useSession { session ->
             session.withCriteria<MessageRecord> { criteria ->
-                val record = criteria.from(MessageRecord::class.java)
+                val record = criteria.from<MessageRecord>()
                 criteria.select(record)
                     .where(
                         equal(record.get<Int>("kind"), MessageSourceKind.GROUP.ordinal),
@@ -277,7 +291,7 @@ public object MiraiHibernateRecorder : SimpleListenerHost() {
     public operator fun get(stranger: Stranger, start: Int, end: Int): List<MessageRecord> {
         return useSession { session ->
             session.withCriteria<MessageRecord> { criteria ->
-                val record = criteria.from(MessageRecord::class.java)
+                val record = criteria.from<MessageRecord>()
                 criteria.select(record)
                     .where(
                         between(record.get("time"), start, end),
@@ -298,7 +312,7 @@ public object MiraiHibernateRecorder : SimpleListenerHost() {
     public operator fun get(stranger: Stranger): Sequence<MessageRecord> {
         return useSession { session ->
             session.withCriteria<MessageRecord> { criteria ->
-                val record = criteria.from(MessageRecord::class.java)
+                val record = criteria.from<MessageRecord>()
                 criteria.select(record)
                     .where(
                         equal(record.get<Int>("kind"), MessageSourceKind.STRANGER.ordinal),
