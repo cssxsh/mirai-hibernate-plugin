@@ -10,7 +10,7 @@ public object MiraiHibernatePlugin : KotlinPlugin(
     JvmPluginDescription(
         id = "xyz.cssxsh.mirai.plugin.mirai-hibernate-plugin",
         name = "mirai-hibernate-plugin",
-        version = "2.0.4",
+        version = "2.0.5",
     ) {
         author("cssxsh")
 
@@ -36,19 +36,9 @@ public object MiraiHibernatePlugin : KotlinPlugin(
 
         MiraiHibernateRecorder.registerTo(globalEventChannel())
 
-        val (metadata, config) = useSession { session ->
-            val metadata = session.getDatabaseMetaData()
-            val product = metadata.databaseProductName
-            val config: Any = when {
-                product.contains(other = "SQLite", ignoreCase = true) -> with(SqlitePragma) { session.show() }
-                product.contains(other = "MariaDB", ignoreCase = true) -> with(MySqlVariable) { session.show() }
-                product.contains(other = "MySql", ignoreCase = true) -> with(MySqlVariable) { session.show() }
-                else -> "Unsupported show config of $product."
-            }
-            metadata to config
-        }
+        val metadata = useSession { session -> session.getDatabaseMetaData() }
 
-        logger.info { "Database ${metadata.url} by ${metadata.driverName}. $config" }
+        logger.info { "Database ${metadata.url} by ${metadata.driverName}." }
     }
 
     override fun onDisable() {

@@ -26,7 +26,7 @@ public data class MessageRecord(
     val time: Int,
     @Column(name = "kind", nullable = false, updatable = false)
     val kind: Int,
-    @Column(name = "code", nullable = false, updatable = false)
+    @Column(name = "code", nullable = false, updatable = false, length = 5120)
     val code: String,
     @Column(name = "recall", nullable = false)
     val recall: Boolean = false

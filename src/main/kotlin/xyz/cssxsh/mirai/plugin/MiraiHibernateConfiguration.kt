@@ -71,10 +71,9 @@ public class MiraiHibernateConfiguration(private val loader: MiraiHibernateLoade
                 setProperty("hibernate.c3p0.max_size", "${1}")
                 // 设置 rand 别名
                 addRandFunction()
-                addAnnotatedClass(SqlitePragma::class.java)
             }
             url.startsWith("jdbc:mysql") -> {
-                addAnnotatedClass(MySqlVariable::class.java)
+                //
             }
         }
     }
