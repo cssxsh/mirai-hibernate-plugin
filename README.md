@@ -10,7 +10,7 @@
 
 本插件打包了以下版本的数据库驱动
 
-* MySql `mysql:mysql-connector-java:8.0.26`
+* MySql `mysql:mysql-connector-java:8.0.28`
 * Sqlite `org.xerial:sqlite-jdbc:3.36.0.3`
 
 需要其他数据库驱动支持请将 **数据库驱动Jar包** 放到 `plugins` 目录中一同被 `mirai-console` 加载

@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "xyz.cssxsh.mirai"
-version = "2.0.5"
+version = "2.0.6"
 
 mavenCentralPublish {
     useCentralS01()
@@ -33,7 +33,7 @@ dependencies {
     api("org.hibernate:hibernate-c3p0:5.6.5.Final")
     api("com.github.gwenn:sqlite-dialect:0.1.2")
     api("org.xerial:sqlite-jdbc:3.36.0.3")
-    api("mysql:mysql-connector-java:8.0.26")
+    api("mysql:mysql-connector-java:8.0.28")
 
     testImplementation(kotlin("test", "1.6.0"))
 }
