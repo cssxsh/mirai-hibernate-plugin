@@ -49,10 +49,17 @@ public data class MessageRecord(
         return Bot.getInstance(bot).buildMessageSource(MessageSourceKind.values()[kind]) {
             fromId = this@MessageRecord.fromId
             targetId = this@MessageRecord.targetId
-            ids = this@MessageRecord.ids.split(',').map { it.toInt() }.toIntArray()
-            internalIds = this@MessageRecord.ids.split(',').map { it.toInt() }.toIntArray()
+            ids = this@MessageRecord.ids.toIntArray()
+            internalIds = this@MessageRecord.internalIds.toIntArray()
             time = this@MessageRecord.time
             messages(messages = MiraiCode.deserializeMiraiCode(code))
         }
+    }
+
+    private fun String.toIntArray(): IntArray {
+        if (isBlank()) return IntArray(0)
+        val list = split(',')
+
+        return IntArray(list.size) { index -> list[index].toInt() }
     }
 }
