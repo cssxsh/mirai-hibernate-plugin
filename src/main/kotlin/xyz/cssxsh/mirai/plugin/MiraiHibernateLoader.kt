@@ -53,9 +53,7 @@ public interface MiraiHibernateLoader {
             classLoader = plugin::class.java.classLoader,
             configuration = plugin.configFolder.resolve("hibernate.properties"),
             default = """
-                hibernate.connection.url=jdbc:sqlite:${
-                plugin.dataFolder.resolve("hibernate.sqlite").toURI().toASCIIString()
-            }
+                hibernate.connection.url=jdbc:sqlite:${plugin.resolveDataPath("hibernate.sqlite").toUri()}
                 hibernate.connection.driver_class=org.sqlite.JDBC
                 hibernate.dialect=org.sqlite.hibernate.dialect.SQLiteDialect
                 hibernate.connection.provider_class=org.hibernate.connection.C3P0ConnectionProvider
