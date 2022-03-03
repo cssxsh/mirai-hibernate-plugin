@@ -23,7 +23,7 @@ public class MiraiHibernateSourceHandler : MessageSourceHandler {
                 event.message.findIsInstance<QuoteReply>()?.source
                     ?: records(event.subject).find { it.fromId != event.sender.id }?.toMessageSource()
             }
-            else -> throw IllegalArgumentException("无法指定要撤回消息")
+            else -> null
         }
     }
 }
