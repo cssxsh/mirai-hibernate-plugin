@@ -43,5 +43,6 @@ public object MiraiHibernatePlugin : KotlinPlugin(
 
     override fun onDisable() {
         MiraiHibernateRecorder.cancelAll()
+        currentSession.close()
     }
 }
