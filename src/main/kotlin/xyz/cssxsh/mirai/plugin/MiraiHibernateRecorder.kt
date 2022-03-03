@@ -155,14 +155,12 @@ public object MiraiHibernateRecorder : SimpleListenerHost() {
      * [bot] 发送的 或 [bot] 收到 的消息
      */
     public operator fun get(bot: Bot): Sequence<MessageRecord> {
-        return useSession { session ->
-            session.withCriteria<MessageRecord> { criteria ->
-                val record = criteria.from<MessageRecord>()
-                criteria.select(record)
-                    .where(equal(record.get<Long>("bot"), bot.id))
-                    .orderBy(desc(record.get<Int>("time")))
-            }.stream().asSequence()
-        }
+        return currentSession.withCriteria<MessageRecord> { criteria ->
+            val record = criteria.from<MessageRecord>()
+            criteria.select(record)
+                .where(equal(record.get<Long>("bot"), bot.id))
+                .orderBy(desc(record.get<Int>("time")))
+        }.stream().asSequence()
     }
 
     /**
@@ -189,17 +187,15 @@ public object MiraiHibernateRecorder : SimpleListenerHost() {
      * 发送到群 [group] 或 从 [group] 收到 消息
      */
     public operator fun get(group: Group): Sequence<MessageRecord> {
-        return useSession { session ->
-            session.withCriteria<MessageRecord> { criteria ->
-                val record = criteria.from<MessageRecord>()
-                criteria.select(record)
-                    .where(
-                        equal(record.get<Int>("kind"), MessageSourceKind.GROUP.ordinal),
-                        equal(record.get<Long>("targetId"), group.id)
-                    )
-                    .orderBy(desc(record.get<Int>("time")))
-            }.stream().asSequence()
-        }
+        return currentSession.withCriteria<MessageRecord> { criteria ->
+            val record = criteria.from<MessageRecord>()
+            criteria.select(record)
+                .where(
+                    equal(record.get<Int>("kind"), MessageSourceKind.GROUP.ordinal),
+                    equal(record.get<Long>("targetId"), group.id)
+                )
+                .orderBy(desc(record.get<Int>("time")))
+        }.stream().asSequence()
     }
 
     /**
@@ -229,20 +225,18 @@ public object MiraiHibernateRecorder : SimpleListenerHost() {
      * 发送到群 [friend] 或 从 [friend] 收到 的消息
      */
     public operator fun get(friend: Friend): Sequence<MessageRecord> {
-        return useSession { session ->
-            session.withCriteria<MessageRecord> { criteria ->
-                val record = criteria.from<MessageRecord>()
-                criteria.select(record)
-                    .where(
-                        equal(record.get<Int>("kind"), MessageSourceKind.FRIEND.ordinal),
-                        or(
-                            equal(record.get<Long>("fromId"), friend.id),
-                            equal(record.get<Long>("targetId"), friend.id)
-                        )
+        return currentSession.withCriteria<MessageRecord> { criteria ->
+            val record = criteria.from<MessageRecord>()
+            criteria.select(record)
+                .where(
+                    equal(record.get<Int>("kind"), MessageSourceKind.FRIEND.ordinal),
+                    or(
+                        equal(record.get<Long>("fromId"), friend.id),
+                        equal(record.get<Long>("targetId"), friend.id)
                     )
-                    .orderBy(desc(record.get<Int>("time")))
-            }.stream().asSequence()
-        }
+                )
+                .orderBy(desc(record.get<Int>("time")))
+        }.stream().asSequence()
     }
 
     /**
@@ -270,18 +264,16 @@ public object MiraiHibernateRecorder : SimpleListenerHost() {
      * [member] 发送的消息
      */
     public operator fun get(member: Member): Sequence<MessageRecord> {
-        return useSession { session ->
-            session.withCriteria<MessageRecord> { criteria ->
-                val record = criteria.from<MessageRecord>()
-                criteria.select(record)
-                    .where(
-                        equal(record.get<Int>("kind"), MessageSourceKind.GROUP.ordinal),
-                        equal(record.get<Long>("fromId"), member.id),
-                        equal(record.get<Long>("targetId"), member.group.id)
-                    )
-                    .orderBy(desc(record.get<Int>("time")))
-            }.stream().asSequence()
-        }
+        return currentSession.withCriteria<MessageRecord> { criteria ->
+            val record = criteria.from<MessageRecord>()
+            criteria.select(record)
+                .where(
+                    equal(record.get<Int>("kind"), MessageSourceKind.GROUP.ordinal),
+                    equal(record.get<Long>("fromId"), member.id),
+                    equal(record.get<Long>("targetId"), member.group.id)
+                )
+                .orderBy(desc(record.get<Int>("time")))
+        }.stream().asSequence()
     }
 
     /**
@@ -311,20 +303,18 @@ public object MiraiHibernateRecorder : SimpleListenerHost() {
      * 发送到群 [stranger] 或 从 [stranger] 收到 的消息
      */
     public operator fun get(stranger: Stranger): Sequence<MessageRecord> {
-        return useSession { session ->
-            session.withCriteria<MessageRecord> { criteria ->
-                val record = criteria.from<MessageRecord>()
-                criteria.select(record)
-                    .where(
-                        equal(record.get<Int>("kind"), MessageSourceKind.STRANGER.ordinal),
-                        or(
-                            equal(record.get<Long>("fromId"), stranger.id),
-                            equal(record.get<Long>("targetId"), stranger.id)
-                        )
+        return currentSession.withCriteria<MessageRecord> { criteria ->
+            val record = criteria.from<MessageRecord>()
+            criteria.select(record)
+                .where(
+                    equal(record.get<Int>("kind"), MessageSourceKind.STRANGER.ordinal),
+                    or(
+                        equal(record.get<Long>("fromId"), stranger.id),
+                        equal(record.get<Long>("targetId"), stranger.id)
                     )
-                    .orderBy(desc(record.get<Int>("time")))
-            }.stream().asSequence()
-        }
+                )
+                .orderBy(desc(record.get<Int>("time")))
+        }.stream().asSequence()
     }
 
     /**

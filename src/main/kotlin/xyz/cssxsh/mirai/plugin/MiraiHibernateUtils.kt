@@ -11,6 +11,15 @@ internal val logger get() = MiraiHibernatePlugin.logger
 
 public val JvmPlugin.factory: SessionFactory get() = MiraiSessionCache[this]
 
+internal val currentSession: Session by lazy {
+//    try {
+//        MiraiHibernatePlugin.factory.currentSession
+//    } catch (_: Throwable) {
+//        MiraiHibernatePlugin.factory.openSession()
+//    }
+    MiraiHibernatePlugin.factory.openSession()
+}
+
 internal fun <R> useSession(lock: Any? = null, block: (session: Session) -> R): R {
     return if (lock == null) {
         MiraiHibernatePlugin.factory.openSession().use(block)
