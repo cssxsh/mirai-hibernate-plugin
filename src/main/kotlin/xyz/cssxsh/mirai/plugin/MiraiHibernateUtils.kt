@@ -41,7 +41,7 @@ public fun List<MessageRecord>.toForwardMessage(context: Contact) {
 public fun Sequence<MessageRecord>.toForwardMessage(context: Contact) {
     buildForwardMessage(context) {
         for (record in this@toForwardMessage) {
-            record.fromId at record.time says MiraiCode.deserializeMiraiCode(record.code)
+            record.fromId at record.time says MiraiCode.deserializeMiraiCode(record.code, context)
         }
     }
 }
