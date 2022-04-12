@@ -36,7 +36,7 @@ public object MiraiHibernatePlugin : KotlinPlugin(
 
         MiraiHibernateRecorder.registerTo(globalEventChannel())
 
-        val metadata = useSession { session -> session.getDatabaseMetaData() }
+        val metadata = currentSession.getDatabaseMetaData()
 
         logger.info { "Database ${metadata.url} by ${metadata.driverName}." }
     }

@@ -118,18 +118,16 @@ public object MiraiHibernateRecorder : SimpleListenerHost() {
      * @see [MessageRecord.code]
      */
     public operator fun get(source: MessageSource): List<MessageRecord> {
-        return useSession { session ->
-            session.withCriteria<MessageRecord> { criteria ->
-                val record = criteria.from<MessageRecord>()
-                criteria.select(record)
-                    .where(
-                        equal(record.get<Int>("kind"), source.kind.ordinal),
-                        equal(record.get<Long>("fromId"), source.fromId),
-                        equal(record.get<Long>("targetId"), source.targetId),
-                        equal(record.get<Int>("time"), source.time)
-                    )
-            }.list()
-        }
+        return currentSession.withCriteria<MessageRecord> { criteria ->
+            val record = criteria.from<MessageRecord>()
+            criteria.select(record)
+                .where(
+                    equal(record.get<Int>("kind"), source.kind.ordinal),
+                    equal(record.get<Long>("fromId"), source.fromId),
+                    equal(record.get<Long>("targetId"), source.targetId),
+                    equal(record.get<Int>("time"), source.time)
+                )
+        }.list()
     }
 
     /**
@@ -138,17 +136,15 @@ public object MiraiHibernateRecorder : SimpleListenerHost() {
      * @param end 结束时间
      */
     public operator fun get(bot: Bot, start: Int, end: Int): List<MessageRecord> {
-        return useSession { session ->
-            session.withCriteria<MessageRecord> { criteria ->
-                val record = criteria.from<MessageRecord>()
-                criteria.select(record)
-                    .where(
-                        between(record.get("time"), start, end),
-                        equal(record.get<Long>("bot"), bot.id)
-                    )
-                    .orderBy(desc(record.get<Int>("time")))
-            }.list()
-        }
+        return currentSession.withCriteria<MessageRecord> { criteria ->
+            val record = criteria.from<MessageRecord>()
+            criteria.select(record)
+                .where(
+                    between(record.get("time"), start, end),
+                    equal(record.get<Long>("bot"), bot.id)
+                )
+                .orderBy(desc(record.get<Int>("time")))
+        }.list()
     }
 
     /**
@@ -169,18 +165,16 @@ public object MiraiHibernateRecorder : SimpleListenerHost() {
      * @param end 结束时间
      */
     public operator fun get(group: Group, start: Int, end: Int): List<MessageRecord> {
-        return useSession { session ->
-            session.withCriteria<MessageRecord> { criteria ->
-                val record = criteria.from<MessageRecord>()
-                criteria.select(record)
-                    .where(
-                        between(record.get("time"), start, end),
-                        equal(record.get<Int>("kind"), MessageSourceKind.GROUP.ordinal),
-                        equal(record.get<Long>("targetId"), group.id)
-                    )
-                    .orderBy(desc(record.get<Int>("time")))
-            }.list()
-        }
+        return currentSession.withCriteria<MessageRecord> { criteria ->
+            val record = criteria.from<MessageRecord>()
+            criteria.select(record)
+                .where(
+                    between(record.get("time"), start, end),
+                    equal(record.get<Int>("kind"), MessageSourceKind.GROUP.ordinal),
+                    equal(record.get<Long>("targetId"), group.id)
+                )
+                .orderBy(desc(record.get<Int>("time")))
+        }.list()
     }
 
     /**
@@ -204,21 +198,19 @@ public object MiraiHibernateRecorder : SimpleListenerHost() {
      * @param end 结束时间
      */
     public operator fun get(friend: Friend, start: Int, end: Int): List<MessageRecord> {
-        return useSession { session ->
-            session.withCriteria<MessageRecord> { criteria ->
-                val record = criteria.from<MessageRecord>()
-                criteria.select(record)
-                    .where(
-                        between(record.get("time"), start, end),
-                        equal(record.get<Int>("kind"), MessageSourceKind.FRIEND.ordinal),
-                        or(
-                            equal(record.get<Long>("fromId"), friend.id),
-                            equal(record.get<Long>("targetId"), friend.id)
-                        )
+        return currentSession.withCriteria<MessageRecord> { criteria ->
+            val record = criteria.from<MessageRecord>()
+            criteria.select(record)
+                .where(
+                    between(record.get("time"), start, end),
+                    equal(record.get<Int>("kind"), MessageSourceKind.FRIEND.ordinal),
+                    or(
+                        equal(record.get<Long>("fromId"), friend.id),
+                        equal(record.get<Long>("targetId"), friend.id)
                     )
-                    .orderBy(desc(record.get<Int>("time")))
-            }.list()
-        }
+                )
+                .orderBy(desc(record.get<Int>("time")))
+        }.list()
     }
 
     /**
@@ -245,19 +237,17 @@ public object MiraiHibernateRecorder : SimpleListenerHost() {
      * @param end 结束时间
      */
     public operator fun get(member: Member, start: Int, end: Int): List<MessageRecord> {
-        return useSession { session ->
-            session.withCriteria<MessageRecord> { criteria ->
-                val record = criteria.from<MessageRecord>()
-                criteria.select(record)
-                    .where(
-                        between(record.get("time"), start, end),
-                        equal(record.get<Int>("kind"), MessageSourceKind.GROUP.ordinal),
-                        equal(record.get<Long>("fromId"), member.id),
-                        equal(record.get<Long>("targetId"), member.group.id)
-                    )
-                    .orderBy(desc(record.get<Int>("time")))
-            }.list()
-        }
+        return currentSession.withCriteria<MessageRecord> { criteria ->
+            val record = criteria.from<MessageRecord>()
+            criteria.select(record)
+                .where(
+                    between(record.get("time"), start, end),
+                    equal(record.get<Int>("kind"), MessageSourceKind.GROUP.ordinal),
+                    equal(record.get<Long>("fromId"), member.id),
+                    equal(record.get<Long>("targetId"), member.group.id)
+                )
+                .orderBy(desc(record.get<Int>("time")))
+        }.list()
     }
 
     /**
@@ -282,21 +272,19 @@ public object MiraiHibernateRecorder : SimpleListenerHost() {
      * @param end 结束时间
      */
     public operator fun get(stranger: Stranger, start: Int, end: Int): List<MessageRecord> {
-        return useSession { session ->
-            session.withCriteria<MessageRecord> { criteria ->
-                val record = criteria.from<MessageRecord>()
-                criteria.select(record)
-                    .where(
-                        between(record.get("time"), start, end),
-                        equal(record.get<Int>("kind"), MessageSourceKind.STRANGER.ordinal),
-                        or(
-                            equal(record.get<Long>("fromId"), stranger.id),
-                            equal(record.get<Long>("targetId"), stranger.id)
-                        )
+        return currentSession.withCriteria<MessageRecord> { criteria ->
+            val record = criteria.from<MessageRecord>()
+            criteria.select(record)
+                .where(
+                    between(record.get("time"), start, end),
+                    equal(record.get<Int>("kind"), MessageSourceKind.STRANGER.ordinal),
+                    or(
+                        equal(record.get<Long>("fromId"), stranger.id),
+                        equal(record.get<Long>("targetId"), stranger.id)
                     )
-                    .orderBy(desc(record.get<Int>("time")))
-            }.list()
-        }
+                )
+                .orderBy(desc(record.get<Int>("time")))
+        }.list()
     }
 
     /**
