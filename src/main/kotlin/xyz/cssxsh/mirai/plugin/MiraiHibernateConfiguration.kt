@@ -16,7 +16,7 @@ import java.sql.*
 public class MiraiHibernateConfiguration(private val loader: MiraiHibernateLoader) :
     Configuration(
         BootstrapServiceRegistryBuilder()
-            .applyClassLoader(MiraiHibernatePlugin::class.java.classLoader)
+            .applyClassLoader(loader.classLoader)
             .build()
     ) {
     public constructor(plugin: JvmPlugin) : this(loader = MiraiHibernateLoader(plugin = plugin))
