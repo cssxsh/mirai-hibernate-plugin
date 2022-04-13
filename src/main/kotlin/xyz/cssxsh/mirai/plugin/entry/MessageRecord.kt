@@ -3,6 +3,7 @@ package xyz.cssxsh.mirai.plugin.entry
 import net.mamoe.mirai.*
 import net.mamoe.mirai.message.code.*
 import net.mamoe.mirai.message.data.*
+import java.io.*
 import javax.persistence.*
 
 @Entity
@@ -28,9 +29,9 @@ public data class MessageRecord(
     val kind: Int,
     @Column(name = "code", nullable = false, updatable = false, length = 5120)
     val code: String,
-    @Column(name = "recall", nullable = false)
+    @Column(name = "recall", nullable = false, updatable = true)
     val recall: Boolean = false
-) {
+) : Serializable {
     public constructor(source: MessageSource, message: MessageChain) : this(
         bot = source.botId,
         fromId = source.fromId,
@@ -42,6 +43,9 @@ public data class MessageRecord(
         code = message.serializeToMiraiCode()
     )
 
+    @OneToOne(mappedBy = "record", optional = true, fetch = FetchType.LAZY)
+    public val forward: ForwardMessageRecord? = null
+
     /**
      * [MessageSource.originalMessage] 来自 [MessageRecord.code] 的解码
      */
@@ -52,14 +56,13 @@ public data class MessageRecord(
             ids = this@MessageRecord.ids.toIntArray()
             internalIds = this@MessageRecord.internalIds.toIntArray()
             time = this@MessageRecord.time
-            messages(messages = MiraiCode.deserializeMiraiCode(code))
+            messages(messages = if (code.isBlank()) {
+                forward?.toForwardMessage()?.let(::listOf) ?: MiraiCode.deserializeMiraiCode(code)
+            } else {
+                MiraiCode.deserializeMiraiCode(code)
+            })
         }
     }
 
-    private fun String.toIntArray(): IntArray {
-        if (isBlank()) return IntArray(0)
-        val list = split(',')
-
-        return IntArray(list.size) { index -> list[index].toInt() }
-    }
+    private fun String.toIntArray(): IntArray = splitToSequence(',').map { it.toInt() }.toList().toIntArray()
 }

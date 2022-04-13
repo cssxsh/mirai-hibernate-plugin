@@ -10,6 +10,7 @@ import net.mamoe.mirai.utils.*
 import xyz.cssxsh.hibernate.*
 import xyz.cssxsh.mirai.plugin.entry.*
 import java.sql.*
+import java.io.*
 import kotlin.coroutines.*
 import kotlin.streams.*
 
@@ -23,69 +24,70 @@ import kotlin.streams.*
  */
 public object MiraiHibernateRecorder : SimpleListenerHost() {
 
-    @EventHandler
-    internal fun MessageEvent.record() {
+    private fun <E: Serializable> E.record() {
         useSession { session ->
             session.transaction.begin()
             try {
-                session.save(MessageRecord(source = source, message = message))
+                session.merge(this)
                 session.transaction.commit()
             } catch (cause: Throwable) {
                 session.transaction.rollback()
                 throw cause
             }
         }
+    }
+
+    private fun <E: Serializable> Collection<E>.record() {
+        useSession { session ->
+            session.transaction.begin()
+            try {
+                forEach { session.saveOrUpdate(it) }
+                session.transaction.commit()
+            } catch (cause: Throwable) {
+                session.transaction.rollback()
+                throw cause
+            }
+        }
+    }
+
+    @OptIn(MiraiExperimentalApi::class)
+    private fun MessageChain.record(source: MessageSource = this.source) {
+        val record = MessageRecord(source = source, message = this)
+        record.record()
+        firstIsInstanceOrNull<ForwardMessage>()?.let { forward ->
+            val message = ForwardMessageRecord(record = record, forward = forward)
+            message.record()
+            forward.nodeList.map { node -> ForwardNodeRecord(forward = message, node) }.record()
+        }
+        firstIsInstanceOrNull<OnlineAudio>()?.let { audio ->
+            TODO("OnlineAudio record ${audio.urlForDownload}")
+        }
+        filterIsInstance<CustomMessage>().forEach { custom ->
+            TODO("CustomMessage record ${custom::class.qualifiedName}")
+        }
+    }
+
+    @EventHandler
+    internal fun MessageEvent.record() {
+        message.record()
     }
 
     @EventHandler
     internal fun MessagePostSendEvent<*>.record() {
         if (isFailure) return
-        useSession { session ->
-            session.transaction.begin()
-            try {
-                session.save(MessageRecord(source = source!!, message = message))
-                session.transaction.commit()
-            } catch (cause: Throwable) {
-                session.transaction.rollback()
-                throw cause
-            }
-        }
+        message.record(source = source!!)
     }
 
     @EventHandler
     internal fun MessageRecallEvent.record() {
-        useSession { session ->
-            session.transaction.begin()
-            try {
-                session.withCriteriaUpdate<MessageRecord> { criteria ->
-                    val record = criteria.from()
-                    criteria.set(record.get("recall"), true)
-                        .where(
-                            equal(record.get<String>("ids"), messageIds.joinToString()),
-                            equal(record.get<String>("internalIds"), messageInternalIds.joinToString()),
-                            equal(record.get<Int>("time"), messageTime)
-                        )
-                }.executeUpdate()
-                session.transaction.commit()
-            } catch (cause: Throwable) {
-                session.transaction.rollback()
-                throw cause
-            }
+        for (record in get(this)) {
+            record.copy(recall = true).record()
         }
     }
 
     @EventHandler
     internal fun NudgeEvent.record() {
-        useSession { session ->
-            session.transaction.begin()
-            try {
-                session.save(NudgeRecord(event = this))
-                session.transaction.commit()
-            } catch (cause: Throwable) {
-                session.transaction.rollback()
-                throw cause
-            }
-        }
+        NudgeRecord(event = this).record()
     }
 
     private fun Throwable.causes() = sequence {
@@ -114,11 +116,61 @@ public object MiraiHibernateRecorder : SimpleListenerHost() {
     }
 
     /**
+     * 与 [event] 对应的记录
+     * @see [MessageRecord.code]
+     */
+    public operator fun get(event: MessageRecallEvent): List<MessageRecord> {
+        return currentSession.withCriteria<MessageRecord> { criteria ->
+            val record = criteria.from<MessageRecord>()
+            criteria.select(record)
+                .where(
+                    equal(
+                        record.get<Int>("kind"), when (event) {
+                            is MessageRecallEvent.FriendRecall -> MessageSourceKind.FRIEND.ordinal
+                            is MessageRecallEvent.GroupRecall -> MessageSourceKind.GROUP.ordinal
+                        }
+                    ),
+                    equal(record.get<String>("ids"), event.messageIds.joinToString()),
+                    equal(record.get<String>("internalIds"), event.messageInternalIds.joinToString()),
+                    equal(record.get<Int>("time"), event.messageTime)
+                )
+        }.list().takeUnless { it.isNullOrEmpty() } ?: currentSession.withCriteria<MessageRecord> { criteria ->
+            val record = criteria.from<MessageRecord>()
+            criteria.select(record)
+                .where(
+                    equal(
+                        record.get<Int>("kind"), when (event) {
+                            is MessageRecallEvent.FriendRecall -> MessageSourceKind.FRIEND.ordinal
+                            is MessageRecallEvent.GroupRecall -> MessageSourceKind.GROUP.ordinal
+                        }
+                    ),
+                    equal(record.get<Long>("fromId"), event.authorId),
+                    equal(
+                        record.get<Long>("targetId"), when (event) {
+                            is MessageRecallEvent.FriendRecall -> event.operator.id
+                            is MessageRecallEvent.GroupRecall -> event.group.id
+                        }
+                    ),
+                    equal(record.get<Int>("time"), event.messageTime)
+                )
+        }.list()
+    }
+
+    /**
      * 与 [source] 对应的记录
      * @see [MessageRecord.code]
      */
     public operator fun get(source: MessageSource): List<MessageRecord> {
         return currentSession.withCriteria<MessageRecord> { criteria ->
+            val record = criteria.from<MessageRecord>()
+            criteria.select(record)
+                .where(
+                    equal(record.get<Int>("kind"), source.kind.ordinal),
+                    equal(record.get<String>("ids"), source.ids.joinToString()),
+                    equal(record.get<String>("internalIds"), source.internalIds.joinToString()),
+                    equal(record.get<Int>("time"), source.time)
+                )
+        }.list().takeUnless { it.isNullOrEmpty() } ?: currentSession.withCriteria<MessageRecord> { criteria ->
             val record = criteria.from<MessageRecord>()
             criteria.select(record)
                 .where(

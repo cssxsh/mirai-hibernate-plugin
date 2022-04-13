@@ -3,6 +3,7 @@ package xyz.cssxsh.mirai.plugin.entry
 import net.mamoe.mirai.contact.*
 import net.mamoe.mirai.event.events.*
 import net.mamoe.mirai.message.data.*
+import java.io.*
 import javax.persistence.*
 
 @Entity
@@ -30,7 +31,7 @@ public data class NudgeRecord(
     val suffix: String,
     @Column(name = "recall", nullable = false)
     val recall: Boolean = false
-) {
+) : Serializable {
     public constructor(event: NudgeEvent, time: Int = (System.currentTimeMillis() / 1000).toInt()) : this(
         bot = event.bot.id,
         time = time,
