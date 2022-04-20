@@ -5,6 +5,7 @@ import net.mamoe.mirai.*
 import net.mamoe.mirai.contact.*
 import net.mamoe.mirai.event.*
 import net.mamoe.mirai.event.events.*
+import net.mamoe.mirai.internal.message.*
 import net.mamoe.mirai.message.data.*
 import net.mamoe.mirai.utils.*
 import xyz.cssxsh.hibernate.*
@@ -24,7 +25,7 @@ import kotlin.streams.*
  */
 public object MiraiHibernateRecorder : SimpleListenerHost() {
 
-    private fun <E: Serializable> E.record() {
+    private fun <E : Serializable> E.record() {
         useSession { session ->
             session.transaction.begin()
             try {
@@ -37,45 +38,21 @@ public object MiraiHibernateRecorder : SimpleListenerHost() {
         }
     }
 
-    private fun <E: Serializable> Collection<E>.record() {
-        useSession { session ->
-            session.transaction.begin()
-            try {
-                forEach { session.saveOrUpdate(it) }
-                session.transaction.commit()
-            } catch (cause: Throwable) {
-                session.transaction.rollback()
-                throw cause
-            }
-        }
-    }
-
-    @OptIn(MiraiExperimentalApi::class)
-    private fun MessageChain.record(source: MessageSource = this.source) {
-        val record = MessageRecord(source = source, message = this)
-        record.record()
-        firstIsInstanceOrNull<ForwardMessage>()?.let { forward ->
-            val message = ForwardMessageRecord(record = record, forward = forward)
-            message.record()
-            forward.nodeList.map { node -> ForwardNodeRecord(forward = message, node) }.record()
-        }
-        firstIsInstanceOrNull<OnlineAudio>()?.let { audio ->
-            TODO("OnlineAudio record ${audio.urlForDownload}")
-        }
-        filterIsInstance<CustomMessage>().forEach { custom ->
-            TODO("CustomMessage record ${custom::class.qualifiedName}")
-        }
-    }
-
     @EventHandler
     internal fun MessageEvent.record() {
-        message.record()
+        MessageRecord.fromSuccess(source = source, message = message).record()
     }
 
     @EventHandler
     internal fun MessagePostSendEvent<*>.record() {
-        if (isFailure) return
-        message.record(source = source!!)
+        val source = source
+        @Suppress("INVISIBLE_REFERENCE", "INVISIBLE_MEMBER")
+        val message = with(LightMessageRefiner) { message.dropMiraiInternalFlags() }
+        if (source != null) {
+            MessageRecord.fromSuccess(source = source, message = message).record()
+        } else {
+            MessageRecord.fromFailure(target = target, message = message).record()
+        }
     }
 
     @EventHandler
