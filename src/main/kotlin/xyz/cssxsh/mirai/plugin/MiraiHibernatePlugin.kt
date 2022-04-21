@@ -10,7 +10,7 @@ public object MiraiHibernatePlugin : KotlinPlugin(
     JvmPluginDescription(
         id = "xyz.cssxsh.mirai.plugin.mirai-hibernate-plugin",
         name = "mirai-hibernate-plugin",
-        version = "2.0.7",
+        version = "2.0.8",
     ) {
         author("cssxsh")
 
@@ -23,7 +23,7 @@ public object MiraiHibernatePlugin : KotlinPlugin(
      * @see [org.jboss.logging.LoggerProviders.LOGGING_PROVIDER_KEY]
      */
     override fun PluginComponentStorage.onLoad() {
-         try {
+        try {
             Class.forName("net.mamoe.mirai.logger.bridge.slf4j.MiraiLoggerSlf4jFactory")
             System.setProperty("com.mchange.v2.log.MLog", "com.mchange.v2.log.slf4j.Slf4jMLog")
             System.setProperty("org.jboss.logging.provider", "slf4j")
