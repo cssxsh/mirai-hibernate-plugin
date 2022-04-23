@@ -18,12 +18,12 @@ public data class MessageRecord(
     val bot: Long,
     @Column(name = "from_id", nullable = false, updatable = false)
     val fromId: Long,
-    @Column(name = "target_id", nullable = true, updatable = false)
+    @Column(name = "target_id", nullable = false, updatable = false)
     val targetId: Long,
     @Column(name = "ids", nullable = true, updatable = false)
-    val ids: String,
+    val ids: String?,
     @Column(name = "internal_ids", nullable = true, updatable = false)
-    val internalIds: String,
+    val internalIds: String?,
     @Column(name = "time", nullable = false, updatable = false)
     val time: Int,
     @Column(name = "kind", nullable = false, updatable = false)
@@ -83,8 +83,8 @@ public data class MessageRecord(
             fromId = target.bot.id,
             targetId = target.id,
             time = 0,
-            ids = "",
-            internalIds = "",
+            ids = null,
+            internalIds = null,
             kind = when (target) {
                 is Group -> MessageSourceKind.GROUP.ordinal
                 is Friend -> MessageSourceKind.FRIEND.ordinal
@@ -99,6 +99,12 @@ public data class MessageRecord(
             recall = true
         )
 
-        private fun String.toIntArray(): IntArray = splitToSequence(',').map { it.toInt() }.toList().toIntArray()
+        private fun String?.toIntArray(): IntArray {
+            return if (isNullOrEmpty()) {
+                IntArray(0)
+            } else {
+                splitToSequence(',').map { it.toInt() }.toMutableList().toIntArray()
+            }
+        }
     }
 }
