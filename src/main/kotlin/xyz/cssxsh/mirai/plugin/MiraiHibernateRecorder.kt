@@ -12,6 +12,7 @@ import xyz.cssxsh.hibernate.*
 import xyz.cssxsh.mirai.plugin.entry.*
 import java.sql.*
 import java.io.*
+import javax.persistence.*
 import kotlin.coroutines.*
 import kotlin.streams.*
 
@@ -77,9 +78,12 @@ public object MiraiHibernateRecorder : SimpleListenerHost() {
     }
 
     override fun handleException(context: CoroutineContext, exception: Throwable) {
-        when (val cause = exception.causes().firstOrNull { it is SQLException } ?: exception) {
+        when (val cause = exception.causes().firstOrNull { it is SQLException || it is PersistenceException } ?: exception) {
             is SQLException -> {
                 logger.warning({ "SQLException" }, cause)
+            }
+            is PersistenceException -> {
+                logger.warning({ "PersistenceException" }, cause)
             }
             is CancellationException -> {
                 // ignore ...
