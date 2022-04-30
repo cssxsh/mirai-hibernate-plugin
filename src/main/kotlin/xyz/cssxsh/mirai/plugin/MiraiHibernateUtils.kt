@@ -2,7 +2,6 @@ package xyz.cssxsh.mirai.plugin
 
 import net.mamoe.mirai.console.plugin.jvm.*
 import net.mamoe.mirai.contact.*
-import net.mamoe.mirai.message.code.*
 import net.mamoe.mirai.message.data.*
 import org.hibernate.*
 import xyz.cssxsh.mirai.plugin.entry.*
@@ -33,7 +32,7 @@ internal fun <R> useSession(lock: Any? = null, block: (session: Session) -> R): 
 public fun List<MessageRecord>.toForwardMessage(context: Contact) {
     buildForwardMessage(context) {
         for (record in this@toForwardMessage) {
-            record.fromId at record.time says MiraiCode.deserializeMiraiCode(record.code)
+            record.fromId at record.time says record.toMessageChain()
         }
     }
 }
@@ -41,7 +40,7 @@ public fun List<MessageRecord>.toForwardMessage(context: Contact) {
 public fun Sequence<MessageRecord>.toForwardMessage(context: Contact) {
     buildForwardMessage(context) {
         for (record in this@toForwardMessage) {
-            record.fromId at record.time says MiraiCode.deserializeMiraiCode(record.code, context)
+            record.fromId at record.time says record.toMessageChain()
         }
     }
 }
