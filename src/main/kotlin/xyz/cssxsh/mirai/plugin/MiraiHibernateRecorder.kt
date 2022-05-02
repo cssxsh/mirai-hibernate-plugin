@@ -39,13 +39,13 @@ public object MiraiHibernateRecorder : SimpleListenerHost() {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     internal fun MessageEvent.record() {
         val message = message.asSequence().filterNot { it is MessageSource }.toMessageChain()
         MessageRecord.fromSuccess(source = source, message = message).record()
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     internal fun MessagePostSendEvent<*>.record() {
         val source = source
         @Suppress("INVISIBLE_REFERENCE", "INVISIBLE_MEMBER")
@@ -57,14 +57,14 @@ public object MiraiHibernateRecorder : SimpleListenerHost() {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     internal fun MessageRecallEvent.record() {
         for (record in get(this)) {
             record.copy(recall = true).record()
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     internal fun NudgeEvent.record() {
         NudgeRecord(event = this).record()
     }
