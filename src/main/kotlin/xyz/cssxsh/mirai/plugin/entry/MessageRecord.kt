@@ -37,7 +37,7 @@ public data class MessageRecord(
      * [MessageSource.originalMessage] 来自 [MessageRecord.code] 的解码
      */
     public fun toMessageSource(): MessageSource {
-        return Bot.getInstance(bot).buildMessageSource(MessageSourceKind.values()[kind]) {
+        return Mirai.buildMessageSource(bot, MessageSourceKind.values()[kind]) {
             fromId = this@MessageRecord.fromId
             targetId = this@MessageRecord.targetId
             ids = this@MessageRecord.ids.toIntArray()
