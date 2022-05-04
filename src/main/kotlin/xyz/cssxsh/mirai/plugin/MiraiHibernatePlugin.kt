@@ -39,6 +39,9 @@ public object MiraiHibernatePlugin : KotlinPlugin(
         val metadata = currentSession.getDatabaseMetaData()
 
         logger.info { "Database ${metadata.url} by ${metadata.driverName}." }
+        if (metadata.url.startsWith("jdbc:sqlite")) {
+            logger.warning { "正在使用 Sqlite 数据库记录聊天内容，有条件请更换为其他数据库，例如 MySql" }
+        }
     }
 
     override fun onDisable() {
