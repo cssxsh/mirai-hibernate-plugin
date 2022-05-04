@@ -26,11 +26,11 @@ import kotlin.streams.*
  */
 public object MiraiHibernateRecorder : SimpleListenerHost() {
 
-    private fun <E : Serializable> E.record() {
+    private fun <E : Serializable> E.merge() {
         useSession { session ->
             session.transaction.begin()
             try {
-                session.merge(this@record)
+                session.merge(this@merge)
                 session.transaction.commit()
             } catch (cause: Throwable) {
                 session.transaction.rollback()
@@ -43,7 +43,7 @@ public object MiraiHibernateRecorder : SimpleListenerHost() {
     internal fun MessageEvent.record() {
         launch {
             val message = message.asSequence().filterNot { it is MessageSource }.toMessageChain()
-            MessageRecord.fromSuccess(source = source, message = message).record()
+            MessageRecord.fromSuccess(source = source, message = message).merge()
         }
     }
 
@@ -54,9 +54,9 @@ public object MiraiHibernateRecorder : SimpleListenerHost() {
             @Suppress("INVISIBLE_REFERENCE", "INVISIBLE_MEMBER")
             val message = with(LightMessageRefiner) { message.dropMiraiInternalFlags() }
             if (source != null) {
-                MessageRecord.fromSuccess(source = source, message = message).record()
+                MessageRecord.fromSuccess(source = source, message = message).merge()
             } else {
-                MessageRecord.fromFailure(target = target, message = message).record()
+                MessageRecord.fromFailure(target = target, message = message).merge()
             }
         }
     }
@@ -65,7 +65,7 @@ public object MiraiHibernateRecorder : SimpleListenerHost() {
     internal fun MessageRecallEvent.record() {
         launch {
             for (record in get(this@record)) {
-                record.copy(recall = true).record()
+                record.copy(recall = true).merge()
             }
         }
     }
@@ -73,7 +73,7 @@ public object MiraiHibernateRecorder : SimpleListenerHost() {
     @EventHandler(priority = EventPriority.HIGHEST)
     internal fun NudgeEvent.record() {
         launch {
-            NudgeRecord(event = this@record).record()
+            NudgeRecord(event = this@record).merge()
         }
     }
 
