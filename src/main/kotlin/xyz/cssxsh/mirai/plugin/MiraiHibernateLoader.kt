@@ -56,7 +56,7 @@ public interface MiraiHibernateLoader {
                 hibernate.connection.url=jdbc:sqlite:${plugin.resolveDataPath("hibernate.sqlite").toUri()}
                 hibernate.connection.driver_class=org.sqlite.JDBC
                 hibernate.dialect=org.sqlite.hibernate.dialect.SQLiteDialect
-                hibernate.connection.provider_class=org.hibernate.connection.C3P0ConnectionProvider
+                hibernate.connection.provider_class=org.hibernate.hikaricp.internal.HikariCPConnectionProvider
                 hibernate.connection.isolation=${Connection.TRANSACTION_READ_UNCOMMITTED}
                 hibernate.hbm2ddl.auto=update
                 hibernate-connection-autocommit=${true}

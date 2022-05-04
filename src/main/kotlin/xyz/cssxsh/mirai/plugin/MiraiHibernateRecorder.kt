@@ -87,12 +87,12 @@ public object MiraiHibernateRecorder : SimpleListenerHost() {
     }
 
     override fun handleException(context: CoroutineContext, exception: Throwable) {
-        when (val cause = exception.causes().firstOrNull { it is SQLException || it is PersistenceException } ?: exception) {
+        when (val cause = exception.causes().find { it is SQLException || it is PersistenceException } ?: exception) {
             is SQLException -> {
-                logger.warning({ "SQLException" }, cause)
+                logger.warning({ "SQLException in Recorder" }, cause)
             }
             is PersistenceException -> {
-                logger.warning({ "PersistenceException" }, cause)
+                logger.warning({ "PersistenceException in Recorder" }, cause)
             }
             is CancellationException -> {
                 // ignore ...
