@@ -30,7 +30,7 @@ public object MiraiHibernateRecorder : SimpleListenerHost() {
         useSession { session ->
             session.transaction.begin()
             try {
-                session.merge(this)
+                session.merge(this@record)
                 session.transaction.commit()
             } catch (cause: Throwable) {
                 session.transaction.rollback()
@@ -41,32 +41,40 @@ public object MiraiHibernateRecorder : SimpleListenerHost() {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     internal fun MessageEvent.record() {
-        val message = message.asSequence().filterNot { it is MessageSource }.toMessageChain()
-        MessageRecord.fromSuccess(source = source, message = message).record()
+        launch {
+            val message = message.asSequence().filterNot { it is MessageSource }.toMessageChain()
+            MessageRecord.fromSuccess(source = source, message = message).record()
+        }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     internal fun MessagePostSendEvent<*>.record() {
-        val source = source
-        @Suppress("INVISIBLE_REFERENCE", "INVISIBLE_MEMBER")
-        val message = with(LightMessageRefiner) { message.dropMiraiInternalFlags() }
-        if (source != null) {
-            MessageRecord.fromSuccess(source = source, message = message).record()
-        } else {
-            MessageRecord.fromFailure(target = target, message = message).record()
+        launch {
+            val source = source
+            @Suppress("INVISIBLE_REFERENCE", "INVISIBLE_MEMBER")
+            val message = with(LightMessageRefiner) { message.dropMiraiInternalFlags() }
+            if (source != null) {
+                MessageRecord.fromSuccess(source = source, message = message).record()
+            } else {
+                MessageRecord.fromFailure(target = target, message = message).record()
+            }
         }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     internal fun MessageRecallEvent.record() {
-        for (record in get(this)) {
-            record.copy(recall = true).record()
+        launch {
+            for (record in get(this@record)) {
+                record.copy(recall = true).record()
+            }
         }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     internal fun NudgeEvent.record() {
-        NudgeRecord(event = this).record()
+        launch {
+            NudgeRecord(event = this@record).record()
+        }
     }
 
     private fun Throwable.causes() = sequence {
