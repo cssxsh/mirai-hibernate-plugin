@@ -6,6 +6,10 @@
 
 [![maven-central](https://img.shields.io/maven-central/v/xyz.cssxsh.mirai/mirai-hibernate-plugin)](https://search.maven.org/artifact/xyz.cssxsh.mirai/mirai-hibernate-plugin)
 
+插件自带聊天记录器 [MiraiHibernateRecorder](src/main/kotlin/xyz/cssxsh/mirai/plugin/MiraiHibernateLoader.kt),  
+会记录 `群聊/私聊` 的内容到数据库方便其他插件使用，默认是 `Sqlite` 数据库, 有条件请修改为 `MySql`  
+数据库配置在 `config/xyz.cssxsh.mirai.plugin.mirai-hibernate-plugin/hibernate.properties`
+
 ## 数据库支持
 
 本插件打包了以下版本的数据库驱动和连接池

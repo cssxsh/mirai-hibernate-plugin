@@ -10,7 +10,7 @@ public object MiraiHibernatePlugin : KotlinPlugin(
     JvmPluginDescription(
         id = "xyz.cssxsh.mirai.plugin.mirai-hibernate-plugin",
         name = "mirai-hibernate-plugin",
-        version = "2.0.8",
+        version = "2.1.0",
     ) {
         author("cssxsh")
 
