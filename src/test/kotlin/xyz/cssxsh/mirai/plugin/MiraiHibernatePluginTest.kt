@@ -5,11 +5,6 @@ import net.mamoe.mirai.console.plugin.jvm.*
 import net.mamoe.mirai.event.*
 import net.mamoe.mirai.message.data.MessageSource.Key.recall
 
-/**
- * 也可以不注解 [MiraiHibernate]，这时 [loader] 会自动生成
- * @see [MiraiHibernateLoader]
- */
-@MiraiHibernate(loader = MiraiHibernatePluginTest.Loader::class)
 object MiraiHibernatePluginTest : KotlinPlugin(
     JvmPluginDescription(
         id = "xyz.cssxsh.mirai.plugin.mirai-hibernate-text",
@@ -20,14 +15,9 @@ object MiraiHibernatePluginTest : KotlinPlugin(
     }
 ) {
 
-    object Loader : MiraiHibernateLoader by MiraiHibernateLoader.Impl(plugin = this)
-
     override fun onEnable() {
 
-        /**
-         * @see JvmPlugin.factory
-         * @see MiraiHibernateConfiguration
-         */
+        val factory = MiraiHibernateConfiguration(plugin = this).buildSessionFactory()
         val metadata = factory.openSession().use { session ->
             session.doReturningWork { connection -> connection.metaData }
         }

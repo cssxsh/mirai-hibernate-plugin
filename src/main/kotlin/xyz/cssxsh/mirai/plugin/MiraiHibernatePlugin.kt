@@ -36,6 +36,8 @@ public object MiraiHibernatePlugin : KotlinPlugin(
 
         MiraiHibernateRecorder.registerTo(globalEventChannel())
 
+        factory = MiraiHibernateConfiguration(plugin = this).buildSessionFactory()
+
         val metadata = currentSession.getDatabaseMetaData()
 
         logger.info { "Database ${metadata.url} by ${metadata.driverName}." }
@@ -46,6 +48,6 @@ public object MiraiHibernatePlugin : KotlinPlugin(
 
     override fun onDisable() {
         MiraiHibernateRecorder.cancelAll()
-        currentSession.close()
+        factory.close()
     }
 }

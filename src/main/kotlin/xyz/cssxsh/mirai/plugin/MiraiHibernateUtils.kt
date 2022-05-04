@@ -1,6 +1,6 @@
 package xyz.cssxsh.mirai.plugin
 
-import net.mamoe.mirai.console.plugin.jvm.*
+import kotlinx.coroutines.*
 import net.mamoe.mirai.contact.*
 import net.mamoe.mirai.message.data.*
 import org.hibernate.*
@@ -8,23 +8,24 @@ import xyz.cssxsh.mirai.plugin.entry.*
 
 internal val logger get() = MiraiHibernatePlugin.logger
 
-public val JvmPlugin.factory: SessionFactory get() = MiraiSessionCache[this]
+internal lateinit var factory: SessionFactory
 
-internal val currentSession: Session by lazy {
-//    try {
-//        MiraiHibernatePlugin.factory.currentSession
-//    } catch (_: Throwable) {
-//        MiraiHibernatePlugin.factory.openSession()
-//    }
-    MiraiHibernatePlugin.factory.openSession()
-}
+internal val CoroutineScope.currentSession: Session
+    get() {
+        val session = factory.openSession()
+        launch {
+            delay(1000)
+            session.close()
+        }
+        return session
+    }
 
 internal fun <R> useSession(lock: Any? = null, block: (session: Session) -> R): R {
     return if (lock == null) {
-        MiraiHibernatePlugin.factory.openSession().use(block)
+        factory.openSession().use(block)
     } else {
         synchronized(lock) {
-            MiraiHibernatePlugin.factory.openSession().use(block)
+            factory.openSession().use(block)
         }
     }
 }
