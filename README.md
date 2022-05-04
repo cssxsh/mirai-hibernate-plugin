@@ -8,10 +8,12 @@
 
 ## 数据库支持
 
-本插件打包了以下版本的数据库驱动
+本插件打包了以下版本的数据库驱动和连接池
 
 * MySql `mysql:mysql-connector-java:8.0.28`
 * Sqlite `org.xerial:sqlite-jdbc:3.36.0.3`
+* c3p0 `org.hibernate:hibernate-c3p0:5.6.5.Final`
+* hikaricp `org.hibernate:hibernate-hikaricp:5.6.5.Final` (since 2.1.0)
 
 需要其他数据库驱动支持请将 **数据库驱动Jar包** 放到 `plugins` 目录中一同被 `mirai-console` 加载
 

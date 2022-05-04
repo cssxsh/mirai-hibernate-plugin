@@ -31,6 +31,7 @@ dependencies {
     // SQL/ORM
     api("org.hibernate:hibernate-core:5.6.5.Final")
     api("org.hibernate:hibernate-c3p0:5.6.5.Final")
+    api("org.hibernate:hibernate-hikaricp:5.6.5.Final")
     api("com.github.gwenn:sqlite-dialect:0.1.2")
     api("org.xerial:sqlite-jdbc:3.36.0.3")
     api("mysql:mysql-connector-java:8.0.28")

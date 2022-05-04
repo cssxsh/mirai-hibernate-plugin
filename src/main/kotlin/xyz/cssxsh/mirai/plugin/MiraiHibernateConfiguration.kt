@@ -22,7 +22,7 @@ public class MiraiHibernateConfiguration(private val loader: MiraiHibernateLoade
     public constructor(plugin: JvmPlugin) : this(loader = MiraiHibernateLoader(plugin = plugin))
 
     init {
-        setProperty("hibernate.connection.provider_class", "org.hibernate.connection.C3P0ConnectionProvider")
+        setProperty("hibernate.connection.provider_class", "org.hibernate.hikaricp.internal.HikariCPConnectionProvider")
         setProperty("hibernate.connection.isolation", "${Connection.TRANSACTION_READ_UNCOMMITTED}")
         load()
     }
