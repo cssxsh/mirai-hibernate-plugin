@@ -14,7 +14,6 @@ import java.sql.*
 import java.io.*
 import javax.persistence.*
 import kotlin.coroutines.*
-import kotlin.reflect.full.*
 import kotlin.streams.*
 
 /**
@@ -27,18 +26,7 @@ import kotlin.streams.*
  */
 public object MiraiHibernateRecorder : SimpleListenerHost() {
 
-    private fun <E : Serializable> E.merge() {
-        useSession(this::class.companionObjectInstance) { session ->
-            session.transaction.begin()
-            try {
-                session.merge(this@merge)
-                session.transaction.commit()
-            } catch (cause: Throwable) {
-                session.transaction.rollback()
-                throw cause
-            }
-        }
-    }
+    private fun <E : Serializable> E.merge(): Unit = useSession { session -> session.merge(this@merge) }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     internal fun MessageEvent.record() {

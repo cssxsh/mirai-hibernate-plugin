@@ -14,18 +14,22 @@ internal val CoroutineScope.currentSession: Session
     get() {
         val session = factory.openSession()
         launch {
-            delay(1000)
+            delay(40_000)
             session.close()
         }
         return session
     }
 
-internal fun <R> useSession(lock: Any? = null, block: (session: Session) -> R): R {
-    return if (lock == null) {
-        factory.openSession().use(block)
-    } else {
-        synchronized(lock) {
-            factory.openSession().use(block)
+internal fun <R> useSession(block: (session: Session) -> R): R {
+    return factory.openSession().use { session ->
+        val transaction = session.beginTransaction()
+        try {
+            val result = block.invoke(session)
+            transaction.commit()
+            result
+        } catch (cause: Throwable) {
+            transaction.rollback()
+            throw cause
         }
     }
 }
