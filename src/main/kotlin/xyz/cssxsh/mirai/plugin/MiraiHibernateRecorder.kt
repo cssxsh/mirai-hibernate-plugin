@@ -99,7 +99,8 @@ public object MiraiHibernateRecorder : SimpleListenerHost() {
      * @see [MessageRecord.code]
      */
     public operator fun get(event: MessageRecallEvent): List<MessageRecord> {
-        return currentSession.withCriteria<MessageRecord> { criteria ->
+        val session = currentSession
+        return session.withCriteria<MessageRecord> { criteria ->
             val record = criteria.from<MessageRecord>()
             criteria.select(record)
                 .where(
@@ -113,7 +114,7 @@ public object MiraiHibernateRecorder : SimpleListenerHost() {
                     equal(record.get<String>("internalIds"), event.messageInternalIds.joinToString()),
                     equal(record.get<Int>("time"), event.messageTime)
                 )
-        }.list().takeUnless { it.isNullOrEmpty() } ?: currentSession.withCriteria<MessageRecord> { criteria ->
+        }.list().takeUnless { it.isNullOrEmpty() } ?: session.withCriteria<MessageRecord> { criteria ->
             val record = criteria.from<MessageRecord>()
             criteria.select(record)
                 .where(
@@ -140,7 +141,8 @@ public object MiraiHibernateRecorder : SimpleListenerHost() {
      * @see [MessageRecord.code]
      */
     public operator fun get(source: MessageSource): List<MessageRecord> {
-        return currentSession.withCriteria<MessageRecord> { criteria ->
+        val session = currentSession
+        return session.withCriteria<MessageRecord> { criteria ->
             val record = criteria.from<MessageRecord>()
             criteria.select(record)
                 .where(
@@ -150,7 +152,7 @@ public object MiraiHibernateRecorder : SimpleListenerHost() {
                     equal(record.get<String>("internalIds"), source.internalIds.joinToString()),
                     equal(record.get<Int>("time"), source.time)
                 )
-        }.list().takeUnless { it.isNullOrEmpty() } ?: currentSession.withCriteria<MessageRecord> { criteria ->
+        }.list().takeUnless { it.isNullOrEmpty() } ?: session.withCriteria<MessageRecord> { criteria ->
             val record = criteria.from<MessageRecord>()
             criteria.select(record)
                 .where(
