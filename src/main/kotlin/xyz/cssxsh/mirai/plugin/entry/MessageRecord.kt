@@ -28,7 +28,7 @@ public data class MessageRecord(
     val time: Int,
     @Column(name = "kind", nullable = false, updatable = false)
     val kind: Int,
-    @Column(name = "code", nullable = false, updatable = false, length = 65536)
+    @Column(name = "code", nullable = false, updatable = false, columnDefinition = "text")
     val code: String,
     @Column(name = "recall", nullable = false, updatable = true)
     val recall: Boolean = false
@@ -90,7 +90,7 @@ public data class MessageRecord(
                 is Friend -> MessageSourceKind.FRIEND.ordinal
                 is Member -> MessageSourceKind.TEMP.ordinal
                 is Stranger -> MessageSourceKind.STRANGER.ordinal
-                else -> throw NoSuchElementException("Fail Message kind with $target")
+                else -> throw NoSuchElementException("Unknown message kind with $target")
             },
             code = with(MessageChain) {
                 message.serializeToJsonString()
