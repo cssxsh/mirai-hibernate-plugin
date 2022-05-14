@@ -1,0 +1,63 @@
+package xyz.cssxsh.mirai.plugin.entry
+
+import kotlinx.serialization.json.*
+import kotlinx.serialization.*
+import net.mamoe.mirai.message.data.*
+import net.mamoe.mirai.internal.message.*
+import net.mamoe.mirai.message.*
+import okio.ByteString.Companion.toByteString
+import javax.persistence.*
+
+@Entity
+@Table(name = "face_record")
+public data class FaceRecord(
+    @Id
+    @Column(name = "md5", nullable = false, updatable = false, length = 32)
+    public val md5: String,
+    @Column(name = "code", nullable = false, updatable = false, columnDefinition = "text")
+    public val code: String,
+    @Column(name = "content", nullable = false)
+    public val content: String,
+    @Column(name = "url", nullable = false)
+    public val url: String
+) : java.io.Serializable {
+
+    public fun toMessageContent(): MessageContent {
+        return json.decodeFromString(serializer, code)
+    }
+
+    public companion object {
+        private val json = Json {
+            serializersModule = MessageSerializers.serializersModule
+            ignoreUnknownKeys = true
+        }
+        private val serializer = PolymorphicSerializer(MessageContent::class)
+
+        /**
+         * from [OnlineImage.isEmoji]
+         */
+        @Suppress("INVISIBLE_REFERENCE", "INVISIBLE_MEMBER")
+        public fun fromImage(image: Image): FaceRecord {
+            return FaceRecord(
+                md5 = image.md5.toByteString().hex(),
+                code = json.encodeToString(serializer, image),
+                content = image.contentToString(),
+                url = (image as OnlineImage).originUrl
+            )
+        }
+
+        /**
+         * from [MarketFaceImpl]
+         */
+        @Suppress("INVISIBLE_REFERENCE", "INVISIBLE_MEMBER")
+        public fun fromMarketFace(face: MarketFace): FaceRecord {
+            val md5 = (face as MarketFaceImpl).delegate.faceId.toByteString().hex()
+            return FaceRecord(
+                md5 = md5,
+                code = json.encodeToString(serializer, face),
+                content = face.name,
+                url = "https://gxh.vip.qq.com/club/item/parcel/item/${md5.substring(0..1)}/$md5/300x300.png"
+            )
+        }
+    }
+}

@@ -34,6 +34,14 @@ public object MiraiHibernateRecorder : SimpleListenerHost() {
             val message = message.asSequence().filterNot { it is MessageSource }.toMessageChain()
             MessageRecord.fromSuccess(source = source, message = message).merge()
         }
+        launch {
+            for (item in message) {
+                when {
+                    item is Image && item.isEmoji -> FaceRecord.fromImage(image = item).merge()
+                    item is MarketFace && item !is Dice -> FaceRecord.fromMarketFace(face = item).merge()
+                }
+            }
+        }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
