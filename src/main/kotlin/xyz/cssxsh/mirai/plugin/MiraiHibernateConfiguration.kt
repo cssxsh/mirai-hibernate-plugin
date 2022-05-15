@@ -62,8 +62,8 @@ public class MiraiHibernateConfiguration(private val loader: MiraiHibernateLoade
 
     private fun load() {
         if (loader.autoScan) scan()
-        loader.configuration.apply { if (exists().not()) writeText(loader.default) }.reader().use(properties::load)
-        val url = requireNotNull(getProperty("hibernate.connection.url")) { "hibernate.connection.url cannot is null" }
+        loader.configuration.apply { if (exists().not()) writeText(loader.default) }.inputStream().use(properties::load)
+        val url = getProperty("hibernate.connection.url").orEmpty()
         when {
             url.startsWith("jdbc:sqlite") -> {
                 // SQLite 是单文件数据库，最好只有一个连接

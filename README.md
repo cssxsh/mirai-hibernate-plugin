@@ -14,10 +14,9 @@
 
 本插件打包了以下版本的数据库驱动和连接池
 
-* MySql `mysql:mysql-connector-java:8.0.28`
-* Sqlite `org.xerial:sqlite-jdbc:3.36.0.3`
-* c3p0 `org.hibernate:hibernate-c3p0:5.6.5.Final`
-* hikaricp `org.hibernate:hibernate-hikaricp:5.6.5.Final` (since 2.1.0)
+* `mysql:mysql-connector-java:8.0.29`
+* `org.xerial:sqlite-jdbc:3.36.0.3`
+* `com.zaxxer:HikariCP:4.0.3`
 
 需要其他数据库驱动支持请将 **数据库驱动Jar包** 放到 `plugins` 目录中一同被 `mirai-console` 加载
 
@@ -35,17 +34,15 @@ dependencies {
 
 ## 一些方法和类说明
 
-* `JvmPlugin.factory`  
-  获取通过 [MiraiHibernateConfiguration](src/main/kotlin/xyz/cssxsh/mirai/plugin/MiraiHibernateConfiguration.kt)
+* [MiraiHibernateConfiguration](src/main/kotlin/xyz/cssxsh/mirai/plugin/MiraiHibernateConfiguration.kt)
   配置的，对应于 `JvmPlugin` 的 `SessionFactory`  
   默认将会读取(生成)在 `configFolder` 目录下的 `hibernate.properties` 作为配置文件  
-  并且自动扫描加载 `JvmPlugin` 所在类包下的被 `javax.persistence.Entity` 标记的实体类  
-  可以通过注解 `MiraiHibernate` 调整加载行为
+  并且自动扫描加载 `JvmPlugin` 所在类包下的被 `javax.persistence.Entity` 标记的实体类
 
-* `MiraiHibernateRecorder`  
+* [MiraiHibernateRecorder](src/main/kotlin/xyz/cssxsh/mirai/plugin/MiraiHibernateRecorder.kt)  
   是本插件自带的消息记录器，通过对 `MessageEvent` 和 `MessagePostSendEvent` 记录，保存消息历史到数据库
 
-* `CriteriaBuilder.rand`  
+* [CriteriaBuilder.rand](src/main/kotlin/xyz/cssxsh/hibernate/Criteria.kt)  
   `MiraiHibernateConfiguration` 中会对 Sqlite 的 `random` 进行别名注册为 `rand` 统一SQL语句的中的随机函数名
 
 ### 示例代码

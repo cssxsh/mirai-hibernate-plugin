@@ -19,13 +19,11 @@ public object MiraiHibernatePlugin : KotlinPlugin(
     }
 ) {
     /**
-     * @see [com.mchange.v2.log.MLogClasses.SLF4J_CNAME]
      * @see [org.jboss.logging.LoggerProviders.LOGGING_PROVIDER_KEY]
      */
     override fun PluginComponentStorage.onLoad() {
         try {
             Class.forName("net.mamoe.mirai.logger.bridge.slf4j.MiraiLoggerSlf4jFactory")
-            System.setProperty("com.mchange.v2.log.MLog", "com.mchange.v2.log.slf4j.Slf4jMLog")
             System.setProperty("org.jboss.logging.provider", "slf4j")
         } catch (_: ClassNotFoundException) {
             logger.warning { "未安装 mirai-slf4j-bridge." }
@@ -36,7 +34,14 @@ public object MiraiHibernatePlugin : KotlinPlugin(
 
         MiraiHibernateRecorder.registerTo(globalEventChannel())
 
-        factory = MiraiHibernateConfiguration(plugin = this).buildSessionFactory()
+        val configuration = MiraiHibernateConfiguration(plugin = this)
+
+        if (configuration.properties["hibernate.connection.provider_class"] == "org.hibernate.connection.C3P0ConnectionProvider") {
+            logger.warning { "发现使用 C3P0ConnectionProvider，将替换为 HikariCPConnectionProvider" }
+            configuration.properties["hibernate.connection.provider_class"] = "org.hibernate.hikaricp.internal.HikariCPConnectionProvider"
+        }
+
+        factory = configuration.buildSessionFactory()
 
         val metadata = currentSession.getDatabaseMetaData()
 
