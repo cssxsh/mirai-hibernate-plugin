@@ -1,5 +1,6 @@
 package xyz.cssxsh.mirai.plugin.entry
 
+import kotlinx.serialization.*
 import net.mamoe.mirai.contact.*
 import net.mamoe.mirai.event.events.*
 import net.mamoe.mirai.message.data.*
@@ -7,6 +8,7 @@ import javax.persistence.*
 
 @Entity
 @Table(name = "nudge_record")
+@Serializable
 public data class NudgeRecord(
     @Id
     @Column(name = "id", nullable = false, updatable = false)

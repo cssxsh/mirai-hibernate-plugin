@@ -9,6 +9,7 @@ import javax.persistence.*
 
 @Entity
 @Table(name = "message_record")
+@Serializable
 public data class MessageRecord(
     @Id
     @Column(name = "id", nullable = false, updatable = false)

@@ -10,6 +10,7 @@ import javax.persistence.*
 
 @Entity
 @Table(name = "face_record")
+@Serializable
 public data class FaceRecord(
     @Id
     @Column(name = "md5", nullable = false, updatable = false, length = 32)
