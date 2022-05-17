@@ -20,11 +20,24 @@ public data class FaceRecord(
     @Column(name = "content", nullable = false)
     public val content: String,
     @Column(name = "url", nullable = false)
-    public val url: String
+    public val url: String,
+    @Column(name = "height", nullable = false, columnDefinition = "default 100")
+    public val height: Int,
+    @Column(name = "width", nullable = false, columnDefinition = "default 100")
+    public val width: Int
 ) : java.io.Serializable {
 
     public fun toMessageContent(): MessageContent {
-        return json.decodeFromString(serializer, code)
+        val face = json.decodeFromString(serializer, code)
+        // XXX: 序列化信息有限
+        if (face is Image && !face.isEmoji) {
+            return Image(imageId = face.imageId) {
+                height = this@FaceRecord.height
+                width = this@FaceRecord.height
+                isEmoji = true
+            }
+        }
+        return face
     }
 
     public companion object {
@@ -43,6 +56,8 @@ public data class FaceRecord(
                 md5 = image.md5.toByteString().hex(),
                 code = json.encodeToString(serializer, image),
                 content = image.contentToString(),
+                height = image.height,
+                width = image.width,
                 url = (image as OnlineImage).originUrl
             )
         }
@@ -56,6 +71,8 @@ public data class FaceRecord(
             return FaceRecord(
                 md5 = md5,
                 code = json.encodeToString(serializer, face),
+                height = face.delegate.imageHeight,
+                width = face.delegate.imageWidth,
                 content = face.name,
                 url = "https://gxh.vip.qq.com/club/item/parcel/item/${md5.substring(0..1)}/$md5/300x300.png"
             )
