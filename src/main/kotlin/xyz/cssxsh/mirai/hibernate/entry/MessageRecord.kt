@@ -1,4 +1,4 @@
-package xyz.cssxsh.mirai.plugin.entry
+package xyz.cssxsh.mirai.hibernate.entry
 
 import kotlinx.serialization.*
 import net.mamoe.mirai.*

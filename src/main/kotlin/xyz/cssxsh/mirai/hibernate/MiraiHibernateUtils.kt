@@ -1,10 +1,10 @@
-package xyz.cssxsh.mirai.plugin
+package xyz.cssxsh.mirai.hibernate
 
 import kotlinx.coroutines.*
 import net.mamoe.mirai.contact.*
 import net.mamoe.mirai.message.data.*
 import org.hibernate.*
-import xyz.cssxsh.mirai.plugin.entry.*
+import xyz.cssxsh.mirai.hibernate.entry.*
 
 internal val logger get() = MiraiHibernatePlugin.logger
 

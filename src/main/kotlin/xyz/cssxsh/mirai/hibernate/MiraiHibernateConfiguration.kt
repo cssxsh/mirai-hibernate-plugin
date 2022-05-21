@@ -1,4 +1,4 @@
-package xyz.cssxsh.mirai.plugin
+package xyz.cssxsh.mirai.hibernate
 
 import net.mamoe.mirai.console.plugin.jvm.*
 import org.hibernate.boot.registry.*

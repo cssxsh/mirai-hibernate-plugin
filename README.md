@@ -6,7 +6,7 @@
 
 [![maven-central](https://img.shields.io/maven-central/v/xyz.cssxsh.mirai/mirai-hibernate-plugin)](https://search.maven.org/artifact/xyz.cssxsh.mirai/mirai-hibernate-plugin)
 
-插件自带聊天记录器 [MiraiHibernateRecorder](src/main/kotlin/xyz/cssxsh/mirai/plugin/MiraiHibernateLoader.kt),  
+插件自带聊天记录器 [MiraiHibernateRecorder](src/main/kotlin/xyz/cssxsh/mirai/hibernate/MiraiHibernateLoader.kt),  
 会记录 `群聊/私聊` 的内容到数据库方便其他插件使用，默认是 `Sqlite` 数据库, 有条件请修改为 `MySql`  
 数据库配置在 `config/xyz.cssxsh.mirai.plugin.mirai-hibernate-plugin/hibernate.properties`
 
@@ -34,12 +34,12 @@ dependencies {
 
 ## 一些方法和类说明
 
-* [MiraiHibernateConfiguration](src/main/kotlin/xyz/cssxsh/mirai/plugin/MiraiHibernateConfiguration.kt)
+* [MiraiHibernateConfiguration](src/main/kotlin/xyz/cssxsh/mirai/hibernate/MiraiHibernateConfiguration.kt)
   配置的，对应于 `JvmPlugin` 的 `SessionFactory`  
   默认将会读取(生成)在 `configFolder` 目录下的 `hibernate.properties` 作为配置文件  
   并且自动扫描加载 `JvmPlugin` 所在类包下的被 `javax.persistence.Entity` 标记的实体类
 
-* [MiraiHibernateRecorder](src/main/kotlin/xyz/cssxsh/mirai/plugin/MiraiHibernateRecorder.kt)  
+* [MiraiHibernateRecorder](src/main/kotlin/xyz/cssxsh/mirai/hibernate/MiraiHibernateRecorder.kt)  
   是本插件自带的消息记录器，通过对 `MessageEvent` 和 `MessagePostSendEvent` 记录，保存消息历史到数据库
 
 * [CriteriaBuilder.rand](src/main/kotlin/xyz/cssxsh/hibernate/Criteria.kt)  
@@ -47,7 +47,7 @@ dependencies {
 
 ### 示例代码
 
-* [kotlin](src/test/kotlin/xyz/cssxsh/mirai/plugin/MiraiHibernatePluginTest.kt)
+* [kotlin](src/test/kotlin/xyz/cssxsh/mirai/test/MiraiHibernatePluginTest.kt)
 
 ## 安装
 

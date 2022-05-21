@@ -1,4 +1,4 @@
-package xyz.cssxsh.mirai.plugin
+package xyz.cssxsh.mirai.hibernate
 
 import kotlinx.coroutines.*
 import net.mamoe.mirai.*
@@ -9,7 +9,7 @@ import net.mamoe.mirai.internal.message.*
 import net.mamoe.mirai.message.data.*
 import net.mamoe.mirai.utils.*
 import xyz.cssxsh.hibernate.*
-import xyz.cssxsh.mirai.plugin.entry.*
+import xyz.cssxsh.mirai.hibernate.entry.*
 import java.sql.*
 import java.io.*
 import javax.persistence.*

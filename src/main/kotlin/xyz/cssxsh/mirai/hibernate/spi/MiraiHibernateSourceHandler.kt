@@ -1,9 +1,10 @@
-package xyz.cssxsh.mirai.spi
+package xyz.cssxsh.mirai.hibernate.spi
 
 import net.mamoe.mirai.contact.*
 import net.mamoe.mirai.event.events.*
 import net.mamoe.mirai.message.data.*
-import xyz.cssxsh.mirai.plugin.*
+import xyz.cssxsh.mirai.hibernate.*
+import xyz.cssxsh.mirai.spi.*
 
 public class MiraiHibernateSourceHandler : MessageSourceHandler {
     override val id: String = "hibernate-recorder"
