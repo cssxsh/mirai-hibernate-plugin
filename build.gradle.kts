@@ -41,6 +41,7 @@ dependencies {
     api("com.h2database:h2:2.1.212")
     api("org.xerial:sqlite-jdbc:3.36.0.3")
     api("mysql:mysql-connector-java:8.0.29")
+    api("org.postgresql:postgresql:42.3.5")
 
     testImplementation(kotlin("test", "1.6.21"))
 }
