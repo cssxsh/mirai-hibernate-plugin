@@ -15,7 +15,7 @@ public object MiraiHibernatePlugin : KotlinPlugin(
         author("cssxsh")
 
         dependsOn("net.mamoe.mirai.mirai-slf4j-bridge", true)
-        dependsOn("xyz.cssxsh.mirai.plugin.mirai-administrator", true)
+        dependsOn("xyz.cssxsh.mirai.plugin.mirai-administrator", ">= 1.1.0", true)
     }
 ) {
     /**
@@ -38,7 +38,8 @@ public object MiraiHibernatePlugin : KotlinPlugin(
 
         if (configuration.properties["hibernate.connection.provider_class"] == "org.hibernate.connection.C3P0ConnectionProvider") {
             logger.warning { "发现使用 C3P0ConnectionProvider，将替换为 HikariCPConnectionProvider" }
-            configuration.properties["hibernate.connection.provider_class"] = "org.hibernate.hikaricp.internal.HikariCPConnectionProvider"
+            configuration.properties["hibernate.connection.provider_class"] =
+                "org.hibernate.hikaricp.internal.HikariCPConnectionProvider"
         }
 
         factory = configuration.buildSessionFactory()
@@ -47,7 +48,9 @@ public object MiraiHibernatePlugin : KotlinPlugin(
 
         logger.info { "Database ${metadata.url} by ${metadata.driverName}." }
         if (metadata.url.startsWith("jdbc:sqlite")) {
-            logger.warning { "正在使用 Sqlite 数据库记录聊天内容，有条件请更换为其他数据库，例如 MySql" }
+            logger.warning { "正在使用 Sqlite 数据库记录聊天内容，Sqlite 不支持并发，有条件请更换为其他数据库" }
+            logger.warning { "正在使用 Sqlite 数据库记录聊天内容，Sqlite 不支持并发，有条件请更换为其他数据库" }
+            logger.warning { "正在使用 Sqlite 数据库记录聊天内容，Sqlite 不支持并发，有条件请更换为其他数据库" }
         }
     }
 

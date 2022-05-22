@@ -65,6 +65,9 @@ public class MiraiHibernateConfiguration(private val loader: MiraiHibernateLoade
         loader.configuration.apply { if (exists().not()) writeText(loader.default) }.inputStream().use(properties::load)
         val url = getProperty("hibernate.connection.url").orEmpty()
         when {
+            url.startsWith("jdbc:h2") -> {
+                //
+            }
             url.startsWith("jdbc:sqlite") -> {
                 // SQLite 是单文件数据库，最好只有一个连接
                 setProperty("hibernate.c3p0.min_size", "${1}")
@@ -77,6 +80,9 @@ public class MiraiHibernateConfiguration(private val loader: MiraiHibernateLoade
                 addRandFunction()
             }
             url.startsWith("jdbc:mysql") -> {
+                //
+            }
+            url.startsWith("jdbc:postgresql") -> {
                 //
             }
         }

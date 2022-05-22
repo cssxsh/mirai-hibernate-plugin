@@ -16,6 +16,8 @@
 
 * `mysql:mysql-connector-java:8.0.29`
 * `org.xerial:sqlite-jdbc:3.36.0.3`
+* `org.postgresql:postgresql:42.3.5`
+* `com.h2database:h2:2.1.212`
 * `com.zaxxer:HikariCP:4.0.3`
 
 需要其他数据库驱动支持请将 **数据库驱动Jar包** 放到 `plugins` 目录中一同被 `mirai-console` 加载

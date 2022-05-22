@@ -53,9 +53,9 @@ public interface MiraiHibernateLoader {
             classLoader = plugin::class.java.classLoader,
             configuration = plugin.configFolder.resolve("hibernate.properties"),
             default = """
-                hibernate.connection.url=jdbc:sqlite:${plugin.resolveDataPath("hibernate.sqlite").toUri()}
-                hibernate.connection.driver_class=org.sqlite.JDBC
-                hibernate.dialect=org.sqlite.hibernate.dialect.SQLiteDialect
+                hibernate.connection.url=jdbc:h2:${plugin.resolveDataPath("hibernate.h2").toUri().path.removePrefix("/")}
+                hibernate.connection.driver_class=org.h2.Driver
+                hibernate.dialect=org.hibernate.dialect.H2Dialect
                 hibernate.connection.provider_class=org.hibernate.hikaricp.internal.HikariCPConnectionProvider
                 hibernate.connection.isolation=${Connection.TRANSACTION_READ_UNCOMMITTED}
                 hibernate.hbm2ddl.auto=update

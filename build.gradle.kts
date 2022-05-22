@@ -38,6 +38,7 @@ dependencies {
         exclude("org.slf4j")
     }
     api("com.github.gwenn:sqlite-dialect:0.1.2")
+    api("com.h2database:h2:2.1.212")
     api("org.xerial:sqlite-jdbc:3.36.0.3")
     api("mysql:mysql-connector-java:8.0.29")
 
