@@ -1,9 +1,9 @@
 plugins {
-    kotlin("jvm") version "1.6.0"
-    kotlin("plugin.serialization") version "1.6.0"
-    kotlin("plugin.jpa") version "1.6.0"
+    kotlin("jvm") version "1.6.21"
+    kotlin("plugin.serialization") version "1.6.21"
+    kotlin("plugin.jpa") version "1.6.21"
 
-    id("net.mamoe.mirai-console") version "2.10.3"
+    id("net.mamoe.mirai-console") version "2.11.0"
     id("net.mamoe.maven-central-publish") version "0.7.1"
 }
 
@@ -16,6 +16,7 @@ mavenCentralPublish {
     licenseFromGitHubProject("AGPL-3.0", "master")
     publication {
         artifact(tasks.getByName("buildPlugin"))
+        artifact(tasks.getByName("buildPluginLegacy"))
     }
 }
 
@@ -26,8 +27,8 @@ repositories {
 
 dependencies {
     compileOnly("net.mamoe:mirai-slf4j-bridge:1.2.0")
-    compileOnly("net.mamoe:mirai-core:2.10.3")
-    compileOnly("xyz.cssxsh.mirai:mirai-administrator:1.0.7")
+    compileOnly("net.mamoe:mirai-core:2.11.0")
+    compileOnly("xyz.cssxsh.mirai:mirai-administrator:1.1.0")
     // SQL/ORM
     api("org.hibernate:hibernate-core:5.6.8.Final")
     api("org.hibernate:hibernate-hikaricp:5.6.8.Final") {
@@ -40,7 +41,7 @@ dependencies {
     api("org.xerial:sqlite-jdbc:3.36.0.3")
     api("mysql:mysql-connector-java:8.0.29")
 
-    testImplementation(kotlin("test", "1.6.0"))
+    testImplementation(kotlin("test", "1.6.21"))
 }
 
 kotlin {
