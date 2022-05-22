@@ -21,9 +21,9 @@ public data class FaceRecord(
     public val content: String,
     @Column(name = "url", nullable = false)
     public val url: String,
-    @Column(name = "height", nullable = false, columnDefinition = "default 100")
+    @Column(name = "height", nullable = false)
     public val height: Int,
-    @Column(name = "width", nullable = false, columnDefinition = "default 100")
+    @Column(name = "width", nullable = false)
     public val width: Int
 ) : java.io.Serializable {
 

@@ -4,6 +4,7 @@ import kotlinx.coroutines.*
 import net.mamoe.mirai.contact.*
 import net.mamoe.mirai.message.data.*
 import org.hibernate.*
+import xyz.cssxsh.hibernate.*
 import xyz.cssxsh.mirai.hibernate.entry.*
 
 internal val logger get() = MiraiHibernatePlugin.logger
@@ -47,5 +48,20 @@ public fun Sequence<MessageRecord>.toForwardMessage(context: Contact) {
         for (record in this@toForwardMessage) {
             record.fromId at record.time says record.toMessageChain()
         }
+    }
+}
+
+public fun FaceRecord.Companion.random(): FaceRecord {
+    return useSession { session ->
+        val count = session.withCriteria<Long> { criteria ->
+            val record = criteria.from<FaceRecord>()
+            criteria.select(count(record))
+        }.uniqueResult().toInt()
+
+        session.withCriteria<FaceRecord> { criteria ->
+            val record = criteria.from<FaceRecord>()
+            criteria.select(record)
+                .orderBy(desc(record.get<String>("md5")))
+        }.setFirstResult((0 until count).random()).setMaxResults(1).uniqueResult()
     }
 }

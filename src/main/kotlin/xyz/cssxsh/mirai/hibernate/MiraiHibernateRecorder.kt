@@ -102,6 +102,11 @@ public object MiraiHibernateRecorder : SimpleListenerHost() {
         }
     }
 
+    public fun face(md5: String): FaceRecord? {
+        val session = currentSession
+        return session.get(FaceRecord::class.java, md5)
+    }
+
     /**
      * 与 [event] 对应的记录
      * @see [MessageRecord.code]
