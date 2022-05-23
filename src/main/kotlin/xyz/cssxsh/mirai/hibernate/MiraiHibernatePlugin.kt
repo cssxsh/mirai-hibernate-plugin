@@ -11,7 +11,7 @@ public object MiraiHibernatePlugin : KotlinPlugin(
     JvmPluginDescription(
         id = "xyz.cssxsh.mirai.plugin.mirai-hibernate-plugin",
         name = "mirai-hibernate-plugin",
-        version = "2.2.0",
+        version = "2.2.1",
     ) {
         author("cssxsh")
 
@@ -27,7 +27,7 @@ public object MiraiHibernatePlugin : KotlinPlugin(
             Class.forName("net.mamoe.mirai.logger.bridge.slf4j.MiraiLoggerSlf4jFactory")
             System.setProperty("org.jboss.logging.provider", "slf4j")
         } catch (_: ClassNotFoundException) {
-            logger.warning { "未安装 mirai-slf4j-bridge." }
+            // logger.warning { "未安装 mirai-slf4j-bridge." }
         }
     }
 
@@ -53,12 +53,13 @@ public object MiraiHibernatePlugin : KotlinPlugin(
 
         logger.info { "Database ${metadata.url} by ${metadata.driverName}." }
         if (metadata.url.startsWith("jdbc:sqlite")) {
-            logger.warning { "正在使用 Sqlite 数据库记录聊天内容，Sqlite 不支持并发，有条件请更换为其他数据库" }
-            logger.warning { "正在使用 Sqlite 数据库记录聊天内容，Sqlite 不支持并发，有条件请更换为其他数据库" }
-            logger.warning { "正在使用 Sqlite 数据库记录聊天内容，Sqlite 不支持并发，有条件请更换为其他数据库" }
+            logger.warning { "正在使用 Sqlite 数据库记录聊天内容，Sqlite 不支持并发，更换为其他数据库" }
+            logger.warning { "正在使用 Sqlite 数据库记录聊天内容，Sqlite 不支持并发，更换为其他数据库" }
+            logger.warning { "正在使用 Sqlite 数据库记录聊天内容，Sqlite 不支持并发，更换为其他数据库" }
         }
 
         if (test) {
+            logger.info { "开启表情包调试" }
             globalEventChannel().subscribeMessages {
                 "表情包" reply {
                     FaceRecord.random().toMessageContent()

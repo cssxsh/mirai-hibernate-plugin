@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "xyz.cssxsh.mirai"
-version = "2.2.0"
+version = "2.2.1"
 
 mavenCentralPublish {
     useCentralS01()
@@ -34,7 +34,7 @@ dependencies {
     api("org.hibernate:hibernate-hikaricp:5.6.8.Final") {
         exclude("org.slf4j")
     }
-    api("com.zaxxer:HikariCP:4.0.3") {
+    api("com.zaxxer:HikariCP:5.0.1") {
         exclude("org.slf4j")
     }
     api("com.github.gwenn:sqlite-dialect:0.1.2")
