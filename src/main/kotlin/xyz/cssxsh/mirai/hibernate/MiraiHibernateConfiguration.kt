@@ -70,12 +70,8 @@ public class MiraiHibernateConfiguration(private val loader: MiraiHibernateLoade
             }
             url.startsWith("jdbc:sqlite") -> {
                 // SQLite 是单文件数据库，最好只有一个连接
-                setProperty("hibernate.c3p0.min_size", "${1}")
-                setProperty("hibernate.c3p0.max_size", "${1}")
-                setProperty("hibernate.c3p0.timeout", "${60_000}")
                 setProperty("hibernate.hikari.minimumIdle", "${1}")
                 setProperty("hibernate.hikari.maximumPoolSize", "${1}")
-                setProperty("hibernate.hikari.connectionTimeout", "${60_000}")
                 // 设置 rand 别名
                 addRandFunction()
             }

@@ -57,6 +57,7 @@ public interface MiraiHibernateLoader {
                 hibernate.connection.driver_class=org.h2.Driver
                 hibernate.dialect=org.hibernate.dialect.H2Dialect
                 hibernate.connection.provider_class=org.hibernate.hikaricp.internal.HikariCPConnectionProvider
+                hibernate.hikari.connectionTimeout=180000
                 hibernate.connection.isolation=${Connection.TRANSACTION_READ_UNCOMMITTED}
                 hibernate.hbm2ddl.auto=update
                 hibernate-connection-autocommit=${true}
