@@ -11,7 +11,7 @@ public object MiraiHibernatePlugin : KotlinPlugin(
     JvmPluginDescription(
         id = "xyz.cssxsh.mirai.plugin.mirai-hibernate-plugin",
         name = "mirai-hibernate-plugin",
-        version = "2.2.1",
+        version = "2.2.2",
     ) {
         author("cssxsh")
 
@@ -53,9 +53,9 @@ public object MiraiHibernatePlugin : KotlinPlugin(
 
         logger.info { "Database ${metadata.url} by ${metadata.driverName}." }
         if (metadata.url.startsWith("jdbc:sqlite")) {
-            logger.warning { "正在使用 Sqlite 数据库记录聊天内容，Sqlite 不支持并发，更换为其他数据库" }
-            logger.warning { "正在使用 Sqlite 数据库记录聊天内容，Sqlite 不支持并发，更换为其他数据库" }
-            logger.warning { "正在使用 Sqlite 数据库记录聊天内容，Sqlite 不支持并发，更换为其他数据库" }
+            logger.warning { "正在使用 Sqlite 数据库记录聊天内容，Sqlite 不支持并发，请更换为其他数据库" }
+            logger.warning { "正在使用 Sqlite 数据库记录聊天内容，Sqlite 不支持并发，请更换为其他数据库" }
+            logger.warning { "正在使用 Sqlite 数据库记录聊天内容，Sqlite 不支持并发，请更换为其他数据库" }
         }
 
         if (test) {
