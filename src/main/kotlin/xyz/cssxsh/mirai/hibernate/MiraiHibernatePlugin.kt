@@ -31,9 +31,7 @@ public object MiraiHibernatePlugin : KotlinPlugin(
         }
     }
 
-    private val test by lazy {
-        System.getProperty("xyz.cssxsh.mirai.hibernate.test").toBoolean()
-    }
+    private val test by lazy { System.getProperty("xyz.cssxsh.mirai.hibernate.test").toBoolean() }
 
     override fun onEnable() {
 

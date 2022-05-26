@@ -3,6 +3,7 @@ package xyz.cssxsh.mirai.hibernate
 import net.mamoe.mirai.console.plugin.jvm.*
 import java.io.*
 import java.sql.*
+import kotlin.io.path.*
 import kotlin.reflect.full.*
 
 public interface MiraiHibernateLoader {
@@ -38,6 +39,14 @@ public interface MiraiHibernateLoader {
                 loader.objectInstance ?: loader.createInstance()
             }
         }
+
+        private fun JvmPlugin.database(filename: String): String {
+            return Path(".")
+                .toAbsolutePath()
+                .relativize(resolveDataPath(filename))
+                .let { "./$it" }
+                .replace('\\','/')
+        }
     }
 
     public data class Impl(
@@ -53,7 +62,7 @@ public interface MiraiHibernateLoader {
             classLoader = plugin::class.java.classLoader,
             configuration = plugin.configFolder.resolve("hibernate.properties"),
             default = """
-                hibernate.connection.url=jdbc:h2:${plugin.resolveDataPath("hibernate.h2").toUri().toURL()}
+                hibernate.connection.url=jdbc:h2:${plugin.database("hibernate.h2")}
                 hibernate.connection.driver_class=org.h2.Driver
                 hibernate.dialect=org.hibernate.dialect.H2Dialect
                 hibernate.connection.provider_class=org.hibernate.hikaricp.internal.HikariCPConnectionProvider
