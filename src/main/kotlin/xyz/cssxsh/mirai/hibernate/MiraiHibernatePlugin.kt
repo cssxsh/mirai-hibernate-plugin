@@ -5,13 +5,12 @@ import net.mamoe.mirai.console.plugin.jvm.*
 import net.mamoe.mirai.event.*
 import net.mamoe.mirai.utils.*
 import xyz.cssxsh.hibernate.*
-import xyz.cssxsh.mirai.hibernate.entry.*
 
 public object MiraiHibernatePlugin : KotlinPlugin(
     JvmPluginDescription(
         id = "xyz.cssxsh.mirai.plugin.mirai-hibernate-plugin",
         name = "mirai-hibernate-plugin",
-        version = "2.2.3",
+        version = "2.2.4",
     ) {
         author("cssxsh")
 
@@ -30,8 +29,6 @@ public object MiraiHibernatePlugin : KotlinPlugin(
             // logger.warning { "未安装 mirai-slf4j-bridge." }
         }
     }
-
-    private val test by lazy { System.getProperty("xyz.cssxsh.mirai.hibernate.test").toBoolean() }
 
     override fun onEnable() {
 
@@ -54,18 +51,6 @@ public object MiraiHibernatePlugin : KotlinPlugin(
             logger.warning { "正在使用 Sqlite 数据库记录聊天内容，Sqlite 不支持并发，请更换为其他数据库" }
             logger.warning { "正在使用 Sqlite 数据库记录聊天内容，Sqlite 不支持并发，请更换为其他数据库" }
             logger.warning { "正在使用 Sqlite 数据库记录聊天内容，Sqlite 不支持并发，请更换为其他数据库" }
-        }
-
-        if (test) {
-            logger.info { "开启表情包调试" }
-            globalEventChannel().subscribeMessages {
-                "表情包" reply {
-                    FaceRecord.random().toMessageContent()
-                }
-                """[0-9a-f]{32}""".toRegex() matchingReply {
-                    MiraiHibernateRecorder.face(md5 = it.value)?.toMessageContent()
-                }
-            }
         }
     }
 

@@ -41,11 +41,14 @@ public interface MiraiHibernateLoader {
         }
 
         private fun JvmPlugin.database(filename: String): String {
-            return Path(".")
-                .toAbsolutePath()
-                .relativize(resolveDataPath(filename))
-                .let { "./$it" }
-                .replace('\\','/')
+            return try {
+                Path(".")
+                    .toAbsolutePath()
+                    .relativize(resolveDataPath(filename))
+                    .joinToString(separator = "/", prefix = "./")
+            } catch (_: Throwable) {
+                filename
+            }
         }
     }
 

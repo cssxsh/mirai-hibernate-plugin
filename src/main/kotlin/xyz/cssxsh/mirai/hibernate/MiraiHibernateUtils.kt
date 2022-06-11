@@ -3,13 +3,20 @@ package xyz.cssxsh.mirai.hibernate
 import kotlinx.coroutines.*
 import net.mamoe.mirai.contact.*
 import net.mamoe.mirai.message.data.*
+import net.mamoe.mirai.utils.*
 import org.hibernate.*
 import xyz.cssxsh.hibernate.*
 import xyz.cssxsh.mirai.hibernate.entry.*
 
-internal val logger get() = MiraiHibernatePlugin.logger
+internal val logger by lazy {
+    try {
+        MiraiHibernatePlugin.logger
+    } catch (_: Throwable) {
+        MiraiLogger.Factory.create(MiraiHibernateRecorder::class)
+    }
+}
 
-internal lateinit var factory: SessionFactory
+public lateinit var factory: SessionFactory
 
 internal val CoroutineScope.currentSession: Session
     get() {

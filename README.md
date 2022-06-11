@@ -23,7 +23,7 @@
 
 需要其他数据库驱动支持请将 **数据库驱动Jar包** 放到 `plugins` 目录中一同被 `mirai-console` 加载
 
-## 在插件项目中引用
+## 在 Mirai Console Plugin 项目中引用
 
 ```
 repositories {
@@ -34,6 +34,19 @@ dependencies {
     compileOnly("xyz.cssxsh.mirai:mirai-hibernate-plugin:${version}")
 }
 ```
+
+## 在 Mirai Core Jvm 项目中引用
+
+```
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation("xyz.cssxsh.mirai:mirai-hibernate-plugin:${version}")
+}
+```
+需要手动对 `xyz.cssxsh.mirai.hibernate.factory` 进行初始化，和对 `MiraiHibernateRecorder` 进行注册
 
 ## 一些方法和类说明
 
