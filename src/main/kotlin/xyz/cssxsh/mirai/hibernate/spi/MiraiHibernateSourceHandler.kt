@@ -10,21 +10,30 @@ public class MiraiHibernateSourceHandler : MessageSourceHandler {
     override val id: String = "hibernate-recorder"
     override val level: Int by lazy { System.getProperty("xyz.cssxsh.mirai.hibernate.recorder", "10").toInt() }
 
-    private fun records(contact: Contact) = MiraiHibernateRecorder[contact].filterNot { it.recall }
-
+    @Deprecated(message = "兼容性实现", replaceWith = ReplaceWith("null"))
     override fun find(contact: Contact?, event: MessageEvent?): MessageSource? {
         return when {
-            contact is Member -> {
-                records(contact).firstOrNull()?.toMessageSource()
-            }
-            contact != null -> {
-                records(contact).find { it.bot == it.fromId }?.toMessageSource()
-            }
-            event != null -> {
-                event.message.findIsInstance<QuoteReply>()?.source
-                    ?: records(event.subject).find { it.fromId != event.sender.id }?.toMessageSource()
-            }
+            contact is Member -> from(member = contact)
+            contact != null -> target(contact = contact)
+            event != null -> quote(event = event)
             else -> null
+        }
+    }
+
+    override fun from(member: Member): MessageSource? {
+        return MiraiHibernateRecorder[member].find { it.recall }?.toMessageSource()
+    }
+
+    override fun target(contact: Contact): MessageSource? {
+        return MiraiHibernateRecorder[contact].find { it.recall && it.bot == it.fromId }?.toMessageSource()
+    }
+
+    override fun quote(event: MessageEvent): MessageSource? {
+        val quote = event.message.findIsInstance<QuoteReply>()
+        return if (quote != null) {
+            MiraiHibernateRecorder[quote.source].find { it.recall }?.toMessageSource()
+        } else {
+            MiraiHibernateRecorder[event.subject].find { it.recall && it.fromId != event.sender.id }?.toMessageSource()
         }
     }
 }
