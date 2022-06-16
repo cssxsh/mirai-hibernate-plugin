@@ -1,6 +1,5 @@
 package xyz.cssxsh.mirai.hibernate
 
-import net.mamoe.mirai.console.extension.*
 import net.mamoe.mirai.console.plugin.jvm.*
 import net.mamoe.mirai.event.*
 import net.mamoe.mirai.utils.*
@@ -10,7 +9,7 @@ public object MiraiHibernatePlugin : KotlinPlugin(
     JvmPluginDescription(
         id = "xyz.cssxsh.mirai.plugin.mirai-hibernate-plugin",
         name = "mirai-hibernate-plugin",
-        version = "2.2.4",
+        version = "2.3.0-M1",
     ) {
         author("cssxsh")
 
@@ -18,17 +17,6 @@ public object MiraiHibernatePlugin : KotlinPlugin(
         dependsOn("xyz.cssxsh.mirai.plugin.mirai-administrator", ">= 1.1.0", true)
     }
 ) {
-    /**
-     * @see [org.jboss.logging.LoggerProviders.LOGGING_PROVIDER_KEY]
-     */
-    override fun PluginComponentStorage.onLoad() {
-        try {
-            Class.forName("net.mamoe.mirai.logger.bridge.slf4j.MiraiLoggerSlf4jFactory")
-            System.setProperty("org.jboss.logging.provider", "slf4j")
-        } catch (_: ClassNotFoundException) {
-            // logger.warning { "未安装 mirai-slf4j-bridge." }
-        }
-    }
 
     override fun onEnable() {
 
