@@ -17,7 +17,7 @@
 
 * `mysql:mysql-connector-java:8.0.29`
 * `org.xerial:sqlite-jdbc:3.36.0.3`
-* `org.postgresql:postgresql:42.3.5`
+* `org.postgresql:postgresql:42.3.6`
 * `com.h2database:h2:2.1.212`
 * `com.zaxxer:HikariCP:5.0.1`
 
