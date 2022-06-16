@@ -1,11 +1,11 @@
 package xyz.cssxsh.mirai.hibernate.entry
 
+import jakarta.persistence.*
 import kotlinx.serialization.*
 import net.mamoe.mirai.*
 import net.mamoe.mirai.contact.*
 import net.mamoe.mirai.message.code.*
 import net.mamoe.mirai.message.data.*
-import javax.persistence.*
 
 @Entity
 @Table(name = "message_record")

@@ -1,5 +1,6 @@
 package xyz.cssxsh.mirai.hibernate
 
+import jakarta.persistence.*
 import kotlinx.coroutines.*
 import net.mamoe.mirai.*
 import net.mamoe.mirai.contact.*
@@ -12,7 +13,6 @@ import xyz.cssxsh.hibernate.*
 import xyz.cssxsh.mirai.hibernate.entry.*
 import java.sql.*
 import java.io.*
-import javax.persistence.*
 import kotlin.coroutines.*
 import kotlin.streams.*
 

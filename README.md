@@ -16,7 +16,6 @@
 本插件打包了以下版本的数据库驱动和连接池
 
 * `mysql:mysql-connector-java:8.0.29`
-* `org.xerial:sqlite-jdbc:3.36.0.3`
 * `org.postgresql:postgresql:42.3.6`
 * `com.h2database:h2:2.1.212`
 * `com.zaxxer:HikariCP:5.0.1`
@@ -58,7 +57,7 @@ dependencies {
 * [MiraiHibernateRecorder](src/main/kotlin/xyz/cssxsh/mirai/hibernate/MiraiHibernateRecorder.kt)  
   是本插件自带的消息记录器，通过对 `MessageEvent` 和 `MessagePostSendEvent` 记录，保存消息历史到数据库
 
-* [CriteriaBuilder.rand](src/main/kotlin/xyz/cssxsh/hibernate/Criteria.kt)  
+* [Configuration.addRandFunction](src/main/kotlin/xyz/cssxsh/hibernate/Criteria.kt)  
   `MiraiHibernateConfiguration` 中会对 Sqlite 的 `random` 进行别名注册为 `rand` 统一SQL语句的中的随机函数名
 
 ### 示例代码

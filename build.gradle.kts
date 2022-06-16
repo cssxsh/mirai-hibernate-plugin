@@ -28,26 +28,36 @@ repositories {
 dependencies {
     compileOnly("net.mamoe:mirai-slf4j-bridge:1.2.0")
     compileOnly("net.mamoe:mirai-core:2.11.1")
+    compileOnly("net.mamoe:mirai-core-utils:2.11.1")
     compileOnly("xyz.cssxsh.mirai:mirai-administrator:1.2.0")
     // SQL/ORM
-    api("org.hibernate:hibernate-core:5.6.9.Final")
-    api("org.hibernate:hibernate-hikaricp:5.6.9.Final") {
+    api("org.hibernate.orm:hibernate-core:6.1.0.Final")
+    api("org.hibernate.orm:hibernate-hikaricp:6.1.0.Final") {
         exclude("org.slf4j")
     }
+    api("org.hibernate.orm:hibernate-community-dialects:6.1.0.Final")
     api("com.zaxxer:HikariCP:5.0.1") {
         exclude("org.slf4j")
     }
-    api("com.github.gwenn:sqlite-dialect:0.1.2")
     api("com.h2database:h2:2.1.212")
     api("org.xerial:sqlite-jdbc:3.36.0.3")
     api("mysql:mysql-connector-java:8.0.29")
     api("org.postgresql:postgresql:42.3.6")
 
     testImplementation(kotlin("test", "1.6.21"))
+    testImplementation("org.slf4j:slf4j-simple:1.7.36")
+}
+
+mirai {
+    jvmTarget = JavaVersion.VERSION_11
 }
 
 kotlin {
     explicitApi()
+}
+
+noArg {
+    annotation("jakarta.persistence.Entity")
 }
 
 tasks {

@@ -1,10 +1,10 @@
 package xyz.cssxsh.mirai.hibernate.entry
 
+import jakarta.persistence.*
 import kotlinx.serialization.*
 import net.mamoe.mirai.contact.*
 import net.mamoe.mirai.event.events.*
 import net.mamoe.mirai.message.data.*
-import javax.persistence.*
 
 @Entity
 @Table(name = "nudge_record")

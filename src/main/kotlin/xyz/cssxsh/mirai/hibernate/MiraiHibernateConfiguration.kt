@@ -28,9 +28,9 @@ public class MiraiHibernateConfiguration(private val loader: MiraiHibernateLoade
     }
 
     /**
-     * @see [javax.persistence.Entity]
+     * @see jakarta.persistence.Entity
      */
-    private fun scan() {
+    private fun scan(annotationClass: Class<out Annotation> = jakarta.persistence.Entity::class.java) {
         val path = loader.packageName.replace('.', '/')
         val connection = loader.classLoader.getResource(path)?.openConnection() ?: throw IOException(path)
         when (connection) {
@@ -39,7 +39,7 @@ public class MiraiHibernateConfiguration(private val loader: MiraiHibernateLoade
                     if (entry.name.startsWith(path) && entry.name.endsWith(".class")) {
                         val name = entry.name.removeSuffix(".class").replace('/', '.')
                         val clazz = loader.classLoader.loadClass(name)
-                        if (clazz.isAnnotationPresent(javax.persistence.Entity::class.java)) {
+                        if (clazz.isAnnotationPresent(annotationClass)) {
                             addAnnotatedClass(clazz)
                         }
                     }
@@ -51,7 +51,7 @@ public class MiraiHibernateConfiguration(private val loader: MiraiHibernateLoade
                     if (filename.endsWith(".class")) {
                         val name = filename.removeSuffix(".class")
                         val clazz = loader.classLoader.loadClass("${loader.packageName}.${name}")
-                        if (clazz.isAnnotationPresent(javax.persistence.Entity::class.java)) {
+                        if (clazz.isAnnotationPresent(annotationClass)) {
                             addAnnotatedClass(clazz)
                         }
                     }
@@ -60,8 +60,15 @@ public class MiraiHibernateConfiguration(private val loader: MiraiHibernateLoade
         }
     }
 
+    /**
+     * @see org.hibernate.dialect.MySQLDialect
+     * @see org.hibernate.dialect.MariaDBDialect
+     * @see org.hibernate.dialect.H2Dialect
+     * @see org.hibernate.dialect.PostgreSQLDialect
+     * @see org.hibernate.community.dialect.SQLiteDialect
+     */
     private fun load() {
-        if (loader.autoScan) scan()
+        if (loader.autoScan) addPackage(loader.packageName) else scan()
         loader.configuration.apply { if (exists().not()) writeText(loader.default) }.inputStream().use(properties::load)
         val url = getProperty("hibernate.connection.url").orEmpty()
         when {

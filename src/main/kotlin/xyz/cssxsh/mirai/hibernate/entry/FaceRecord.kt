@@ -1,12 +1,12 @@
 package xyz.cssxsh.mirai.hibernate.entry
 
-import kotlinx.serialization.json.*
+import jakarta.persistence.*
 import kotlinx.serialization.*
+import kotlinx.serialization.json.*
+import net.mamoe.mirai.message.*
 import net.mamoe.mirai.message.data.*
 import net.mamoe.mirai.internal.message.*
-import net.mamoe.mirai.message.*
-import okio.ByteString.Companion.toByteString
-import javax.persistence.*
+import net.mamoe.mirai.utils.*
 
 @Entity
 @Table(name = "face_record")
@@ -53,7 +53,7 @@ public data class FaceRecord(
         @Suppress("INVISIBLE_REFERENCE", "INVISIBLE_MEMBER")
         public fun fromImage(image: Image): FaceRecord {
             return FaceRecord(
-                md5 = image.md5.toByteString().hex(),
+                md5 = image.md5.toUHexString("").lowercase(),
                 code = json.encodeToString(serializer, image),
                 content = image.contentToString(),
                 height = image.height,
@@ -67,7 +67,7 @@ public data class FaceRecord(
          */
         @Suppress("INVISIBLE_REFERENCE", "INVISIBLE_MEMBER")
         public fun fromMarketFace(face: MarketFace): FaceRecord {
-            val md5 = (face as MarketFaceImpl).delegate.faceId.toByteString().hex()
+            val md5 = (face as MarketFaceImpl).delegate.faceId.toUHexString("").lowercase()
             return FaceRecord(
                 md5 = md5,
                 code = json.encodeToString(serializer, face),
