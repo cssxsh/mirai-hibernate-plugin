@@ -1,5 +1,6 @@
 package xyz.cssxsh.mirai.hibernate
 
+import net.mamoe.mirai.console.extension.*
 import net.mamoe.mirai.console.plugin.jvm.*
 import net.mamoe.mirai.event.*
 import net.mamoe.mirai.utils.*
@@ -17,6 +18,10 @@ public object MiraiHibernatePlugin : KotlinPlugin(
         dependsOn("xyz.cssxsh.mirai.plugin.mirai-administrator", ">= 1.1.0", true)
     }
 ) {
+
+    override fun PluginComponentStorage.onLoad() {
+        checkPlatform()
+    }
 
     override fun onEnable() {
 
