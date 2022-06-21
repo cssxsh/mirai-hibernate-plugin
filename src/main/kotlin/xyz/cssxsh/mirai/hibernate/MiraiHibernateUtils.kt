@@ -21,7 +21,7 @@ public fun checkPlatform() {
     if ("termux" in System.getProperty("user.dir")) {
         logger.info { "change platform to android-arm" }
         // sqlite base on native lib
-        System.getProperty("org.sqlite.lib.path", "org/sqlite/native/android-arm")
+        System.setProperty("org.sqlite.lib.path", "org/sqlite/native/Linux/android-arm")
     }
 }
 
