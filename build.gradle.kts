@@ -3,12 +3,12 @@ plugins {
     kotlin("plugin.serialization") version "1.6.21"
     kotlin("plugin.jpa") version "1.6.21"
 
-    id("net.mamoe.mirai-console") version "2.11.1"
+    id("net.mamoe.mirai-console") version "2.12.0-RC"
     id("net.mamoe.maven-central-publish") version "0.7.1"
 }
 
 group = "xyz.cssxsh.mirai"
-version = "2.3.0-M1"
+version = "2.3.0-M2"
 
 mavenCentralPublish {
     useCentralS01()
@@ -27,8 +27,8 @@ repositories {
 
 dependencies {
     compileOnly("net.mamoe:mirai-slf4j-bridge:1.2.0")
-    compileOnly("net.mamoe:mirai-core:2.11.1")
-    compileOnly("net.mamoe:mirai-core-utils:2.11.1")
+    compileOnly("net.mamoe:mirai-core:2.12.0-RC")
+    compileOnly("net.mamoe:mirai-core-utils:2.12.0-RC")
     compileOnly("xyz.cssxsh.mirai:mirai-administrator:1.2.0")
     // SQL/ORM
     api("org.hibernate.orm:hibernate-core:6.1.0.Final")
@@ -39,13 +39,13 @@ dependencies {
     api("com.zaxxer:HikariCP:5.0.1") {
         exclude("org.slf4j")
     }
-    api("com.h2database:h2:2.1.212")
+    api("com.h2database:h2:2.1.214")
     api("org.xerial:sqlite-jdbc:3.36.0.3")
     api("mysql:mysql-connector-java:8.0.29")
-    api("org.postgresql:postgresql:42.3.6")
+    api("org.postgresql:postgresql:42.4.0")
 
     testImplementation(kotlin("test", "1.6.21"))
-    testImplementation("org.slf4j:slf4j-simple:1.7.36")
+    testImplementation("net.mamoe:mirai-slf4j-bridge:1.2.0")
 }
 
 mirai {
