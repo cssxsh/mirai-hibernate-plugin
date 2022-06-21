@@ -1,11 +1,15 @@
 package xyz.cssxsh.mirai.hibernate.entry
 
-import kotlinx.serialization.json.*
+import kotlinx.coroutines.*
 import kotlinx.serialization.*
-import net.mamoe.mirai.message.data.*
-import net.mamoe.mirai.internal.message.*
+import kotlinx.serialization.json.*
+import net.mamoe.mirai.console.util.cast
 import net.mamoe.mirai.message.*
-import okio.ByteString.Companion.toByteString
+import net.mamoe.mirai.message.data.*
+import net.mamoe.mirai.internal.message.data.*
+import net.mamoe.mirai.internal.message.image.*
+import net.mamoe.mirai.message.data.Image.Key.queryUrl
+import net.mamoe.mirai.utils.*
 import javax.persistence.*
 
 @Entity
@@ -53,12 +57,16 @@ public data class FaceRecord(
         @Suppress("INVISIBLE_REFERENCE", "INVISIBLE_MEMBER")
         public fun fromImage(image: Image): FaceRecord {
             return FaceRecord(
-                md5 = image.md5.toByteString().hex(),
+                md5 = image.md5.toUHexString("").lowercase(),
                 code = json.encodeToString(serializer, image),
                 content = image.contentToString(),
                 height = image.height,
                 width = image.width,
-                url = (image as OnlineImage).originUrl
+                url = try {
+                    (image as OnlineImage).originUrl
+                } catch (_: Throwable) {
+                    runBlocking { image.queryUrl() }
+                }
             )
         }
 
@@ -67,12 +75,18 @@ public data class FaceRecord(
          */
         @Suppress("INVISIBLE_REFERENCE", "INVISIBLE_MEMBER")
         public fun fromMarketFace(face: MarketFace): FaceRecord {
-            val md5 = (face as MarketFaceImpl).delegate.faceId.toByteString().hex()
+            val delegate = try {
+                (face as MarketFaceImpl).delegate
+            } catch (_: Throwable) {
+                face::class.java.getDeclaredField("delegate")
+                    .get(face).cast()
+            }
+            val md5 = delegate.faceId.toUHexString("").lowercase()
             return FaceRecord(
                 md5 = md5,
                 code = json.encodeToString(serializer, face),
-                height = face.delegate.imageHeight,
-                width = face.delegate.imageWidth,
+                height = delegate.imageHeight,
+                width = delegate.imageWidth,
                 content = face.name,
                 url = "https://gxh.vip.qq.com/club/item/parcel/item/${md5.substring(0..1)}/$md5/300x300.png"
             )
