@@ -19,14 +19,19 @@ public fun CriteriaBuilder.rand(): Expression<Double> = function("rand", Double:
  * @see CriteriaBuilder.rand
  */
 public fun Configuration.addRandFunction() {
+    // MySql rand 0 ~ 1
+    // Sqlite random -9223372036854775808 ~ +9223372036854775807
+    // PostgreSQL random 0 ~ 1
+    // H2 rand 0 ~ 1
+    // SqlServer rand 0 ~ 1
     addSqlFunction("rand", StandardSQLFunction("random", StandardBasicTypes.DOUBLE))
 }
 
 /**
  * 构造一个 Criteria 查询
  */
-public inline fun <reified T> Session.withCriteria(block: CriteriaBuilder.(criteria: CriteriaQuery<T>) -> Unit): SelectionQuery<T> =
-    createSelectionQuery(with(criteriaBuilder) { createQuery(T::class.java).also { block(it) } })
+public inline fun <reified T> Session.withCriteria(block: CriteriaBuilder.(criteria: CriteriaQuery<T>) -> Unit): Query<T> =
+    createQuery(with(criteriaBuilder) { createQuery(T::class.java).also { block(it) } })
 
 /**
  * 构造一个 Criteria 查询

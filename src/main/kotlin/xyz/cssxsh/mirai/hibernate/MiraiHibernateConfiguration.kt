@@ -68,7 +68,7 @@ public class MiraiHibernateConfiguration(private val loader: MiraiHibernateLoade
      * @see org.hibernate.community.dialect.SQLiteDialect
      */
     private fun load() {
-        if (loader.autoScan) addPackage(loader.packageName) else scan()
+        if (loader.autoScan) scan()
         loader.configuration.apply { if (exists().not()) writeText(loader.default) }.inputStream().use(properties::load)
         val url = getProperty("hibernate.connection.url").orEmpty()
         when {
@@ -86,7 +86,8 @@ public class MiraiHibernateConfiguration(private val loader: MiraiHibernateLoade
                 //
             }
             url.startsWith("jdbc:postgresql") -> {
-                //
+                // 设置 rand 别名
+                addRandFunction()
             }
         }
     }
