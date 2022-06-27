@@ -37,6 +37,7 @@ public data class FaceRecord(
             return Image(imageId = face.imageId) {
                 height = this@FaceRecord.height
                 width = this@FaceRecord.height
+                type = ImageType.match(face.imageId.substringAfter('.'))
                 isEmoji = true
             }
         }
@@ -61,11 +62,7 @@ public data class FaceRecord(
                 content = image.contentToString(),
                 height = image.height,
                 width = image.width,
-                url = try {
-                    (image as OnlineImage).originUrl
-                } catch (_: Throwable) {
-                    runBlocking { image.queryUrl() }
-                }
+                url = runBlocking { image.queryUrl() }
             )
         }
 

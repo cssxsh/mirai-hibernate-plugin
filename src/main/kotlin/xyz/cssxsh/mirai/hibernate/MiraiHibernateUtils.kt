@@ -73,7 +73,7 @@ public fun FaceRecord.Companion.random(): FaceRecord {
             val record = criteria.from<FaceRecord>()
             criteria.select(count(record))
         }.uniqueResult().toInt()
-
+        logger.debug { "face record count $count" }
         session.withCriteria<FaceRecord> { criteria ->
             val record = criteria.from<FaceRecord>()
             criteria.select(record)
