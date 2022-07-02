@@ -5,6 +5,11 @@ import org.hibernate.*
 import org.hibernate.cfg.*
 import org.hibernate.dialect.function.*
 import org.hibernate.query.*
+import org.hibernate.sql.ast.SqlAstTranslator
+import org.hibernate.sql.ast.spi.SqlAppender
+import org.hibernate.sql.ast.tree.SqlAstNode
+import org.hibernate.sql.ast.tree.predicate.Predicate
+import org.hibernate.sql.ast.tree.select.SortSpecification
 import org.hibernate.type.*
 import java.sql.*
 
@@ -15,7 +20,10 @@ import java.sql.*
 public fun CriteriaBuilder.rand(): Expression<Double> = function("rand", Double::class.java)
 
 /**
- * Sqlite 添加 rand 函数别名
+ * Sqlite / PostgreSQL 添加 rand 函数别名
+ *
+ * 通过 `hibernate.connection.url` 判断数据库类型，然后添加对应的函数别名
+ *
  * @see CriteriaBuilder.rand
  */
 public fun Configuration.addRandFunction() {
@@ -24,7 +32,53 @@ public fun Configuration.addRandFunction() {
     // PostgreSQL random 0 ~ 1
     // H2 rand 0 ~ 1
     // SqlServer rand 0 ~ 1
-    addSqlFunction("rand", StandardSQLFunction("random", StandardBasicTypes.DOUBLE))
+    val url = getProperty("hibernate.connection.url") ?: return
+    when {
+        url.startsWith("jdbc:sqlite") -> {
+            addSqlFunction("rand", object : StandardSQLFunction("rand", StandardBasicTypes.DOUBLE) {
+                override fun render(
+                    sqlAppender: SqlAppender,
+                    sqlAstArguments: MutableList<out SqlAstNode>?,
+                    translator: SqlAstTranslator<*>?
+                ) {
+                    sqlAppender.appendSql("((RANDOM() + 9223372036854775808) / 2.0 / 9223372036854775808)")
+                }
+
+                override fun render(
+                    sqlAppender: SqlAppender,
+                    sqlAstArguments: MutableList<out SqlAstNode>?,
+                    filter: Predicate?,
+                    translator: SqlAstTranslator<*>?
+                ) {
+                    render(sqlAppender, sqlAstArguments, translator)
+                }
+
+                override fun render(
+                    sqlAppender: SqlAppender,
+                    sqlAstArguments: MutableList<out SqlAstNode>?,
+                    filter: Predicate?,
+                    withinGroup: MutableList<SortSpecification>?,
+                    translator: SqlAstTranslator<*>?
+                ) {
+                    render(sqlAppender, sqlAstArguments, translator)
+                }
+
+                override fun render(
+                    sqlAppender: SqlAppender,
+                    sqlAstArguments: MutableList<out SqlAstNode>?,
+                    filter: Predicate?,
+                    respectNulls: Boolean?,
+                    fromFirst: Boolean?,
+                    translator: SqlAstTranslator<*>?
+                ) {
+                    render(sqlAppender, sqlAstArguments, translator)
+                }
+            })
+        }
+        url.startsWith("jdbc:postgresql") -> {
+            addSqlFunction("rand", StandardSQLFunction("random", StandardBasicTypes.DOUBLE))
+        }
+    }
 }
 
 /**
