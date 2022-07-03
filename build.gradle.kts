@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "xyz.cssxsh.mirai"
-version = "2.3.0-M2"
+version = "2.3.0"
 
 mavenCentralPublish {
     useCentralS01()
@@ -31,11 +31,9 @@ dependencies {
     compileOnly("net.mamoe:mirai-core-utils:2.12.0-RC")
     compileOnly("xyz.cssxsh.mirai:mirai-administrator:1.2.0")
     // SQL/ORM
-    api("org.hibernate.orm:hibernate-core:6.1.0.Final")
-    api("org.hibernate.orm:hibernate-hikaricp:6.1.0.Final") {
-        exclude("org.slf4j")
-    }
-    api("org.hibernate.orm:hibernate-community-dialects:6.1.0.Final")
+    api("org.hibernate.orm:hibernate-core:6.1.1.Final")
+    api("org.hibernate.orm:hibernate-hikaricp:6.1.1.Final")
+    api("org.hibernate.orm:hibernate-community-dialects:6.1.1.Final")
     api("com.zaxxer:HikariCP:5.0.1") {
         exclude("org.slf4j")
     }

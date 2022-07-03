@@ -16,11 +16,11 @@
 本插件打包了以下版本的数据库驱动和连接池
 
 * `mysql:mysql-connector-java:8.0.29`
-* `org.postgresql:postgresql:42.3.6`
-* `com.h2database:h2:2.1.212`
+* `org.postgresql:postgresql:42.4.0`
+* `com.h2database:h2:2.1.214`
 * `com.zaxxer:HikariCP:5.0.1`
 
-需要其他数据库驱动支持请将 **数据库驱动Jar包** 放到 `plugins` 目录中一同被 `mirai-console` 加载
+需要其他数据库驱动支持请将 **数据库驱动Jar包** 放到 `plugin-shared-libraries` 目录中一同被 `mirai-console` 加载
 
 ## 在 Mirai Console Plugin 项目中引用
 
@@ -58,7 +58,7 @@ dependencies {
   是本插件自带的消息记录器，通过对 `MessageEvent` 和 `MessagePostSendEvent` 记录，保存消息历史到数据库
 
 * [Configuration.addRandFunction](src/main/kotlin/xyz/cssxsh/hibernate/Criteria.kt)  
-  `MiraiHibernateConfiguration` 中会对 Sqlite 的 `random` 进行别名注册为 `rand` 统一SQL语句的中的随机函数名
+  `MiraiHibernateConfiguration` 中会对 Sqlite / PostgreSql 的 `random` 进行别名注册为 `rand` 统一SQL语句的中的随机函数名
 
 ### 示例代码
 

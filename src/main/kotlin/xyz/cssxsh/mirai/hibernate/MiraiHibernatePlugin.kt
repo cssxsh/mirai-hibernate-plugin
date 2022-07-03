@@ -10,7 +10,7 @@ public object MiraiHibernatePlugin : KotlinPlugin(
     JvmPluginDescription(
         id = "xyz.cssxsh.mirai.plugin.mirai-hibernate-plugin",
         name = "mirai-hibernate-plugin",
-        version = "2.3.0-M2",
+        version = "2.3.0",
     ) {
         author("cssxsh")
 
@@ -29,14 +29,20 @@ public object MiraiHibernatePlugin : KotlinPlugin(
 
         val configuration = MiraiHibernateConfiguration(plugin = this)
 
-        with(configuration.properties) {
-            if (get("hibernate.connection.provider_class") == "org.hibernate.connection.C3P0ConnectionProvider") {
+        with(configuration) {
+            if (getProperty("hibernate.connection.provider_class") == "org.hibernate.connection.C3P0ConnectionProvider") {
                 logger.warning { "发现使用 C3P0ConnectionProvider，将替换为 HikariCPConnectionProvider" }
-                put("hibernate.connection.provider_class", "org.hibernate.hikaricp.internal.HikariCPConnectionProvider")
+                setProperty(
+                    "hibernate.connection.provider_class",
+                    "org.hibernate.hikaricp.internal.HikariCPConnectionProvider"
+                )
             }
-            if (get("hibernate.dialect") == "org.sqlite.hibernate.dialect.SQLiteDialect") {
+            if (getProperty("hibernate.dialect") == "org.sqlite.hibernate.dialect.SQLiteDialect") {
                 logger.warning { "发现使用 org.sqlite.hibernate.dialect.SQLiteDialect，将替换为 org.hibernate.community.dialect.SQLiteDialect" }
-                put("hibernate.dialect", "org.hibernate.community.dialect.SQLiteDialect")
+                setProperty(
+                    "hibernate.dialect",
+                    "org.hibernate.community.dialect.SQLiteDialect"
+                )
             }
         }
 
