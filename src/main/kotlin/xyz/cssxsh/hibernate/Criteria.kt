@@ -3,6 +3,7 @@ package xyz.cssxsh.hibernate
 import org.hibernate.Session
 import org.hibernate.cfg.*
 import org.hibernate.dialect.function.*
+import org.hibernate.engine.spi.SessionFactoryImplementor
 import org.hibernate.query.*
 import org.hibernate.query.criteria.internal.*
 import org.hibernate.query.criteria.internal.expression.function.*
@@ -17,11 +18,35 @@ import javax.persistence.criteria.*
 public fun CriteriaBuilder.rand(): BasicFunctionExpression<Double> = RandomFunction(this as CriteriaBuilderImpl)
 
 /**
- * Sqlite 添加 rand 函数别名
+ * Sqlite / PostgreSQL 添加 rand 函数别名
+ *
+ * 通过 `hibernate.connection.url` 判断数据库类型，然后添加对应的函数别名
+ *
  * @see CriteriaBuilder.rand
  */
 public fun Configuration.addRandFunction() {
-    addSqlFunction("rand", NoArgSQLFunction("random", StandardBasicTypes.DOUBLE))
+    // MySql rand 0 ~ 1
+    // Sqlite random -9223372036854775808 ~ +9223372036854775807
+    // PostgreSQL random 0 ~ 1
+    // H2 rand 0 ~ 1
+    // SqlServer rand 0 ~ 1
+    val url = getProperty("hibernate.connection.url") ?: return
+    when {
+        url.startsWith("jdbc:sqlite") -> {
+            addSqlFunction("rand", object : NoArgSQLFunction("rand", StandardBasicTypes.DOUBLE) {
+                override fun render(
+                    argumentType: Type?,
+                    args: MutableList<Any?>?,
+                    factory: SessionFactoryImplementor?
+                ): String {
+                    return "((RANDOM() + 9223372036854775808) / 2.0 / 9223372036854775808)"
+                }
+            })
+        }
+        url.startsWith("jdbc:postgresql") -> {
+            addSqlFunction("rand", StandardSQLFunction("random", StandardBasicTypes.DOUBLE))
+        }
+    }
 }
 
 /**

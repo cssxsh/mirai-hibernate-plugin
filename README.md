@@ -17,11 +17,13 @@
 
 * `mysql:mysql-connector-java:8.0.29`
 * `org.xerial:sqlite-jdbc:3.36.0.3`
-* `org.postgresql:postgresql:42.3.5`
-* `com.h2database:h2:2.1.212`
+* `org.postgresql:postgresql:42.4.0`
+* `com.h2database:h2:2.1.214`
 * `com.zaxxer:HikariCP:5.0.1`
 
-需要其他数据库驱动支持请将 **数据库驱动Jar包** 放到 `plugins` 目录中一同被 `mirai-console` 加载
+需要其他数据库驱动或连接池支持，请添加 `plugin-shared-libraries` 依赖，有两种方法
+1. 将 **Jar包** 放到 `plugin-shared-libraries` 目录中一同被 `mirai-console` 加载
+2. 在 `plugin-shared-libraries/libraries.txt` 中添加 maven 引用，例如 `com.microsoft.sqlserver:mssql-jdbc:10.2.1.jre11`
 
 ## 在 Mirai Console Plugin 项目中引用
 

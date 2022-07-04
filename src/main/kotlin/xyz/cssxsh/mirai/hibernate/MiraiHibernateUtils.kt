@@ -16,6 +16,15 @@ internal val logger by lazy {
     }
 }
 
+public fun checkPlatform() {
+    // Termux
+    if ("termux" in System.getProperty("user.dir")) {
+        logger.info { "change platform to android-arm" }
+        // sqlite base on native lib
+        System.setProperty("org.sqlite.lib.path", "org/sqlite/native/Linux/android-arm")
+    }
+}
+
 public lateinit var factory: SessionFactory
 
 internal val CoroutineScope.currentSession: Session

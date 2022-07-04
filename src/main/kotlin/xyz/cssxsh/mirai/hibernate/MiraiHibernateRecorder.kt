@@ -123,20 +123,6 @@ public object MiraiHibernateRecorder : SimpleListenerHost() {
                             is MessageRecallEvent.GroupRecall -> MessageSourceKind.GROUP.ordinal
                         }
                     ),
-                    equal(record.get<String>("ids"), event.messageIds.joinToString()),
-                    equal(record.get<String>("internalIds"), event.messageInternalIds.joinToString()),
-                    equal(record.get<Int>("time"), event.messageTime)
-                )
-        }.list().takeUnless { it.isNullOrEmpty() } ?: session.withCriteria<MessageRecord> { criteria ->
-            val record = criteria.from<MessageRecord>()
-            criteria.select(record)
-                .where(
-                    equal(
-                        record.get<Int>("kind"), when (event) {
-                            is MessageRecallEvent.FriendRecall -> MessageSourceKind.FRIEND.ordinal
-                            is MessageRecallEvent.GroupRecall -> MessageSourceKind.GROUP.ordinal
-                        }
-                    ),
                     equal(record.get<Long>("fromId"), event.authorId),
                     equal(
                         record.get<Long>("targetId"), when (event) {
@@ -144,8 +130,10 @@ public object MiraiHibernateRecorder : SimpleListenerHost() {
                             is MessageRecallEvent.GroupRecall -> event.group.id
                         }
                     ),
+                    equal(record.get<String>("ids"), event.messageIds.joinToString()),
                     equal(record.get<Int>("time"), event.messageTime)
                 )
+                .orderBy(asc(abs(diff(record.get("bot"), event.bot.id))))
         }.list()
     }
 
@@ -159,22 +147,13 @@ public object MiraiHibernateRecorder : SimpleListenerHost() {
             val record = criteria.from<MessageRecord>()
             criteria.select(record)
                 .where(
-                    equal(record.get<Int>("bot"), source.botId),
-                    equal(record.get<Int>("kind"), source.kind.ordinal),
-                    equal(record.get<String>("ids"), source.ids.joinToString()),
-                    equal(record.get<String>("internalIds"), source.internalIds.joinToString()),
-                    equal(record.get<Int>("time"), source.time)
-                )
-        }.list().takeUnless { it.isNullOrEmpty() } ?: session.withCriteria<MessageRecord> { criteria ->
-            val record = criteria.from<MessageRecord>()
-            criteria.select(record)
-                .where(
-                    equal(record.get<Int>("bot"), source.botId),
                     equal(record.get<Int>("kind"), source.kind.ordinal),
                     equal(record.get<Long>("fromId"), source.fromId),
                     equal(record.get<Long>("targetId"), source.targetId),
+                    equal(record.get<String>("ids"), source.ids.joinToString()),
                     equal(record.get<Int>("time"), source.time)
                 )
+                .orderBy(asc(abs(diff(record.get("bot"), source.botId))))
         }.list()
     }
 

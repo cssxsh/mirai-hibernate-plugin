@@ -60,6 +60,13 @@ public class MiraiHibernateConfiguration(private val loader: MiraiHibernateLoade
         }
     }
 
+    /**
+     * @see org.hibernate.dialect.MySQLDialect
+     * @see org.hibernate.dialect.MariaDBDialect
+     * @see org.hibernate.dialect.H2Dialect
+     * @see org.hibernate.dialect.PostgreSQLDialect
+     * @see org.sqlite.hibernate.dialect.SQLiteDialect
+     */
     private fun load() {
         if (loader.autoScan) scan()
         loader.configuration.apply { if (exists().not()) writeText(loader.default) }.inputStream().use(properties::load)
@@ -79,7 +86,8 @@ public class MiraiHibernateConfiguration(private val loader: MiraiHibernateLoade
                 //
             }
             url.startsWith("jdbc:postgresql") -> {
-                //
+                // 设置 rand 别名
+                addRandFunction()
             }
         }
     }
