@@ -3,12 +3,12 @@ plugins {
     kotlin("plugin.serialization") version "1.6.21"
     kotlin("plugin.jpa") version "1.6.21"
 
-    id("net.mamoe.mirai-console") version "2.12.0-RC"
+    id("net.mamoe.mirai-console") version "2.12.0"
     id("net.mamoe.maven-central-publish") version "0.7.1"
 }
 
 group = "xyz.cssxsh.mirai"
-version = "2.3.0"
+version = "2.3.1"
 
 mavenCentralPublish {
     useCentralS01()
@@ -27,12 +27,14 @@ repositories {
 
 dependencies {
     compileOnly("net.mamoe:mirai-slf4j-bridge:1.2.0")
-    compileOnly("net.mamoe:mirai-core:2.12.0-RC")
-    compileOnly("net.mamoe:mirai-core-utils:2.12.0-RC")
+    compileOnly("net.mamoe:mirai-core:2.12.0")
+    compileOnly("net.mamoe:mirai-core-utils:2.12.0")
     compileOnly("xyz.cssxsh.mirai:mirai-administrator:1.2.0")
     // SQL/ORM
     api("org.hibernate.orm:hibernate-core:6.1.1.Final")
-    api("org.hibernate.orm:hibernate-hikaricp:6.1.1.Final")
+    api("org.hibernate.orm:hibernate-hikaricp:6.1.1.Final") {
+        exclude("org.slf4j")
+    }
     api("org.hibernate.orm:hibernate-community-dialects:6.1.1.Final")
     api("com.zaxxer:HikariCP:5.0.1") {
         exclude("org.slf4j")
