@@ -25,7 +25,7 @@ public fun checkPlatform() {
     }
 }
 
-public lateinit var factory: SessionFactory
+internal lateinit var factory: SessionFactory
 
 internal val CoroutineScope.currentSession: Session
     get() {
