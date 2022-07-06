@@ -25,8 +25,6 @@ public object MiraiHibernatePlugin : KotlinPlugin(
 
     override fun onEnable() {
 
-        MiraiHibernateRecorder.registerTo(globalEventChannel())
-
         val configuration = MiraiHibernateConfiguration(plugin = this)
 
         if (configuration.properties["hibernate.connection.provider_class"] == "org.hibernate.connection.C3P0ConnectionProvider") {
@@ -45,6 +43,8 @@ public object MiraiHibernatePlugin : KotlinPlugin(
             logger.warning { "正在使用 Sqlite 数据库记录聊天内容，Sqlite 不支持并发，请更换为其他数据库" }
             logger.warning { "正在使用 Sqlite 数据库记录聊天内容，Sqlite 不支持并发，请更换为其他数据库" }
         }
+
+        MiraiHibernateRecorder.registerTo(globalEventChannel())
     }
 
     override fun onDisable() {
