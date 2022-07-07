@@ -15,6 +15,11 @@ jobs:
           distribution: 'adopt'
           java-version: '11'
 
+      - name: Start PostgreSQL
+        run: |
+          net start postgresql-x64-14
+          createdb mirai
+
       - name: Start MySQL
         run: |
           net start MySQL80
@@ -53,7 +58,7 @@ jobs:
 
       - name: Start PostgreSQL
         run: |
-          sudo brew services start postgresql
+          brew services start postgresql
           createdb mirai
 
       - name: chmod -R 777 *
