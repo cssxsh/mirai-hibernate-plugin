@@ -23,7 +23,7 @@ jobs:
 
       - name: Start MySQL
         run: | 
-          & ls "C:\Program Files\MySQL"
+          & ls "C:\Program Files\"
 
       - name: chmod -R 777 *
         run: chmod -R 777 *
