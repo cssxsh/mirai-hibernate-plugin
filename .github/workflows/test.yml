@@ -19,7 +19,7 @@ jobs:
         run: |
           sc config postgresql-x64-14 start= demand
           net start postgresql-x64-14
-          'C:/Program Files/PostgreSQL/14/bin/createdb' -U postgres mirai
+          'C:/Program Files/PostgreSQL/14/bin/createdb' '-U' postgres mirai
 
       - name: Start MySQL
         run: |
