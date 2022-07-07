@@ -22,9 +22,8 @@ jobs:
           & $Env:PGBIN/createdb -U postgres mirai
 
       - name: Start MySQL
-        uses: ankane/setup-mysql@v1
-        with:
-          database: mirai
+        run: | 
+          & ls "C:\Program Files\MySQL"
 
       - name: chmod -R 777 *
         run: chmod -R 777 *
@@ -98,14 +97,15 @@ jobs:
           distribution: 'adopt'
           java-version: '11'
 
-      - uses: ankane/setup-postgres@v1
+      - name: Start PostgreSql
+        uses: ankane/setup-postgres@v1
         with:
           database: mirai
 
       - name: Start MySQL
-        uses: ankane/setup-mysql@v1
-        with:
-          database: mirai
+        run: |
+          sudo systemctl start mysql.service
+          mysqladmin -u root -proot create mirai
 
       - name: chmod -R 777 *
         run: chmod -R 777 *
