@@ -77,7 +77,7 @@ jobs:
       - name: Start MySQL
         run: |
           sudo systemctl start mysql.service
-          mysqladmin -u root create mirai
+          mysqladmin -u root -proot create mirai
 
       - name: Start MySQL
         run: sudo systemctl start mysql.service
