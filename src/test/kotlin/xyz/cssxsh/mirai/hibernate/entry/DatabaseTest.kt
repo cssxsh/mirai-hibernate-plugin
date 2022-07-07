@@ -1,6 +1,6 @@
 package xyz.cssxsh.mirai.hibernate.entry
 
-import net.mamoe.mirai.message.data.MessageSourceKind
+import net.mamoe.mirai.message.data.*
 import net.mamoe.mirai.utils.*
 import org.hibernate.SessionFactory
 import org.hibernate.cfg.Configuration

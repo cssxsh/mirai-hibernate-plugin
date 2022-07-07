@@ -72,15 +72,14 @@ jobs:
           java-version: '11'
 
       - name: Start PostgreSQL
-        run: sudo systemctl start postgresql.service
+        run: | 
+          sudo systemctl start postgresql.service
+          sudo -u postgres createdb mirai
 
       - name: Start MySQL
         run: |
           sudo systemctl start mysql.service
           mysqladmin -u root -proot create mirai
-
-      - name: Start MySQL
-        run: sudo systemctl start mysql.service
 
       - name: chmod -R 777 *
         run: chmod -R 777 *
@@ -99,3 +98,6 @@ jobs:
 
       - name: MysqlTest
         run: ./gradlew test --tests "xyz.cssxsh.mirai.hibernate.entry.MysqlTest" --scan --info
+
+      - name: PostgreSqlTest
+        run: ./gradlew test --tests "xyz.cssxsh.mirai.hibernate.entry.PostgreSqlTest" --scan --info

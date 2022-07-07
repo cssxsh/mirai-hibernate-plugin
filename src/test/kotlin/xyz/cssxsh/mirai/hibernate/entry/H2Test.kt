@@ -1,6 +1,6 @@
 package xyz.cssxsh.mirai.hibernate.entry
 
-import xyz.cssxsh.hibernate.addRandFunction
+import xyz.cssxsh.hibernate.*
 import java.io.File
 
 class H2Test : DatabaseTest() {
