@@ -17,8 +17,9 @@ jobs:
 
       - name: Start PostgreSQL
         run: |
+          sc config postgresql-x64-14 start= demand
           net start postgresql-x64-14
-          createdb mirai
+          createdb -U postgres mirai
 
       - name: Start MySQL
         run: |
@@ -59,7 +60,7 @@ jobs:
       - name: Start PostgreSQL
         run: |
           brew services start postgresql
-          createdb mirai
+          createdb -U postgres mirai
 
       - name: chmod -R 777 *
         run: chmod -R 777 *
