@@ -53,7 +53,7 @@ jobs:
 
       - name: Start PostgreSQL
         run: |
-          sudo systemctl start postgresql.service
+          sudo brew services restart postgresql
           sudo -u postgres createdb mirai
 
       - name: chmod -R 777 *
