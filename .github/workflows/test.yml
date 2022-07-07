@@ -22,8 +22,9 @@ jobs:
           & $Env:PGBIN/createdb -U postgres mirai
 
       - name: Start MySQL
-        run: | 
-          & ls "C:\Program Files\"
+        uses: ankane/setup-mysql@v1
+        with:
+          database: mirai
 
       - name: chmod -R 777 *
         run: chmod -R 777 *
@@ -40,8 +41,8 @@ jobs:
       - name: H2Test
         run: ./gradlew test --tests "xyz.cssxsh.mirai.hibernate.entry.H2Test" --scan --info
 
-      - name: MysqlTest
-        run: ./gradlew test --tests "xyz.cssxsh.mirai.hibernate.entry.MysqlTest" --scan --info
+      - name: PostgreSqlTest
+        run: ./gradlew test --tests "xyz.cssxsh.mirai.hibernate.entry.PostgreSqlTest" --scan --info
 
   macos:
     runs-on: macos-latest
