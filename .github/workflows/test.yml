@@ -19,11 +19,11 @@ jobs:
         run: |
           sc config postgresql-x64-14 start= demand
           net start postgresql-x64-14
-          & 'C:/Program Files/PostgreSQL/14/bin/createdb' -U postgres mirai
+          & $Env:PGBIN/createdb -U postgres mirai
 
       - name: Start MySQL
         run: |
-          net start MySQL80
+          net start MySQL
           mysqladmin -u root -proot create mirai
 
       - name: chmod -R 777 *
