@@ -75,6 +75,11 @@ jobs:
         run: sudo systemctl start postgresql.service
 
       - name: Start MySQL
+        run: |
+          sudo systemctl start mysql.service
+          mysqladmin -u root -p root create mirai
+
+      - name: Start MySQL
         run: sudo systemctl start mysql.service
 
       - name: chmod -R 777 *
