@@ -8,6 +8,7 @@ import org.junit.jupiter.api.*
 import xyz.cssxsh.hibernate.*
 import java.io.File
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 abstract class DatabaseTest {
 
     protected val logger: MiraiLogger = MiraiLogger.Factory.create(this::class.java)
@@ -16,6 +17,8 @@ abstract class DatabaseTest {
         addAnnotatedClass(FaceRecord::class.java)
         addAnnotatedClass(MessageRecord::class.java)
         addAnnotatedClass(NudgeRecord::class.java)
+
+        setProperty("hibernate.connection.show_sql", "true")
     }
 
     protected val factory: SessionFactory by lazy {
@@ -26,9 +29,11 @@ abstract class DatabaseTest {
     @BeforeAll
     fun insert() {
         factory.openSession().use { session ->
+            session.transaction.begin()
+
             repeat(10) { index ->
                 val md5 = index.toByteArray().md5().toUHexString("")
-                val record = FaceRecord(
+                val face = FaceRecord(
                     md5 = md5,
                     code = "{}",
                     content = "${index}",
@@ -37,9 +42,9 @@ abstract class DatabaseTest {
                     width = index
                 )
 
-                session.merge(record)
+                session.persist(face)
 
-                MessageRecord(
+                val message = MessageRecord(
                     bot = index * 10L,
                     fromId = index * 100L,
                     targetId = index * 1000L,
@@ -50,8 +55,10 @@ abstract class DatabaseTest {
                     code = md5
                 )
 
-                session.merge(record)
+                session.persist(message)
             }
+
+            session.transaction.commit()
         }
     }
 
