@@ -12,6 +12,7 @@ import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import xyz.cssxsh.hibernate.rand
 import xyz.cssxsh.hibernate.withCriteria
+import java.io.File
 
 abstract class DatabaseTest {
 
@@ -21,7 +22,10 @@ abstract class DatabaseTest {
         addAnnotatedClass(NudgeRecord::class.java)
     }
 
-    protected val factory: SessionFactory by lazy { configuration.buildSessionFactory() }
+    protected val factory: SessionFactory by lazy {
+        File("./data/xyz.cssxsh.mirai.plugin.mirai-hibernate-plugin").mkdirs()
+        configuration.buildSessionFactory()
+    }
 
     @BeforeAll
     fun insert() {
