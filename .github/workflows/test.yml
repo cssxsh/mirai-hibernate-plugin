@@ -17,7 +17,6 @@ jobs:
 
       - name: Start MySQL
         run: |
-          net start mysql
           mysqladmin -u root -proot create mirai
 
       - name: chmod -R 777 *
