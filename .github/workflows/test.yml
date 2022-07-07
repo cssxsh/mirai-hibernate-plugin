@@ -19,7 +19,7 @@ jobs:
         run: |
           sc config postgresql-x64-14 start= demand
           net start postgresql-x64-14
-          $PGBIN/createdb -U postgres mirai
+          $Env:PGBIN/createdb -U postgres mirai
 
       - name: Start MySQL
         run: |
