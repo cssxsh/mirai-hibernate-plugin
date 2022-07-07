@@ -15,6 +15,11 @@ jobs:
           distribution: 'adopt'
           java-version: '11'
 
+      - name: Start MySQL
+        run: |
+          net start mysql
+          mysqladmin -u root -proot create mirai
+
       - name: chmod -R 777 *
         run: chmod -R 777 *
 
@@ -29,6 +34,9 @@ jobs:
 
       - name: H2Test
         run: ./gradlew test --tests "xyz.cssxsh.mirai.hibernate.entry.H2Test" --scan --info
+
+      - name: MysqlTest
+        run: ./gradlew test --tests "xyz.cssxsh.mirai.hibernate.entry.MysqlTest" --scan --info
 
   macos:
     runs-on: macos-latest
@@ -43,6 +51,11 @@ jobs:
           distribution: 'adopt'
           java-version: '11'
 
+      - name: Start PostgreSQL
+        run: |
+          sudo systemctl start postgresql.service
+          sudo -u postgres createdb mirai
+
       - name: chmod -R 777 *
         run: chmod -R 777 *
 
@@ -57,6 +70,9 @@ jobs:
 
       - name: H2Test
         run: ./gradlew test --tests "xyz.cssxsh.mirai.hibernate.entry.H2Test" --scan --info
+
+      - name: PostgreSqlTest
+        run: ./gradlew test --tests "xyz.cssxsh.mirai.hibernate.entry.PostgreSqlTest" --scan --info
 
   linux:
     runs-on: ubuntu-latest
