@@ -8,7 +8,6 @@ import org.junit.jupiter.api.*
 import xyz.cssxsh.hibernate.*
 import java.io.File
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 abstract class DatabaseTest {
 
     protected val logger: MiraiLogger = MiraiLogger.Factory.create(this::class.java)
