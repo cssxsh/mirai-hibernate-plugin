@@ -1,20 +1,17 @@
 package xyz.cssxsh.mirai.hibernate.entry
 
 import net.mamoe.mirai.message.data.MessageSourceKind
-import net.mamoe.mirai.utils.md5
-import net.mamoe.mirai.utils.toByteArray
-import net.mamoe.mirai.utils.toUHexString
+import net.mamoe.mirai.utils.*
 import org.hibernate.SessionFactory
 import org.hibernate.cfg.Configuration
-import org.junit.jupiter.api.AfterAll
-import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.BeforeAll
-import org.junit.jupiter.api.Test
-import xyz.cssxsh.hibernate.rand
-import xyz.cssxsh.hibernate.withCriteria
+import org.junit.jupiter.api.*
+import xyz.cssxsh.hibernate.*
 import java.io.File
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 abstract class DatabaseTest {
+
+    protected val logger: MiraiLogger = MiraiLogger.Factory.create(this::class.java)
 
     protected val configuration = Configuration().apply {
         addAnnotatedClass(FaceRecord::class.java)
@@ -66,8 +63,18 @@ abstract class DatabaseTest {
                 criteria.select(rand())
             }.uniqueResult()
         }
+        logger.info("rand $num")
         Assertions.assertTrue(num >= 0.0, "< 0.0")
         Assertions.assertTrue(num <= 1.0, "> 1.0")
+
+        val list = factory.openSession().use { session ->
+            session.withCriteria<FaceRecord> { criteria ->
+                val record = criteria.from<FaceRecord>()
+                criteria.select(record)
+                    .orderBy(asc(rand()))
+            }.setMaxResults(3).list()
+        }
+        Assertions.assertEquals(list.size, 3)
     }
 
     @AfterAll
