@@ -17,6 +17,7 @@ jobs:
 
       - name: Start MySQL
         run: |
+          net start mysqld
           mysqladmin -u root -proot create mirai
 
       - name: chmod -R 777 *
@@ -52,8 +53,8 @@ jobs:
 
       - name: Start PostgreSQL
         run: |
-          sudo brew services restart postgresql
-          sudo -u postgres createdb mirai
+          sudo brew services start postgresql
+          createdb mirai
 
       - name: chmod -R 777 *
         run: chmod -R 777 *
