@@ -11,6 +11,16 @@ jobs:
           - windows-latest
           - macos-latest
           - ubuntu-latest
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_DATABASE: mirai
+          MYSQL_USER: username
+          MYSQL_PASSWORD: password
+          MYSQL_ROOT_PASSWORD: root
+        ports:
+          - 3306
     steps:
 
       - name: Checkout
@@ -36,3 +46,6 @@ jobs:
 
       - name: H2Test
         run: ./gradlew test --tests "xyz.cssxsh.mirai.hibernate.entry.H2Test" --scan --info
+
+      - name: MysqlTest
+        run: ./gradlew test --tests "xyz.cssxsh.mirai.hibernate.entry.MysqlTest" --scan --info
