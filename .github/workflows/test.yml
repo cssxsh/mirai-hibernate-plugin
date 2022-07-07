@@ -60,7 +60,7 @@ jobs:
       - name: Start PostgreSQL
         run: |
           brew services start postgresql
-          createdb -U postgres mirai
+          $PGBIN/createdb -U postgres mirai
 
       - name: chmod -R 777 *
         run: chmod -R 777 *
