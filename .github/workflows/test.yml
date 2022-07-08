@@ -57,9 +57,7 @@ jobs:
       - name: Start PostgreSQL
         run: |
           brew info postgresql
-          rm -r /usr/local/var/postgres/*
           chown runner /usr/local/var/postgres
-          initdb --locale=C -E UTF-8 /usr/local/var/postgres -U postgres
           brew services restart postgresql -v
           tail -n 100 /usr/local/var/log/postgres.log
           createdb mirai
@@ -71,8 +69,6 @@ jobs:
       - name: Start MySQL
         run: |
           brew install mysql
-          mysqld --initialize-insecure
-          mysqld --install
           brew services restart mysql
           mysqladmin -uroot create mirai
           mysqladmin -uroot password root
