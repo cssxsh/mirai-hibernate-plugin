@@ -65,8 +65,8 @@ jobs:
 
       - name: Start PostgreSQL
         run: |
-          initdb -E utf8
-          pg_ctl -l logfile start
+          initdb ~/postgresql -E utf8
+          brew services services postgresql
           createdb mirai
           psql -c "ALTER USER postgres PASSWORD 'root';"
 
