@@ -58,8 +58,7 @@ jobs:
         run: |
           brew info postgresql
           brew services start postgresql -v
-          brew services restart postgresql -v
-          brew services restart postgresql -v
+          sheelp 10s
           tail -n 100 /usr/local/var/log/postgres.log
           createdb mirai
           psql -c "ALTER USER postgres PASSWORD 'root';"
@@ -72,6 +71,7 @@ jobs:
           brew install mysql
           brew info mysql
           brew services restart mysql -v
+          sheelp 10s
           mysqladmin -uroot create mirai
           mysqladmin -uroot password root
 
