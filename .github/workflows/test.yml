@@ -71,8 +71,7 @@ jobs:
       - name: Start MySQL
         run: |
           brew install mysql
-          brew services restart mysql -v
-          ls /usr/local/var/mysql/mysql
+          sudo brew services restart mysql -v
           mysqladmin -uroot create mirai
           mysqladmin -uroot password root
 
