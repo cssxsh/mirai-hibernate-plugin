@@ -6,15 +6,6 @@ jobs:
     runs-on: windows-latest
     steps:
 
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Setup JDK 11
-        uses: actions/setup-java@v2
-        with:
-          distribution: 'adopt'
-          java-version: '11'
-
       - name: Start PostgreSQL
         run: |
           sc config postgresql-x64-14 start= demand
@@ -28,6 +19,15 @@ jobs:
           net start MySQL
           mysqladmin -uroot create mirai
           mysqladmin -uroot password root
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup JDK 11
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '11'
 
       - name: chmod -R 777 *
         run: chmod -R 777 *
@@ -54,18 +54,9 @@ jobs:
     runs-on: macos-latest
     steps:
 
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Setup JDK 11
-        uses: actions/setup-java@v2
-        with:
-          distribution: 'adopt'
-          java-version: '11'
-
       - name: Start PostgreSQL
         run: |
-          initdb ~/postgresql -E utf8
+          initdb /usr/local/var/postgres -E utf8
           brew services restart postgresql
           createdb mirai
           psql -c "ALTER USER postgres PASSWORD 'root';"
@@ -78,7 +69,15 @@ jobs:
           brew services restart mysql
           mysqladmin -uroot create mirai
           mysqladmin -uroot password root
-          
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup JDK 11
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '11'
 
       - name: chmod -R 777 *
         run: chmod -R 777 *
@@ -102,15 +101,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Setup JDK 11
-        uses: actions/setup-java@v2
-        with:
-          distribution: 'adopt'
-          java-version: '11'
-
       - name: Start PostgreSql
         run: |
           sudo systemctl start postgresql
@@ -121,6 +111,15 @@ jobs:
         run: |
           sudo systemctl start mysql.service
           mysqladmin -u root -proot create mirai
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup JDK 11
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '11'
 
       - name: chmod -R 777 *
         run: chmod -R 777 *
