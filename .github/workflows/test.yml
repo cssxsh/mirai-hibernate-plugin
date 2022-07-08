@@ -57,7 +57,7 @@ jobs:
       - name: Start PostgreSQL
         run: |
           brew info postgresql
-          su -u postgres brew services start postgresql -v
+          su postgres -e "brew services start postgresql -v"
           tail -n 100 /usr/local/var/log/postgres.log
           psql -l
           createdb mirai
