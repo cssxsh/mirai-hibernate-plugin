@@ -57,9 +57,8 @@ jobs:
       - name: Start PostgreSQL
         run: |
           brew info postgresql
-          rm -r /usr/local/var/postgres/*
-          chown runner /usr/local/var/postgres
-          initdb --locale=C -E UTF-8 /usr/local/var/postgres -U postgres
+          brew services start postgresql -v
+          brew services restart postgresql -v
           brew services restart postgresql -v
           tail -n 100 /usr/local/var/log/postgres.log
           createdb mirai
