@@ -22,9 +22,12 @@ jobs:
           & $Env:PGBIN/createdb -U postgres mirai
 
       - name: Start MySQL
-        uses: ankane/setup-mysql@v1
-        with:
-          database: mirai
+        run: |
+          mysqld --initialize-insecure
+          mysqld --install
+          net start MySQL
+          mysqladmin create mirai
+          mysqladmin -uroot password root
 
       - name: chmod -R 777 *
         run: chmod -R 777 *
@@ -62,7 +65,6 @@ jobs:
 
       - name: Start PostgreSQL
         run: |
-          rm /opt/homebrew/var/postgres/postmaster.pid
           brew services restart postgresql
           createdb mirai
 
