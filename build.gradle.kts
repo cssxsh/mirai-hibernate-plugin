@@ -46,6 +46,7 @@ dependencies {
 
     testImplementation(kotlin("test", "1.6.21"))
     testImplementation("net.mamoe:mirai-slf4j-bridge:1.2.0")
+    testImplementation("net.mamoe:mirai-core-utils:2.12.0")
 }
 
 mirai {
