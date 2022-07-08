@@ -56,10 +56,9 @@ jobs:
 
       - name: Start PostgreSQL
         run: |
-          ls /usr/local/var/postgres
-          echo $PGDATABASE
+          sudo dscl . create /Users/postgres gid 1 passwd '*'
           brew info postgresql
-          brew services restart postgresql -v
+          sudo -u postgres brew services restart postgresql -v
           tail -n 100 /usr/local/var/log/postgres.log
           createdb mirai
           psql -c "ALTER USER postgres PASSWORD 'root';"
