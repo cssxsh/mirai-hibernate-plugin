@@ -60,6 +60,7 @@ jobs:
           chown runner /usr/local/var/postgres
           brew services restart postgresql -v
           tail -n 100 /usr/local/var/log/postgres.log
+          sudo ls /tmp/.s.PGSQL.5432
           createdb mirai
           psql -c "ALTER USER postgres PASSWORD 'root';"
         env:
