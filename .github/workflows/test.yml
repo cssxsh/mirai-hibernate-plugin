@@ -59,7 +59,7 @@ jobs:
           ls /usr/local/var/postgres
           echo $PGDATABASE
           brew info postgresql
-          sudo -u postgres brew services restart postgresql -v
+          brew services restart postgresql -v
           tail -n 100 /usr/local/var/log/postgres.log
           createdb mirai
           psql -c "ALTER USER postgres PASSWORD 'root';"
