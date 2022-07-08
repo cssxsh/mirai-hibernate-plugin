@@ -65,8 +65,8 @@ jobs:
 
       - name: Start PostgreSQL
         run: |
-          brew postgresql-upgrade-database
-          brew services restart postgresql
+          initdb ~/postgresql -E utf8
+          brew services start postgresql
           createdb mirai
 
       - name: Start MySQL
