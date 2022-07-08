@@ -59,7 +59,6 @@ jobs:
           rm -r /usr/local/var/postgres/*
           initdb -D /usr/local/var/postgres/
           pg_ctl -D /usr/local/var/postgres/ -l logfile start
-          brew services restart postgresql
           createdb mirai
           psql -c "ALTER USER postgres PASSWORD 'root';"
 
