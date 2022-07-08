@@ -85,7 +85,7 @@ public fun Configuration.addDiceFunction() {
                 val (model) = args
                 appendSql("FLOOR(")
                 translator.render(model, SqlAstNodeRenderingMode.DEFAULT)
-                appendSql(" * RANDOM())")
+                appendSql(" * RAND())")
             })
         }
     }
