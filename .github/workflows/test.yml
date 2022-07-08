@@ -65,8 +65,8 @@ jobs:
 
       - name: Start PostgreSQL
         run: |
-          rm /usr/local/var/postgres/postmaster.pid
           brew services restart postgresql
+          ls /usr/local/var/
           createdb mirai
 
       - name: Start MySQL
@@ -108,7 +108,7 @@ jobs:
       - name: Start PostgreSql
         run: |
           sudo systemctl start postgresql
-          createdb -U postgres mirai
+          sudo -u postgres createdb mirai
           sudo -u postgres psql -c "ALTER USER postgres PASSWORD 'root';"
 
       - name: Start MySQL
