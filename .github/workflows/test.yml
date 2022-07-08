@@ -65,7 +65,7 @@ jobs:
 
       - name: Start PostgreSQL
         run: |
-          echo 'port = 5432' >> /usr/local/var/postgres/postgresql.conf
+          brew postgresql-upgrade-database
           brew services restart postgresql
           createdb mirai
 
