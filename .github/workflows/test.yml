@@ -66,7 +66,7 @@ jobs:
       - name: Start PostgreSQL
         run: |
           brew services restart postgresql
-          cat /usr/local/var/postgres/postgresql.conf
+          echo 'port = 5432' >> /usr/local/var/postgres/postgresql.conf
           createdb mirai
 
       - name: Start MySQL
