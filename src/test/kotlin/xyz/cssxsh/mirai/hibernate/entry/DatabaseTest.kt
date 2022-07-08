@@ -18,11 +18,13 @@ abstract class DatabaseTest {
         addAnnotatedClass(MessageRecord::class.java)
         addAnnotatedClass(NudgeRecord::class.java)
 
-        setProperty("hibernate.connection.show_sql", "true")
+        setProperty("hibernate.show_sql", "true")
     }
 
     protected val factory: SessionFactory by lazy {
         File("./data/xyz.cssxsh.mirai.plugin.mirai-hibernate-plugin").mkdirs()
+        configuration.addRandFunction()
+        configuration.addDiceFunction()
         configuration.buildSessionFactory()
     }
 
@@ -32,11 +34,12 @@ abstract class DatabaseTest {
             session.transaction.begin()
 
             repeat(10) { index ->
-                val md5 = index.toByteArray().md5().toUHexString("")
+                val md5 = (System.currentTimeMillis() + index * 100)
+                    .toByteArray().md5().toUHexString("")
                 val face = FaceRecord(
                     md5 = md5,
                     code = "{}",
-                    content = "${index}",
+                    content = "$index",
                     url = "https://127.0.0.1/$index",
                     height = index,
                     width = index
@@ -78,6 +81,33 @@ abstract class DatabaseTest {
                 val record = criteria.from<FaceRecord>()
                 criteria.select(record)
                     .orderBy(asc(rand()))
+            }.setMaxResults(3).list()
+        }
+        Assertions.assertEquals(list.size, 3)
+    }
+
+    @Test
+    fun dice() {
+        val num = factory.openSession().use { session ->
+            session.withCriteria<Long> { criteria ->
+                criteria.select(dice(literal(1000)))
+            }.uniqueResult()
+        }
+        logger.info("dice $num")
+        Assertions.assertTrue(num >= 0, "< 0")
+        Assertions.assertTrue(num <= 1000, "> 1000")
+
+        val list = factory.openSession().use { session ->
+            session.withCriteria<MessageRecord> { criteria ->
+                val record = criteria.from<MessageRecord>()
+                val id = record.get<Long>("id")
+                val subquery = criteria.subquery<Long>()
+                val rand = dice(subquery.select(max(subquery.from<MessageRecord>().get("id"))))
+
+                criteria.select(record)
+                    .where(
+                        ge(id, rand)
+                    )
             }.setMaxResults(3).list()
         }
         Assertions.assertEquals(list.size, 3)
