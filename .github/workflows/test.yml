@@ -56,7 +56,8 @@ jobs:
 
       - name: Start PostgreSQL
         run: |
-          ls /usr/local/var/postgres/base/
+          ls /usr/local/var/postgres/base/14022
+          ls /usr/local/var/postgres/base/14023
           brew info postgresql
           brew services start postgresql -v
           tail -n 100 /usr/local/var/log/postgres.log
