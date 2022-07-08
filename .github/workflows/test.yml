@@ -106,7 +106,7 @@ jobs:
           java-version: '11'
 
       - name: Start PostgreSql
-        run |
+        run: |
           sudo systemctl start postgresql
           createdb -U postgres mirai
           sudo -u postgres psql -c "ALTER USER postgres PASSWORD 'root';"
