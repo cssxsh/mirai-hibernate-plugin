@@ -70,6 +70,10 @@ public class MiraiHibernateConfiguration(private val loader: MiraiHibernateLoade
     private fun load() {
         if (loader.autoScan) scan()
         loader.configuration.apply { if (exists().not()) writeText(loader.default) }.inputStream().use(properties::load)
+        // 设置 rand 别名
+        addRandFunction()
+        // 设置 dice 宏
+        addDiceFunction()
         val url = getProperty("hibernate.connection.url").orEmpty()
         when {
             url.startsWith("jdbc:h2") -> {
@@ -77,17 +81,14 @@ public class MiraiHibernateConfiguration(private val loader: MiraiHibernateLoade
             }
             url.startsWith("jdbc:sqlite") -> {
                 // SQLite 是单文件数据库，最好只有一个连接
-                setProperty("hibernate.hikari.minimumIdle", "${1}")
-                setProperty("hibernate.hikari.maximumPoolSize", "${1}")
-                // 设置 rand 别名
-                addRandFunction()
+                setProperty("hibernate.hikari.minimumIdle", "1")
+                setProperty("hibernate.hikari.maximumPoolSize", "1")
             }
             url.startsWith("jdbc:mysql") -> {
                 //
             }
             url.startsWith("jdbc:postgresql") -> {
-                // 设置 rand 别名
-                addRandFunction()
+                //
             }
         }
     }

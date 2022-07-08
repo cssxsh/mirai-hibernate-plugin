@@ -5,6 +5,7 @@
 [Mirai Console](https://github.com/mamoe/mirai-console) 的前置插件，用于 Hibernate ORM 框架的初始化
 
 [![maven-central](https://img.shields.io/maven-central/v/xyz.cssxsh.mirai/mirai-hibernate-plugin)](https://search.maven.org/artifact/xyz.cssxsh.mirai/mirai-hibernate-plugin)
+[![Database Test](https://github.com/cssxsh/mirai-hibernate-plugin/actions/workflows/test.yml/badge.svg)](https://github.com/cssxsh/mirai-hibernate-plugin/actions/workflows/test.yml)
 
 插件自带聊天记录器 [MiraiHibernateRecorder](src/main/kotlin/xyz/cssxsh/mirai/hibernate/MiraiHibernateLoader.kt),  
 会记录 `群聊/私聊` 的内容到数据库方便其他插件使用，默认是 `h2database` 数据库(since `2.2.0+`)  
@@ -15,10 +16,10 @@
 
 本插件打包了以下版本的数据库驱动和连接池
 
-* `mysql:mysql-connector-java:8.0.29`
-* `org.xerial:sqlite-jdbc:3.36.0.3`
-* `org.postgresql:postgresql:42.4.0`
-* `com.h2database:h2:2.1.214`
+* `mysql:mysql-connector-java:8.0.29` - [mysql](example/mysql.hibernate.properties)
+* `org.xerial:sqlite-jdbc:3.36.0.3` - [sqlite](example/sqlite.hibernate.properties)
+* `org.postgresql:postgresql:42.4.0` - [postgresql](example/postgresql.hibernate.properties)
+* `com.h2database:h2:2.1.214` - [h2](example/h2.hibernate.properties)
 * `com.zaxxer:HikariCP:5.0.1`
 
 需要其他数据库驱动或连接池支持，请添加 `plugin-shared-libraries` 依赖，有两种方法
@@ -34,6 +35,11 @@ repositories {
 
 dependencies {
     compileOnly("xyz.cssxsh.mirai:mirai-hibernate-plugin:${version}")
+}
+
+// hibernate 6 和 HikariCP 5 需要 jdk11
+mirai {
+    jvmTarget = JavaVersion.VERSION_11
 }
 ```
 

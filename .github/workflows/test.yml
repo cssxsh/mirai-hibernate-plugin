@@ -58,7 +58,7 @@ jobs:
         run: |
           brew info postgresql
           brew services start postgresql -v
-          sleep 10s
+          sleep 3s
           tail -n 100 /usr/local/var/log/postgres.log
           createuser -U runner -s postgres
           createdb mirai
@@ -72,7 +72,7 @@ jobs:
           brew install mysql
           brew info mysql
           brew services restart mysql -v
-          sleep 10s
+          sleep 3s
           mysqladmin -uroot create mirai
           mysqladmin -uroot password root
 
@@ -99,6 +99,9 @@ jobs:
 
       - name: H2Test
         run: ./gradlew test --tests "xyz.cssxsh.mirai.hibernate.entry.H2Test" --scan --info
+
+      - name: MysqlTest
+        run: ./gradlew test --tests "xyz.cssxsh.mirai.hibernate.entry.MysqlTest" --scan --info
 
       - name: PostgreSqlTest
         run: ./gradlew test --tests "xyz.cssxsh.mirai.hibernate.entry.PostgreSqlTest" --scan --info

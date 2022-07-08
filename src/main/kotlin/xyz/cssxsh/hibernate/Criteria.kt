@@ -20,6 +20,7 @@ public fun CriteriaBuilder.rand(): Expression<Double> = function("rand", Double:
  * @param model 模，应为正整数
  * @return 随机生成 [0, model) 范围的数
  * @since 2.3.3
+ * @see Configuration.addRandFunction
  */
 public fun CriteriaBuilder.dice(model: Expression<Long>): Expression<Long> = function("dice", Long::class.java, model)
 
@@ -27,7 +28,7 @@ public fun CriteriaBuilder.dice(model: Expression<Long>): Expression<Long> = fun
  * Sqlite / PostgreSQL 添加 rand 函数别名
  *
  * 通过 `hibernate.connection.url` 判断数据库类型，然后添加对应的函数别名
- *
+ * @since 2.3.3
  * @see CriteriaBuilder.rand
  */
 public fun Configuration.addRandFunction() {
@@ -39,7 +40,7 @@ public fun Configuration.addRandFunction() {
     val url = getProperty("hibernate.connection.url") ?: throw IllegalStateException("url is empty")
     when {
         url.startsWith("jdbc:sqlite") -> {
-            addSqlFunction("rand", MacroSQLFunction("rand", StandardBasicTypes.DOUBLE) { _, _ ->
+            addSqlFunction("rand", MacroSQLFunction(StandardBasicTypes.DOUBLE) { _, _ ->
                 appendSql("((RANDOM() + 9223372036854775808) / 2.0 / 9223372036854775808)")
             })
         }
@@ -65,7 +66,7 @@ public fun Configuration.addDiceFunction() {
     val url = getProperty("hibernate.connection.url") ?: throw IllegalStateException("url is empty")
     when {
         url.startsWith("jdbc:sqlite") -> {
-            addSqlFunction("dice", MacroSQLFunction("dice", StandardBasicTypes.LONG) { args, translator ->
+            addSqlFunction("dice", MacroSQLFunction(StandardBasicTypes.LONG) { args, translator ->
                 val (model) = args
                 appendSql("ABS(RANDOM() % ")
                 translator.render(model, SqlAstNodeRenderingMode.DEFAULT)
@@ -73,7 +74,7 @@ public fun Configuration.addDiceFunction() {
             })
         }
         url.startsWith("jdbc:postgresql") -> {
-            addSqlFunction("dice", MacroSQLFunction("dice", StandardBasicTypes.LONG) { args, translator ->
+            addSqlFunction("dice", MacroSQLFunction(StandardBasicTypes.LONG) { args, translator ->
                 val (model) = args
                 appendSql("FLOOR(")
                 translator.render(model, SqlAstNodeRenderingMode.DEFAULT)
@@ -81,7 +82,7 @@ public fun Configuration.addDiceFunction() {
             })
         }
         else -> {
-            addSqlFunction("dice", MacroSQLFunction("dice", StandardBasicTypes.LONG) { args, translator ->
+            addSqlFunction("dice", MacroSQLFunction(StandardBasicTypes.LONG) { args, translator ->
                 val (model) = args
                 appendSql("FLOOR(")
                 translator.render(model, SqlAstNodeRenderingMode.DEFAULT)
