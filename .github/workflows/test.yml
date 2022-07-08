@@ -56,9 +56,8 @@ jobs:
 
       - name: Start PostgreSQL
         run: |
-          ls /usr/local/var/postgres
-          echo "unix_socket_permissions = 0777" >> /usr/local/var/postgres/postgresql.conf
-          brew services start postgresql
+          rm /opt/homebrew/var/postgres/postmaster.pid
+          brew services restart postgresql
           createdb mirai
           psql -c "ALTER USER postgres PASSWORD 'root';"
 
