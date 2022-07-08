@@ -57,6 +57,7 @@ jobs:
       - name: Start PostgreSQL
         run: |
           brew info postgresql
+          rm -r /usr/local/var/postgres/*
           chown runner /usr/local/var/postgres
           initdb --locale=C -E UTF-8 /usr/local/var/postgres
           brew services restart postgresql -v
