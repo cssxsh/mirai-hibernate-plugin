@@ -41,6 +41,9 @@ jobs:
       - name: H2Test
         run: ./gradlew test --tests "xyz.cssxsh.mirai.hibernate.entry.H2Test" --scan --info
 
+      - name: MysqlTest
+        run: ./gradlew test --tests "xyz.cssxsh.mirai.hibernate.entry.MysqlTest" --scan --info
+
       - name: PostgreSqlTest
         run: ./gradlew test --tests "xyz.cssxsh.mirai.hibernate.entry.PostgreSqlTest" --scan --info
 
@@ -59,7 +62,8 @@ jobs:
 
       - name: Start PostgreSQL
         run: |
-          brew services start postgresql
+          rm /opt/homebrew/var/postgres/postmaster.pid
+          brew services restart postgresql
           createdb mirai
 
       - name: Start MySQL
