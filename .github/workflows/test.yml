@@ -68,6 +68,7 @@ jobs:
           initdb ~/postgresql -E utf8
           pg_ctl -D ~/postgresql -l logfile start
           createdb mirai
+          psql -U root -c "ALTER USER postgres PASSWORD 'root';"
 
       - name: Start MySQL
         run: |
