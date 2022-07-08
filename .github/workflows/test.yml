@@ -70,9 +70,14 @@ jobs:
           createdb mirai
 
       - name: Start MySQL
-        uses: ankane/setup-mysql@v1
-        with:
-          database: mirai
+        run: |
+          brew install mysql
+          mysqld --initialize-insecure
+          mysqld --install
+          brew services restart mysql
+          mysqladmin -uroot create mirai
+          mysqladmin -uroot password root
+          
 
       - name: chmod -R 777 *
         run: chmod -R 777 *
