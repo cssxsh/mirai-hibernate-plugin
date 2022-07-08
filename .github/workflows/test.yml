@@ -56,9 +56,8 @@ jobs:
 
       - name: Start PostgreSQL
         run: |
-          dscacheutil -q group
           brew info postgresql
-          sudo su postgres -c "brew services start postgresql -v"
+          sudo -u postgres brew services start postgresql -v
           tail -n 100 /usr/local/var/log/postgres.log
           psql -l
           createdb mirai
