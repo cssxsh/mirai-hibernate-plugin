@@ -63,7 +63,7 @@ jobs:
           createdb mirai
           psql -c "ALTER USER postgres PASSWORD 'root';"
         env:
-          PGDATABASE: postgres
+          PGUSER: postgres
 
       - name: Start MySQL
         run: |
