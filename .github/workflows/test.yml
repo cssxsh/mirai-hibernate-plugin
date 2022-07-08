@@ -57,8 +57,9 @@ jobs:
       - name: Start PostgreSQL
         run: |
           brew info postgresql
-          brew services start postgresql -U postgres
+          brew services start postgresql -v
           tail -n 100 /usr/local/var/log/postgres.log
+          psql -l
           createdb mirai
           psql -c "ALTER USER postgres PASSWORD 'root';"
 
