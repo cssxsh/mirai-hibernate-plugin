@@ -106,9 +106,10 @@ jobs:
           java-version: '11'
 
       - name: Start PostgreSql
-        uses: ankane/setup-postgres@v1
-        with:
-          database: mirai
+        run |
+          sudo systemctl start postgresql
+          createdb -U postgres mirai
+          sudo -u postgres psql -c "ALTER USER postgres PASSWORD 'root';"
 
       - name: Start MySQL
         run: |
