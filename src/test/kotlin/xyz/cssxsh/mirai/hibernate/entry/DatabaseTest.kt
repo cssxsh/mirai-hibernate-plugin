@@ -7,6 +7,7 @@ import org.hibernate.cfg.Configuration
 import org.junit.jupiter.api.*
 import xyz.cssxsh.hibernate.*
 import java.io.File
+import kotlin.random.Random
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 abstract class DatabaseTest {
@@ -32,10 +33,10 @@ abstract class DatabaseTest {
     fun insert() {
         factory.openSession().use { session ->
             session.transaction.begin()
+            val random = Random(System.currentTimeMillis())
 
-            repeat(10) { index ->
-                val md5 = (System.currentTimeMillis() + index * 100)
-                    .toByteArray().md5().toUHexString("")
+            repeat(100) { index ->
+                val md5 = random.nextLong().toByteArray().md5().toUHexString("")
                 val face = FaceRecord(
                     md5 = md5,
                     code = "{}",
