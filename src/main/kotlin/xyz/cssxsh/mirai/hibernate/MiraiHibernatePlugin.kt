@@ -20,7 +20,7 @@ public object MiraiHibernatePlugin : KotlinPlugin(
 ) {
 
     override fun PluginComponentStorage.onLoad() {
-        checkPlatform()
+        checkPlatform(folder = dataFolder)
     }
 
     override fun onEnable() {

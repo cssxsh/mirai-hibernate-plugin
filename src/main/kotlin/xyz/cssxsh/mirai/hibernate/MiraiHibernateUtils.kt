@@ -5,8 +5,11 @@ import net.mamoe.mirai.contact.*
 import net.mamoe.mirai.message.data.*
 import net.mamoe.mirai.utils.*
 import org.hibernate.*
+import org.sqlite.SQLiteJDBCLoader
 import xyz.cssxsh.hibernate.*
 import xyz.cssxsh.mirai.hibernate.entry.*
+import java.io.File
+import java.net.URL
 
 internal val logger by lazy {
     try {
@@ -16,12 +19,24 @@ internal val logger by lazy {
     }
 }
 
-public fun checkPlatform() {
+private const val SQLITE_JNI =
+    "https://raw.fastgit.org/xerial/sqlite-jdbc/master/src/main/resources/org/sqlite/native/Linux-Android/aarch64/libsqlitejdbc.so"
+
+public fun checkPlatform(folder: File) {
     // Termux
     if ("termux" in System.getProperty("user.dir")) {
-        logger.info { "change platform to android-arm" }
-        // sqlite base on native lib
-        System.setProperty("org.sqlite.lib.path", "org/sqlite/native/Linux/android-arm")
+        logger.info { "change platform to Linux-Android" }
+        System.setProperty("org.sqlite.lib.path", folder.path)
+        folder.resolve("libsqlitejdbc.so").apply {
+            if (exists().not()) {
+                val url = SQLiteJDBCLoader::class.java.classLoader
+                    .getResource("org/sqlite/native/Linux-Android/aarch64/libsqlitejdbc.so")
+                    ?: URL(SQLITE_JNI)
+
+                url.openStream().use { writeBytes(it.readAllBytes()) }
+            }
+        }
+        SQLiteJDBCLoader.initialize()
     }
 }
 
