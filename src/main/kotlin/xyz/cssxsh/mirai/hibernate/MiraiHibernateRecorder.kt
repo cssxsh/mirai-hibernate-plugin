@@ -118,9 +118,9 @@ public object MiraiHibernateRecorder : SimpleListenerHost() {
             criteria.select(record)
                 .where(
                     equal(
-                        record.get<Int>("kind"), when (event) {
-                            is MessageRecallEvent.FriendRecall -> MessageSourceKind.FRIEND.ordinal
-                            is MessageRecallEvent.GroupRecall -> MessageSourceKind.GROUP.ordinal
+                        record.get<MessageSourceKind>("kind"), when (event) {
+                            is MessageRecallEvent.FriendRecall -> MessageSourceKind.FRIEND
+                            is MessageRecallEvent.GroupRecall -> MessageSourceKind.GROUP
                         }
                     ),
                     equal(record.get<Long>("fromId"), event.authorId),
@@ -147,7 +147,7 @@ public object MiraiHibernateRecorder : SimpleListenerHost() {
             val record = criteria.from<MessageRecord>()
             criteria.select(record)
                 .where(
-                    equal(record.get<Int>("kind"), source.kind.ordinal),
+                    equal(record.get<MessageSourceKind>("kind"), source.kind),
                     equal(record.get<Long>("fromId"), source.fromId),
                     equal(record.get<Long>("targetId"), source.targetId),
                     equal(record.get<String>("ids"), source.ids.joinToString()),
@@ -198,7 +198,7 @@ public object MiraiHibernateRecorder : SimpleListenerHost() {
                 .where(
                     equal(record.get<Int>("bot"), group.bot.id),
                     between(record.get("time"), start, end),
-                    equal(record.get<Int>("kind"), MessageSourceKind.GROUP.ordinal),
+                    equal(record.get<MessageSourceKind>("kind"), MessageSourceKind.GROUP),
                     equal(record.get<Long>("targetId"), group.id)
                 )
                 .orderBy(desc(record.get<Int>("time")))
@@ -214,7 +214,7 @@ public object MiraiHibernateRecorder : SimpleListenerHost() {
             criteria.select(record)
                 .where(
                     equal(record.get<Int>("bot"), group.bot.id),
-                    equal(record.get<Int>("kind"), MessageSourceKind.GROUP.ordinal),
+                    equal(record.get<MessageSourceKind>("kind"), MessageSourceKind.GROUP),
                     equal(record.get<Long>("targetId"), group.id)
                 )
                 .orderBy(desc(record.get<Int>("time")))
@@ -233,7 +233,7 @@ public object MiraiHibernateRecorder : SimpleListenerHost() {
                 .where(
                     equal(record.get<Int>("bot"), friend.bot.id),
                     between(record.get("time"), start, end),
-                    equal(record.get<Int>("kind"), MessageSourceKind.FRIEND.ordinal),
+                    equal(record.get<MessageSourceKind>("kind"), MessageSourceKind.FRIEND),
                     or(
                         equal(record.get<Long>("fromId"), friend.id),
                         equal(record.get<Long>("targetId"), friend.id)
@@ -252,7 +252,7 @@ public object MiraiHibernateRecorder : SimpleListenerHost() {
             criteria.select(record)
                 .where(
                     equal(record.get<Int>("bot"), friend.bot.id),
-                    equal(record.get<Int>("kind"), MessageSourceKind.FRIEND.ordinal),
+                    equal(record.get<MessageSourceKind>("kind"), MessageSourceKind.FRIEND),
                     or(
                         equal(record.get<Long>("fromId"), friend.id),
                         equal(record.get<Long>("targetId"), friend.id)
@@ -274,7 +274,7 @@ public object MiraiHibernateRecorder : SimpleListenerHost() {
                 .where(
                     equal(record.get<Int>("bot"), member.bot.id),
                     between(record.get("time"), start, end),
-                    equal(record.get<Int>("kind"), MessageSourceKind.GROUP.ordinal),
+                    equal(record.get<MessageSourceKind>("kind"), MessageSourceKind.GROUP),
                     equal(record.get<Long>("fromId"), member.id),
                     equal(record.get<Long>("targetId"), member.group.id)
                 )
@@ -291,7 +291,7 @@ public object MiraiHibernateRecorder : SimpleListenerHost() {
             criteria.select(record)
                 .where(
                     equal(record.get<Int>("bot"), member.bot.id),
-                    equal(record.get<Int>("kind"), MessageSourceKind.GROUP.ordinal),
+                    equal(record.get<MessageSourceKind>("kind"), MessageSourceKind.GROUP),
                     equal(record.get<Long>("fromId"), member.id),
                     equal(record.get<Long>("targetId"), member.group.id)
                 )
@@ -311,7 +311,7 @@ public object MiraiHibernateRecorder : SimpleListenerHost() {
                 .where(
                     equal(record.get<Int>("bot"), stranger.bot.id),
                     between(record.get("time"), start, end),
-                    equal(record.get<Int>("kind"), MessageSourceKind.STRANGER.ordinal),
+                    equal(record.get<MessageSourceKind>("kind"), MessageSourceKind.STRANGER),
                     or(
                         equal(record.get<Long>("fromId"), stranger.id),
                         equal(record.get<Long>("targetId"), stranger.id)
@@ -330,7 +330,7 @@ public object MiraiHibernateRecorder : SimpleListenerHost() {
             criteria.select(record)
                 .where(
                     equal(record.get<Int>("bot"), stranger.bot.id),
-                    equal(record.get<Int>("kind"), MessageSourceKind.STRANGER.ordinal),
+                    equal(record.get<MessageSourceKind>("kind"), MessageSourceKind.STRANGER),
                     or(
                         equal(record.get<Long>("fromId"), stranger.id),
                         equal(record.get<Long>("targetId"), stranger.id)
