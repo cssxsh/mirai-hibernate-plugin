@@ -55,7 +55,7 @@ abstract class DatabaseTest {
                     ids = "$index",
                     internalIds ="$index",
                     time = (System.currentTimeMillis() / 1000).toInt(),
-                    kind = MessageSourceKind.values().random().ordinal,
+                    kind = MessageSourceKind.values().random(),
                     code = md5
                 )
 

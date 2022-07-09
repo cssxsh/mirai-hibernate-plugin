@@ -28,7 +28,8 @@ public data class MessageRecord(
     @Column(name = "time", nullable = false, updatable = false)
     val time: Int,
     @Column(name = "kind", nullable = false, updatable = false)
-    val kind: Int,
+    @Enumerated(value = EnumType.ORDINAL)
+    val kind: MessageSourceKind,
     @Column(name = "code", nullable = false, updatable = false, columnDefinition = "text")
     val code: String,
     @Column(name = "recall", nullable = false, updatable = true)
@@ -38,7 +39,7 @@ public data class MessageRecord(
      * [MessageSource.originalMessage] 来自 [MessageRecord.code] 的解码
      */
     public fun toMessageSource(): MessageSource {
-        return Mirai.buildMessageSource(bot, MessageSourceKind.values()[kind]) {
+        return Mirai.buildMessageSource(bot, kind) {
             fromId = this@MessageRecord.fromId
             targetId = this@MessageRecord.targetId
             ids = this@MessageRecord.ids.toIntArray()
@@ -70,7 +71,7 @@ public data class MessageRecord(
             time = source.time,
             ids = source.ids.joinToString(","),
             internalIds = source.internalIds.joinToString(","),
-            kind = source.kind.ordinal,
+            kind = source.kind,
             code = with(MessageChain) {
                 message.serializeToJsonString()
             }
@@ -87,10 +88,10 @@ public data class MessageRecord(
             ids = null,
             internalIds = null,
             kind = when (target) {
-                is Group -> MessageSourceKind.GROUP.ordinal
-                is Friend -> MessageSourceKind.FRIEND.ordinal
-                is Member -> MessageSourceKind.TEMP.ordinal
-                is Stranger -> MessageSourceKind.STRANGER.ordinal
+                is Group -> MessageSourceKind.GROUP
+                is Friend -> MessageSourceKind.FRIEND
+                is Member -> MessageSourceKind.TEMP
+                is Stranger -> MessageSourceKind.STRANGER
                 else -> throw NoSuchElementException("Unknown message kind with $target")
             },
             code = with(MessageChain) {

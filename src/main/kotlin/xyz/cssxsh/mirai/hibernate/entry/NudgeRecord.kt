@@ -23,7 +23,8 @@ public data class NudgeRecord(
     @Column(name = "target_id", nullable = false, updatable = false)
     val targetId: Long,
     @Column(name = "kind", nullable = false, updatable = false)
-    val kind: Int,
+    @Enumerated(value = EnumType.ORDINAL)
+    val kind: MessageSourceKind,
     @Column(name = "subject", nullable = false, updatable = false)
     val subject: Long,
     @Column(name = "action", nullable = false, updatable = false)
@@ -39,10 +40,10 @@ public data class NudgeRecord(
         fromId = event.from.id,
         targetId = event.target.id,
         kind = when (event.subject) {
-            is Group -> MessageSourceKind.GROUP.ordinal
-            is Friend -> MessageSourceKind.FRIEND.ordinal
-            is Member -> MessageSourceKind.TEMP.ordinal
-            is Stranger -> MessageSourceKind.STRANGER.ordinal
+            is Group -> MessageSourceKind.GROUP
+            is Friend -> MessageSourceKind.FRIEND
+            is Member -> MessageSourceKind.TEMP
+            is Stranger -> MessageSourceKind.STRANGER
             else -> throw NoSuchElementException("Nudge kind with ${event.subject}")
         },
         subject = event.subject.id,
