@@ -66,8 +66,11 @@ dependencies {
 * [MiraiHibernateRecorder](src/main/kotlin/xyz/cssxsh/mirai/hibernate/MiraiHibernateRecorder.kt)  
   是本插件自带的消息记录器，通过对 `MessageEvent` 和 `MessagePostSendEvent` 记录，保存消息历史到数据库
 
-* [Configuration.addRandFunction](src/main/kotlin/xyz/cssxsh/hibernate/Criteria.kt)  
+* [CriteriaBuilder.rand](src/main/kotlin/xyz/cssxsh/hibernate/Criteria.kt)  
   `MiraiHibernateConfiguration` 中会对 Sqlite / PostgreSql 的 `random` 进行别名注册为 `rand` 统一SQL语句的中的随机函数名
+
+* [CriteriaBuilder.dice](src/main/kotlin/xyz/cssxsh/hibernate/Criteria.kt)  
+  `MiraiHibernateConfiguration` 中会注册名为 `rand` 的宏，用于随机取行
 
 ### 示例代码
 
