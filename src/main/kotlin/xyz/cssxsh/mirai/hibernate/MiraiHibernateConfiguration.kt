@@ -1,10 +1,10 @@
 package xyz.cssxsh.mirai.hibernate
 
+import jakarta.persistence.*
 import net.mamoe.mirai.console.plugin.jvm.*
 import org.hibernate.boot.registry.*
 import org.hibernate.cfg.*
 import xyz.cssxsh.hibernate.*
-import java.io.*
 import java.net.*
 import java.sql.*
 
@@ -30,16 +30,16 @@ public class MiraiHibernateConfiguration(private val loader: MiraiHibernateLoade
     /**
      * @see jakarta.persistence.Entity
      */
-    private fun scan(annotationClass: Class<out Annotation> = jakarta.persistence.Entity::class.java) {
+    private fun scan(vararg annotations: Class<out Annotation>) {
         val path = loader.packageName.replace('.', '/')
-        val connection = loader.classLoader.getResource(path)?.openConnection() ?: throw IOException(path)
+        val connection = loader.classLoader.getResource(path)?.openConnection() ?: return
         when (connection) {
             is JarURLConnection -> {
                 for (entry in connection.jarFile.entries()) {
                     if (entry.name.startsWith(path) && entry.name.endsWith(".class")) {
                         val name = entry.name.removeSuffix(".class").replace('/', '.')
                         val clazz = loader.classLoader.loadClass(name)
-                        if (clazz.isAnnotationPresent(annotationClass)) {
+                        if (annotations.any { clazz.isAnnotationPresent(it) }) {
                             addAnnotatedClass(clazz)
                         }
                     }
@@ -51,7 +51,7 @@ public class MiraiHibernateConfiguration(private val loader: MiraiHibernateLoade
                     if (filename.endsWith(".class")) {
                         val name = filename.removeSuffix(".class")
                         val clazz = loader.classLoader.loadClass("${loader.packageName}.${name}")
-                        if (clazz.isAnnotationPresent(annotationClass)) {
+                        if (annotations.any { clazz.isAnnotationPresent(it) }) {
                             addAnnotatedClass(clazz)
                         }
                     }
@@ -68,7 +68,7 @@ public class MiraiHibernateConfiguration(private val loader: MiraiHibernateLoade
      * @see org.hibernate.community.dialect.SQLiteDialect
      */
     private fun load() {
-        if (loader.autoScan) scan()
+        if (loader.autoScan) scan(Entity::class.java, Embeddable::class.java, MappedSuperclass::class.java)
         loader.configuration.apply { if (exists().not()) writeText(loader.default) }.inputStream().use(properties::load)
         // 设置 rand 别名
         addRandFunction()
