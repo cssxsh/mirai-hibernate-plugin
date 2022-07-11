@@ -60,8 +60,8 @@ dependencies {
 
 * [MiraiHibernateConfiguration](src/main/kotlin/xyz/cssxsh/mirai/hibernate/MiraiHibernateConfiguration.kt)
   配置的，对应于 `JvmPlugin` 的 `SessionFactory`  
-  默认将会读取(生成)在 `configFolder` 目录下的 `hibernate.properties` 作为配置文件  
-  并且自动扫描加载 `JvmPlugin` 所在类包下的被 `javax.persistence.Entity` 标记的实体类
+  默认将会读取(生成)在 `config` 目录下的 `hibernate.properties` 作为配置文件  
+  并且自动扫描加载当前插件的 `entry` 类包中被 `jakarta.persistence.Entity` 标记的实体类
 
 * [MiraiHibernateRecorder](src/main/kotlin/xyz/cssxsh/mirai/hibernate/MiraiHibernateRecorder.kt)  
   是本插件自带的消息记录器，通过对 `MessageEvent` 和 `MessagePostSendEvent` 记录，保存消息历史到数据库

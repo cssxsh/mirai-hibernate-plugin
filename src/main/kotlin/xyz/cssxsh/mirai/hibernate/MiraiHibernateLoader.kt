@@ -61,7 +61,11 @@ public interface MiraiHibernateLoader {
     ) : MiraiHibernateLoader {
         public constructor(plugin: JvmPlugin) : this(
             autoScan = true,
-            packageName = plugin::class.java.packageName + ".entry",
+            packageName = with(plugin::class.java) {
+                classLoader.getDefinedPackage("$packageName.entry")?.name
+                    ?: classLoader.getDefinedPackage("$packageName.model")?.name
+                    ?: packageName
+            },
             classLoader = plugin::class.java.classLoader,
             configuration = plugin.configFolder.resolve("hibernate.properties"),
             default = """
