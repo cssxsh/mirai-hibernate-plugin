@@ -38,7 +38,11 @@ public class MiraiHibernateConfiguration(private val loader: MiraiHibernateLoade
                 for (entry in connection.jarFile.entries()) {
                     if (entry.name.startsWith(path) && entry.name.endsWith(".class")) {
                         val name = entry.name.removeSuffix(".class").replace('/', '.')
-                        val clazz = loader.classLoader.loadClass(name)
+                        val clazz = try {
+                            loader.classLoader.loadClass(name)
+                        } catch (_: NoClassDefFoundError) {
+                            continue
+                        }
                         if (annotations.any { clazz.isAnnotationPresent(it) }) {
                             addAnnotatedClass(clazz)
                         }
@@ -47,12 +51,18 @@ public class MiraiHibernateConfiguration(private val loader: MiraiHibernateLoade
             }
             else -> {
                 // XXX: FileURLConnection
-                connection.inputStream.reader().forEachLine { filename ->
-                    if (filename.endsWith(".class")) {
-                        val name = filename.removeSuffix(".class")
-                        val clazz = loader.classLoader.loadClass("${loader.packageName}.${name}")
-                        if (annotations.any { clazz.isAnnotationPresent(it) }) {
-                            addAnnotatedClass(clazz)
+                connection.inputStream.reader().useLines { lines ->
+                    for (filename in lines) {
+                        if (filename.endsWith(".class")) {
+                            val name = filename.removeSuffix(".class")
+                            val clazz = try {
+                                loader.classLoader.loadClass("${loader.packageName}.${name}")
+                            } catch (_: NoClassDefFoundError) {
+                                continue
+                            }
+                            if (annotations.any { clazz.isAnnotationPresent(it) }) {
+                                addAnnotatedClass(clazz)
+                            }
                         }
                     }
                 }
