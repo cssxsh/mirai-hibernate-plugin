@@ -102,12 +102,13 @@ abstract class DatabaseTest {
             session.withCriteria<MessageRecord> { criteria ->
                 val record = criteria.from<MessageRecord>()
                 val id = record.get<Long>("id")
-                val subquery = criteria.subquery<Long>()
-                val rand = dice(subquery.select(max(subquery.from<MessageRecord>().get("id"))))
+                val max = criteria.subquery<Long>().apply {
+                    select(max(from<MessageRecord>().get("id")))
+                }
 
                 criteria.select(record)
                     .where(
-                        ge(id, rand)
+                        ge(id, dice(max))
                     )
             }.setMaxResults(3).list()
         }

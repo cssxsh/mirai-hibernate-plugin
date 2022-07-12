@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "xyz.cssxsh.mirai"
-version = "2.3.4"
+version = "2.3.5"
 
 mavenCentralPublish {
     useCentralS01()
@@ -16,7 +16,6 @@ mavenCentralPublish {
     licenseFromGitHubProject("AGPL-3.0", "master")
     publication {
         artifact(tasks.getByName("buildPlugin"))
-        artifact(tasks.getByName("buildPluginLegacy"))
     }
 }
 

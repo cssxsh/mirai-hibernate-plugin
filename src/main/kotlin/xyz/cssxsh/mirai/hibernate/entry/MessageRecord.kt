@@ -6,6 +6,7 @@ import net.mamoe.mirai.*
 import net.mamoe.mirai.contact.*
 import net.mamoe.mirai.message.code.*
 import net.mamoe.mirai.message.data.*
+import net.mamoe.mirai.utils.*
 
 @Entity
 @Table(name = "message_record")
@@ -105,7 +106,7 @@ public data class MessageRecord(
             return if (isNullOrEmpty()) {
                 IntArray(0)
             } else {
-                splitToSequence(',').map { it.toInt() }.toMutableList().toIntArray()
+                split(',').mapToIntArray { it.toInt() }
             }
         }
     }
