@@ -62,9 +62,12 @@ public interface MiraiHibernateLoader {
         public constructor(plugin: JvmPlugin) : this(
             autoScan = true,
             packageName = with(plugin::class.java) {
-                classLoader.getDefinedPackage("$packageName.entry")?.name
-                    ?: classLoader.getDefinedPackage("$packageName.model")?.name
-                    ?: packageName
+                val packagePath = packageName.replace('.', '/')
+                for(name in listOf("entry", "entity", "entities", "model", "models", "bean", "beans", "dto")) {
+                    classLoader.getResource("$packagePath/$name") ?: continue
+                    return@with "$packageName.$name"
+                }
+                packageName
             },
             classLoader = plugin::class.java.classLoader,
             configuration = plugin.configFolder.resolve("hibernate.properties"),
