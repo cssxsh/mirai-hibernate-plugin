@@ -28,11 +28,17 @@ public class MiraiHibernateConfiguration(private val loader: MiraiHibernateLoade
     }
 
     /**
+     * 扫描指定包名下的 实体类 (被 Entity, Embeddable, MappedSuperclass 标记的类）
+     * @see MiraiHibernateLoader.autoScan
+     * @see MiraiHibernateLoader.packageName
      * @see jakarta.persistence.Entity
+     * @see jakarta.persistence.Embeddable
+     * @see jakarta.persistence.MappedSuperclass
      */
-    private fun scan(vararg annotations: Class<out Annotation>) {
-        val path = loader.packageName.replace('.', '/')
+    public fun scan(packageName: String) {
+        val path = packageName.replace('.', '/')
         val connection = loader.classLoader.getResource(path)?.openConnection() ?: return
+        val annotations = arrayOf(Entity::class.java, Embeddable::class.java, MappedSuperclass::class.java)
         when (connection) {
             is JarURLConnection -> {
                 for (entry in connection.jarFile.entries()) {
@@ -56,7 +62,7 @@ public class MiraiHibernateConfiguration(private val loader: MiraiHibernateLoade
                         if (filename.endsWith(".class")) {
                             val name = filename.removeSuffix(".class")
                             val clazz = try {
-                                loader.classLoader.loadClass("${loader.packageName}.${name}")
+                                loader.classLoader.loadClass("${packageName}.${name}")
                             } catch (_: NoClassDefFoundError) {
                                 continue
                             }
@@ -78,7 +84,7 @@ public class MiraiHibernateConfiguration(private val loader: MiraiHibernateLoade
      * @see org.hibernate.community.dialect.SQLiteDialect
      */
     private fun load() {
-        if (loader.autoScan) scan(Entity::class.java, Embeddable::class.java, MappedSuperclass::class.java)
+        if (loader.autoScan) scan(packageName = loader.packageName)
         loader.configuration.apply { if (exists().not()) writeText(loader.default) }.inputStream().use(properties::load)
         // 设置 rand 别名
         addRandFunction()
