@@ -5,6 +5,7 @@ import net.mamoe.mirai.event.events.*
 import net.mamoe.mirai.message.data.*
 import xyz.cssxsh.mirai.hibernate.*
 import xyz.cssxsh.mirai.spi.*
+import kotlin.streams.asSequence
 
 public class MiraiHibernateSourceHandler : MessageSourceHandler {
     override val id: String = "hibernate-recorder"
@@ -21,19 +22,25 @@ public class MiraiHibernateSourceHandler : MessageSourceHandler {
     }
 
     override fun from(member: Member): MessageSource? {
-        return MiraiHibernateRecorder[member].find { it.recall }?.toMessageSource()
+        return MiraiHibernateRecorder[member].use { stream ->
+            stream.asSequence().find { !it.recall }?.toMessageSource()
+        }
     }
 
     override fun target(contact: Contact): MessageSource? {
-        return MiraiHibernateRecorder[contact].find { it.recall && it.bot == it.fromId }?.toMessageSource()
+        return MiraiHibernateRecorder[contact].use { stream ->
+            stream.asSequence().find { !it.recall && it.bot == it.fromId }?.toMessageSource()
+        }
     }
 
     override fun quote(event: MessageEvent): MessageSource? {
         val quote = event.message.findIsInstance<QuoteReply>()
         return if (quote != null) {
-            MiraiHibernateRecorder[quote.source].find { it.recall }?.toMessageSource()
+            MiraiHibernateRecorder[quote.source].find { !it.recall }?.toMessageSource()
         } else {
-            MiraiHibernateRecorder[event.subject].find { it.recall && it.fromId != event.sender.id }?.toMessageSource()
+            MiraiHibernateRecorder[event.subject].use { stream ->
+                stream.asSequence().find { !it.recall && it.fromId != event.sender.id }?.toMessageSource()
+            }
         }
     }
 }

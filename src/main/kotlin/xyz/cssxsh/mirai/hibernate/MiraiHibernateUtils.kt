@@ -1,6 +1,5 @@
 package xyz.cssxsh.mirai.hibernate
 
-import kotlinx.coroutines.*
 import net.mamoe.mirai.contact.*
 import net.mamoe.mirai.message.data.*
 import net.mamoe.mirai.utils.*
@@ -41,16 +40,6 @@ public fun checkPlatform(folder: File) {
 }
 
 internal lateinit var factory: SessionFactory
-
-internal val CoroutineScope.currentSession: Session
-    get() {
-        val session = factory.openSession()
-        launch {
-            delay(40_000)
-            session.close()
-        }
-        return session
-    }
 
 internal fun <R> useSession(block: (session: Session) -> R): R {
     return factory.openSession().use { session ->
