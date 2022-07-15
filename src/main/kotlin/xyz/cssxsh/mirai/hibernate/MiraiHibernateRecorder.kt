@@ -369,4 +369,35 @@ public object MiraiHibernateRecorder : SimpleListenerHost() {
             else -> throw IllegalStateException("不支持查询的联系人 $contact")
         }
     }
+
+    /**
+     * 种类为 [kind] 的消息
+     * @param start 开始时间
+     * @param end 结束时间
+     */
+    public operator fun get(kind: MessageSourceKind, start: Int, end: Int): List<MessageRecord> {
+        return currentSession.withCriteria<MessageRecord> { criteria ->
+            val record = criteria.from<MessageRecord>()
+            criteria.select(record)
+                .where(
+                    between(record.get("time"), start, end),
+                    equal(record.get<MessageSourceKind>("kind"), kind)
+                )
+                .orderBy(desc(record.get<Int>("time")))
+        }.list()
+    }
+
+    /**
+     * 种类为 [kind] 的消息
+     */
+    public operator fun get(kind: MessageSourceKind): Sequence<MessageRecord> {
+        return currentSession.withCriteria<MessageRecord> { criteria ->
+            val record = criteria.from<MessageRecord>()
+            criteria.select(record)
+                .where(
+                    equal(record.get<MessageSourceKind>("kind"), kind)
+                )
+                .orderBy(desc(record.get<Int>("time")))
+        }.stream().asSequence()
+    }
 }
