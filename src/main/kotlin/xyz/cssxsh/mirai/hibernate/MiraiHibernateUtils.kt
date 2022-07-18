@@ -81,7 +81,75 @@ public fun FaceRecord.Companion.random(): FaceRecord {
         session.withCriteria<FaceRecord> { criteria ->
             val record = criteria.from<FaceRecord>()
             criteria.select(record)
+                .where(not(record.get("disable")))
                 .orderBy(desc(record.get<String>("md5")))
         }.setFirstResult((0 until count).random()).setMaxResults(1).uniqueResult()
+    }
+}
+
+public fun FaceRecord.Companion.disable(md5: String): FaceRecord {
+    return useSession { session ->
+        val result = session.withCriteriaUpdate<FaceRecord> { criteria ->
+            val root = criteria.from()
+            criteria
+                .set(root.get("disable"), true)
+                .where(equal(root.get<String>("md5"), md5))
+        }.executeUpdate()
+
+        check(result > 0) { "FaceRecord(${md5}).disable 修改失败" }
+
+        session.get(FaceRecord::class.java, md5)
+    }
+}
+
+public fun FaceRecord.Companion.match(tag: String): List<FaceRecord> {
+    return useSession { session ->
+        session.withCriteria<FaceRecord> { criteria ->
+            val root = criteria.from<FaceRecord>()
+            val join = root.joinList<FaceRecord, FaceTagRecord>("tags")
+            criteria.select(root)
+                .where(equal(join.get<String>("tag"), tag))
+        }.list()
+    }
+}
+
+public operator fun FaceTagRecord.Companion.get(md5: String): List<FaceTagRecord> {
+    return useSession { session ->
+        session.withCriteria<FaceTagRecord> { criteria ->
+            val root = criteria.from<FaceTagRecord>()
+            criteria.select(root)
+                .where(equal(root.get<String>("md5"), md5))
+        }.list()
+    }
+}
+
+public operator fun FaceTagRecord.Companion.set(md5: String, tag: String): List<FaceTagRecord> {
+    return useSession { session ->
+        session.persist(FaceTagRecord(md5 = md5, tag = tag))
+
+        session.withCriteria<FaceTagRecord> { criteria ->
+            val root = criteria.from<FaceTagRecord>()
+            criteria.select(root)
+                .where(equal(root.get<String>("md5"), md5))
+        }.list()
+    }
+}
+
+public fun FaceTagRecord.Companion.remove(md5: String, tag: String): List<FaceTagRecord> {
+    return useSession { session ->
+        session.withCriteriaDelete<FaceTagRecord> { criteria ->
+            val root = criteria.from()
+            criteria
+                .where(equal(root.get<String>("md5"), md5))
+        }.executeUpdate()
+
+        session.withCriteria<FaceTagRecord> { criteria ->
+            val root = criteria.from<FaceTagRecord>()
+            criteria.select(root)
+                .where(
+                    equal(root.get<String>("md5"), md5),
+                    equal(root.get<String>("tag"), tag)
+                )
+        }.list()
     }
 }

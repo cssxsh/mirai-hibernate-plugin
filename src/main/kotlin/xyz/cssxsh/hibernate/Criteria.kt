@@ -104,6 +104,12 @@ public inline fun <reified T> Session.withCriteria(block: CriteriaBuilder.(crite
 public inline fun <reified T> Session.withCriteriaUpdate(block: CriteriaBuilder.(criteria: CriteriaUpdate<T>) -> Unit): MutationQuery =
     createMutationQuery(with(criteriaBuilder) { createCriteriaUpdate(T::class.java).also { block(it) } })
 
+/**
+ * 构造一个 Criteria 查询
+ */
+public inline fun <reified T> Session.withCriteriaDelete(block: CriteriaBuilder.(criteria: CriteriaDelete<T>) -> Unit): MutationQuery =
+    createMutationQuery(with(criteriaBuilder) { createCriteriaDelete(T::class.java).also { block(it) } })
+
 public inline fun <reified X> AbstractQuery<*>.from(): Root<X> = from(X::class.java)
 
 public inline fun <reified T> CriteriaUpdate<T>.from(): Root<T> = from(T::class.java)

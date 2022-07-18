@@ -27,8 +27,15 @@ public data class FaceRecord(
     @Column(name = "height", nullable = false)
     public val height: Int,
     @Column(name = "width", nullable = false)
-    public val width: Int
+    public val width: Int,
+    @Column(name = "disable", nullable = false, columnDefinition = "default false")
+    public val disable: Boolean = false
 ) : java.io.Serializable {
+
+    @OneToMany
+    @JoinColumn(name = "md5")
+    @kotlinx.serialization.Transient
+    public val tags: List<FaceTagRecord> = emptyList()
 
     public fun toMessageContent(): MessageContent {
         val face = json.decodeFromString(serializer, code)
