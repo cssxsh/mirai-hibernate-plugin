@@ -116,6 +116,26 @@ abstract class DatabaseTest {
         Assertions.assertEquals(list.size, 3)
     }
 
+    @Test
+    fun tag() {
+        factory.openSession().use { session ->
+            val face = session.withCriteria<FaceRecord> { criteria ->
+                val root = criteria.from<FaceRecord>()
+                criteria.select(root)
+            }.setMaxResults(1).uniqueResult()
+
+            session.transaction.begin()
+            session.merge(FaceTagRecord(md5 = face.md5, tag = "test"))
+            session.transaction.commit()
+
+            println(face.tags)
+
+            session.transaction.begin()
+            session.merge(face.copy(disable = true))
+            session.transaction.commit()
+        }
+    }
+
     @AfterAll
     fun close() {
         factory.close()
