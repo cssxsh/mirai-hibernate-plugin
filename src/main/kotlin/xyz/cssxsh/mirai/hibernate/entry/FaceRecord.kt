@@ -61,7 +61,6 @@ public data class FaceRecord(
         /**
          * from [OnlineImage.isEmoji]
          */
-        @Suppress("INVISIBLE_REFERENCE", "INVISIBLE_MEMBER")
         public fun fromImage(image: Image): FaceRecord {
             return FaceRecord(
                 md5 = image.md5.toUHexString("").lowercase(),
