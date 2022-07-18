@@ -33,8 +33,7 @@ public data class FaceRecord(
     public val disable: Boolean = false
 ) : java.io.Serializable {
 
-    @OneToMany
-    @JoinColumn(name = "md5")
+    @OneToMany(mappedBy = "md5")
     @kotlinx.serialization.Transient
     public val tags: List<FaceTagRecord> = emptyList()
 
