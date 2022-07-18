@@ -16,6 +16,7 @@ abstract class DatabaseTest {
 
     protected val configuration = Configuration().apply {
         addAnnotatedClass(FaceRecord::class.java)
+        addAnnotatedClass(FaceTagRecord::class.java)
         addAnnotatedClass(MessageRecord::class.java)
         addAnnotatedClass(NudgeRecord::class.java)
 
