@@ -4,7 +4,6 @@ import net.mamoe.mirai.console.plugin.jvm.*
 import java.io.*
 import java.sql.*
 import kotlin.io.path.*
-import kotlin.reflect.full.*
 
 public interface MiraiHibernateLoader {
     /**
@@ -34,11 +33,7 @@ public interface MiraiHibernateLoader {
 
     public companion object {
         @JvmStatic
-        public operator fun invoke(plugin: JvmPlugin): MiraiHibernateLoader {
-            return with(plugin::class.findAnnotation<MiraiHibernate>() ?: return Impl(plugin = plugin)) {
-                loader.objectInstance ?: loader.createInstance()
-            }
-        }
+        public operator fun invoke(plugin: JvmPlugin): MiraiHibernateLoader = Impl(plugin = plugin)
 
         private fun JvmPlugin.database(filename: String): String {
             return try {

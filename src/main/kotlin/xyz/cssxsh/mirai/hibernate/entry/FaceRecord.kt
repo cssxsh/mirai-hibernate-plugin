@@ -28,7 +28,7 @@ public data class FaceRecord(
     public val height: Int,
     @Column(name = "width", nullable = false)
     public val width: Int,
-    @Column(name = "disable", nullable = false)
+    @Column(name = "disable", nullable = false, updatable = false)
     @org.hibernate.annotations.ColumnDefault("False")
     public val disable: Boolean = false
 ) : java.io.Serializable {

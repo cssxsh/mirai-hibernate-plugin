@@ -117,7 +117,7 @@ abstract class DatabaseTest {
     }
 
     @Test
-    fun tag() {
+    fun join() {
         factory.openSession().use { session ->
             val face = session.withCriteria<FaceRecord> { criteria ->
                 val root = criteria.from<FaceRecord>()
@@ -128,7 +128,7 @@ abstract class DatabaseTest {
             session.merge(FaceTagRecord(md5 = face.md5, tag = "test"))
             session.transaction.commit()
 
-            println(face.tags)
+            logger.info(face.tags.toString())
 
             session.transaction.begin()
             session.merge(face.copy(disable = true))

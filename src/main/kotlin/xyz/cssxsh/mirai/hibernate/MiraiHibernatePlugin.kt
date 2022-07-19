@@ -28,19 +28,13 @@ public object MiraiHibernatePlugin : KotlinPlugin(
         val configuration = MiraiHibernateConfiguration(plugin = this)
 
         with(configuration) {
-            if (getProperty("hibernate.connection.provider_class") == "org.hibernate.connection.C3P0ConnectionProvider") {
-                logger.warning { "发现使用 C3P0ConnectionProvider，将替换为 HikariCPConnectionProvider" }
-                setProperty(
-                    "hibernate.connection.provider_class",
-                    "org.hibernate.hikaricp.internal.HikariCPConnectionProvider"
-                )
-            }
-            if (getProperty("hibernate.dialect") == "org.sqlite.hibernate.dialect.SQLiteDialect") {
-                logger.warning { "发现使用 org.sqlite.hibernate.dialect.SQLiteDialect，将替换为 org.hibernate.community.dialect.SQLiteDialect" }
-                setProperty(
-                    "hibernate.dialect",
-                    "org.hibernate.community.dialect.SQLiteDialect"
-                )
+            if (getProperty("hibernate.connection.url").orEmpty().startsWith("jdbc:sqlite")) {
+                logger.error { "Sqlite 不支持并发, 将替换为 H2Database" }
+                setProperty("hibernate.connection.url", getProperty("hibernate.connection.url").replace("sqlite", "h2"))
+                setProperty("hibernate.connection.driver_class", "org.h2.Driver")
+                setProperty("hibernate.dialect", "org.hibernate.dialect.H2Dialect")
+                setProperty("hibernate.hikari.minimumIdle", "10")
+                setProperty("hibernate.hikari.maximumPoolSize", "10")
             }
         }
 
