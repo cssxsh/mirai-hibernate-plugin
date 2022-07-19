@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "xyz.cssxsh.mirai"
-version = "2.4.0-M3"
+version = "2.4.0"
 
 mavenCentralPublish {
     useCentralS01()
@@ -44,6 +44,7 @@ dependencies {
     api("org.postgresql:postgresql:42.4.0")
 
     testImplementation(kotlin("test", "1.6.21"))
+    testImplementation("net.mamoe:mirai-core-utils:2.12.0")
     testImplementation("net.mamoe:mirai-slf4j-bridge:1.2.0")
 }
 
