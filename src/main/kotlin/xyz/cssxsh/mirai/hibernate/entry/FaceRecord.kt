@@ -3,8 +3,10 @@ package xyz.cssxsh.mirai.hibernate.entry
 import jakarta.persistence.*
 import kotlinx.coroutines.*
 import kotlinx.serialization.*
+import kotlinx.serialization.descriptors.*
+import kotlinx.serialization.encoding.*
 import kotlinx.serialization.json.*
-import net.mamoe.mirai.message.*
+import kotlinx.serialization.modules.*
 import net.mamoe.mirai.message.data.*
 import net.mamoe.mirai.internal.message.data.*
 import net.mamoe.mirai.internal.message.image.*
@@ -18,7 +20,7 @@ public data class FaceRecord(
     @Id
     @Column(name = "md5", nullable = false, updatable = false, length = 32)
     public val md5: String,
-    @Column(name = "code", nullable = false, updatable = false, columnDefinition = "text")
+    @Column(name = "code", nullable = false, columnDefinition = "text")
     public val code: String,
     @Column(name = "content", nullable = false)
     public val content: String,
@@ -37,26 +39,64 @@ public data class FaceRecord(
     @kotlinx.serialization.Transient
     public val tags: List<FaceTagRecord> = emptyList()
 
-    public fun toMessageContent(): MessageContent {
-        val face = json.decodeFromString(serializer, code)
-        // XXX: 序列化信息有限
-        if (face is Image && !face.isEmoji) {
-            return Image(imageId = face.imageId) {
-                height = this@FaceRecord.height
-                width = this@FaceRecord.height
-                type = ImageType.match(face.imageId.substringAfter('.'))
-                isEmoji = true
-            }
-        }
-        return face
-    }
+    public fun toMessageContent(): MessageContent = json.decodeFromString(serializer, code)
 
     public companion object {
+        @Suppress("INVISIBLE_REFERENCE", "INVISIBLE_MEMBER")
         private val json = Json {
-            serializersModule = MessageSerializers.serializersModule
+            serializersModule = SerializersModule {
+                polymorphic(MessageContent::class) {
+                    subclass(ImageSerializer)
+                    subclass(MarketFaceImpl.serializer())
+                }
+            }
             ignoreUnknownKeys = true
         }
         private val serializer = PolymorphicSerializer(MessageContent::class)
+
+        @Serializable
+        @SerialName("Image")
+        private data class ImageDelegate(
+            val imageId: String,
+            val width: Int = 0,
+            val height: Int = 0,
+            val size: Long = 0,
+            val imageType: ImageType = ImageType.UNKNOWN,
+            val isEmoji: Boolean = true
+        )
+
+        private object ImageSerializer : KSerializer<Image> {
+            private val delegate = ImageDelegate.serializer()
+
+            override val descriptor: SerialDescriptor = delegate.descriptor
+
+            override fun deserialize(decoder: Decoder): Image {
+                return delegate.deserialize(decoder).let { data ->
+                    Image(data.imageId) {
+                        width = data.width
+                        height = data.height
+                        size = data.size
+                        type = data.imageType
+                        isEmoji = data.isEmoji
+                    }
+                }
+            }
+
+            override fun serialize(encoder: Encoder, value: Image) {
+                delegate.serialize(
+                    encoder,
+                    ImageDelegate(
+                        imageId = value.imageId,
+                        width = value.width,
+                        height = value.height,
+                        size = value.size,
+                        imageType = value.imageType,
+                        isEmoji = value.isEmoji
+                    )
+                )
+            }
+        }
+
 
         /**
          * from [OnlineImage.isEmoji]
@@ -64,7 +104,7 @@ public data class FaceRecord(
         public fun fromImage(image: Image): FaceRecord {
             return FaceRecord(
                 md5 = image.md5.toUHexString("").lowercase(),
-                code = json.encodeToString(serializer, image),
+                code = json.encodeToString(ImageSerializer, image),
                 content = image.contentToString(),
                 height = image.height,
                 width = image.width,
