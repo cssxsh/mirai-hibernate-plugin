@@ -41,6 +41,38 @@ public data class FaceRecord(
 
     public fun toMessageContent(): MessageContent = json.decodeFromString(serializer, code)
 
+    private object ImageSerializer : KSerializer<Image> {
+        private val delegate = ImageDelegate.serializer()
+
+        override val descriptor: SerialDescriptor = delegate.descriptor
+
+        override fun deserialize(decoder: Decoder): Image {
+            return delegate.deserialize(decoder).let { data ->
+                Image(data.imageId) {
+                    width = data.width
+                    height = data.height
+                    size = data.size
+                    type = data.imageType
+                    isEmoji = data.isEmoji
+                }
+            }
+        }
+
+        override fun serialize(encoder: Encoder, value: Image) {
+            delegate.serialize(
+                encoder,
+                ImageDelegate(
+                    imageId = value.imageId,
+                    width = value.width,
+                    height = value.height,
+                    size = value.size,
+                    imageType = value.imageType,
+                    isEmoji = value.isEmoji
+                )
+            )
+        }
+    }
+
     public companion object {
         @Suppress("INVISIBLE_REFERENCE", "INVISIBLE_MEMBER")
         private val json = Json {
@@ -48,6 +80,13 @@ public data class FaceRecord(
                 polymorphic(MessageContent::class) {
                     subclass(ImageSerializer)
                     subclass(MarketFaceImpl.serializer())
+                }
+                @OptIn(ExperimentalSerializationApi::class)
+                polymorphicDefaultSerializer(MessageContent::class) { content ->
+                    when (content) {
+                        is MarketFace -> MarketFaceImpl.serializer()
+                        else -> ImageSerializer
+                    }.cast()
                 }
             }
             ignoreUnknownKeys = true
@@ -65,46 +104,13 @@ public data class FaceRecord(
             val isEmoji: Boolean = true
         )
 
-        private object ImageSerializer : KSerializer<Image> {
-            private val delegate = ImageDelegate.serializer()
-
-            override val descriptor: SerialDescriptor = delegate.descriptor
-
-            override fun deserialize(decoder: Decoder): Image {
-                return delegate.deserialize(decoder).let { data ->
-                    Image(data.imageId) {
-                        width = data.width
-                        height = data.height
-                        size = data.size
-                        type = data.imageType
-                        isEmoji = data.isEmoji
-                    }
-                }
-            }
-
-            override fun serialize(encoder: Encoder, value: Image) {
-                delegate.serialize(
-                    encoder,
-                    ImageDelegate(
-                        imageId = value.imageId,
-                        width = value.width,
-                        height = value.height,
-                        size = value.size,
-                        imageType = value.imageType,
-                        isEmoji = value.isEmoji
-                    )
-                )
-            }
-        }
-
-
         /**
          * from [OnlineImage.isEmoji]
          */
         public fun fromImage(image: Image): FaceRecord {
             return FaceRecord(
                 md5 = image.md5.toUHexString("").lowercase(),
-                code = json.encodeToString(ImageSerializer, image),
+                code = json.encodeToString(serializer, image),
                 content = image.contentToString(),
                 height = image.height,
                 width = image.width,
