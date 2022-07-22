@@ -70,7 +70,7 @@ dependencies {
   `MiraiHibernateConfiguration` 中会对 Sqlite / PostgreSql 的 `random` 进行别名注册为 `rand` 统一SQL语句的中的随机函数名
 
 * [CriteriaBuilder.dice](src/main/kotlin/xyz/cssxsh/hibernate/Criteria.kt)  
-  `MiraiHibernateConfiguration` 中会注册名为 `rand` 的宏，用于随机取行
+  `MiraiHibernateConfiguration` 中会注册名为 `dice` 的宏，用于随机取行
 
 ### 示例代码
 
