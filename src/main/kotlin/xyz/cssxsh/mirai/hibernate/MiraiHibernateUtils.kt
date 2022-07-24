@@ -42,17 +42,7 @@ public fun checkPlatform(folder: File) {
 internal lateinit var factory: SessionFactory
 
 internal fun <R> useSession(block: (session: Session) -> R): R {
-    return factory.openSession().use { session ->
-        val transaction = session.beginTransaction()
-        try {
-            val result = block.invoke(session)
-            transaction.commit()
-            result
-        } catch (cause: Throwable) {
-            transaction.rollback()
-            throw cause
-        }
-    }
+    return factory.fromTransaction { session -> block.invoke(session) }
 }
 
 public fun List<MessageRecord>.toForwardMessage(context: Contact) {
