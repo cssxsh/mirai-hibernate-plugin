@@ -54,7 +54,7 @@ public class MiraiHibernateDemo extends JavaPlugin {
             session.createNativeQuery("select * from user", User.class)
                     .list();
 
-            // hql 查询（格式像是 sql 混杂 sql）
+            // hql 查询（格式像是 sql 混杂 java）
             String hql = "from User s where s.name = :name";
             session.createQuery(hql, User.class)
                     .setParameter("name", "...")
