@@ -75,6 +75,7 @@ dependencies {
 ### 示例代码
 
 * [kotlin](src/test/kotlin/xyz/cssxsh/mirai/test/MiraiHibernatePluginTest.kt)
+* [java](src/test/java/xyz/cssxsh/mirai/test/MiraiHibernateDemo.java)
 
 ## 安装
 
