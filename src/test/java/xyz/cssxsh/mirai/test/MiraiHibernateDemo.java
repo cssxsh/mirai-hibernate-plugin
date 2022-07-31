@@ -24,6 +24,7 @@ public class MiraiHibernateDemo extends JavaPlugin {
         // 或者用 Hibernate 原生的方法手动加类
         configuration.addAnnotatedClass(User.class);
 
+        // buildSessionFactory 时会自动建表
         var factory = configuration.buildSessionFactory();
 
         // 用这个方法能安全关闭 Session 不需要额外写 try catch
@@ -48,7 +49,7 @@ public class MiraiHibernateDemo extends JavaPlugin {
             session.merge(user);
 
             // 删除
-            session.detach(user);
+            session.remove(user);
 
             // 原生sql 查询
             session.createNativeQuery("select * from user", User.class)
@@ -79,7 +80,7 @@ public class MiraiHibernateDemo extends JavaPlugin {
             var query2 = builder.createQuery(Work.class);
             var root2 = query.from(Work.class);
             query2.select(root2);
-            query2.where(builder.between(root.get("work").get("id"), 0L, 1000L));
+            query2.where(builder.between(root2.get("user").get("id"), 0L, 1000L));
 
             var list2 = session.createQuery(query)
                     .list();
