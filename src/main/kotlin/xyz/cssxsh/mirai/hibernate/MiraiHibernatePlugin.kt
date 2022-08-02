@@ -40,7 +40,7 @@ public object MiraiHibernatePlugin : KotlinPlugin(
 
         factory = configuration.buildSessionFactory()
 
-        val metadata = useSession { it.getDatabaseMetaData() }
+        val metadata = factory.fromSession { it.getDatabaseMetaData() }
 
         logger.info { "Database ${metadata.url} by ${metadata.driverName}." }
         if (metadata.url.startsWith("jdbc:sqlite")) {

@@ -41,10 +41,6 @@ public fun checkPlatform(folder: File) {
 
 internal lateinit var factory: SessionFactory
 
-internal fun <R> useSession(block: (session: Session) -> R): R {
-    return factory.fromTransaction { session -> block.invoke(session) }
-}
-
 public fun List<MessageRecord>.toForwardMessage(context: Contact) {
     buildForwardMessage(context) {
         for (record in this@toForwardMessage) {
@@ -62,7 +58,7 @@ public fun Sequence<MessageRecord>.toForwardMessage(context: Contact) {
 }
 
 public fun FaceRecord.Companion.random(): FaceRecord {
-    return useSession { session ->
+    return factory.fromSession { session ->
         val count = session.withCriteria<Long> { criteria ->
             val record = criteria.from<FaceRecord>()
             criteria.select(count(record))
@@ -78,7 +74,7 @@ public fun FaceRecord.Companion.random(): FaceRecord {
 }
 
 public fun FaceRecord.Companion.disable(md5: String): FaceRecord {
-    return useSession { session ->
+    return factory.fromTransaction { session ->
         val result = session.withCriteriaUpdate<FaceRecord> { criteria ->
             val root = criteria.from()
             criteria
@@ -93,7 +89,7 @@ public fun FaceRecord.Companion.disable(md5: String): FaceRecord {
 }
 
 public fun FaceRecord.Companion.match(tag: String): List<FaceRecord> {
-    return useSession { session ->
+    return factory.fromSession { session ->
         session.withCriteria<FaceRecord> { criteria ->
             val root = criteria.from<FaceRecord>()
             val join = root.joinList<FaceRecord, FaceTagRecord>("tags")
@@ -104,7 +100,7 @@ public fun FaceRecord.Companion.match(tag: String): List<FaceRecord> {
 }
 
 public operator fun FaceTagRecord.Companion.get(md5: String): List<FaceTagRecord> {
-    return useSession { session ->
+    return factory.fromSession { session ->
         session.withCriteria<FaceTagRecord> { criteria ->
             val root = criteria.from<FaceTagRecord>()
             criteria.select(root)
@@ -114,7 +110,7 @@ public operator fun FaceTagRecord.Companion.get(md5: String): List<FaceTagRecord
 }
 
 public operator fun FaceTagRecord.Companion.set(md5: String, tag: String): List<FaceTagRecord> {
-    return useSession { session ->
+    return factory.fromTransaction { session ->
         session.persist(FaceTagRecord(md5 = md5, tag = tag))
 
         session.withCriteria<FaceTagRecord> { criteria ->
@@ -126,7 +122,7 @@ public operator fun FaceTagRecord.Companion.set(md5: String, tag: String): List<
 }
 
 public fun FaceTagRecord.Companion.remove(md5: String, tag: String): List<FaceTagRecord> {
-    return useSession { session ->
+    return factory.fromTransaction { session ->
         session.withCriteriaDelete<FaceTagRecord> { criteria ->
             val root = criteria.from()
             criteria
