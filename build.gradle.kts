@@ -1,9 +1,9 @@
 plugins {
-    kotlin("jvm") version "1.6.21"
-    kotlin("plugin.serialization") version "1.6.21"
-    kotlin("plugin.jpa") version "1.6.21"
+    kotlin("jvm") version "1.7.10"
+    kotlin("plugin.serialization") version "1.7.10"
+    kotlin("plugin.jpa") version "1.7.10"
 
-    id("net.mamoe.mirai-console") version "2.12.0"
+    id("net.mamoe.mirai-console") version "2.12.1"
     id("net.mamoe.maven-central-publish") version "0.7.1"
 }
 
@@ -26,9 +26,9 @@ repositories {
 
 dependencies {
     compileOnly("net.mamoe:mirai-slf4j-bridge:1.2.0")
-    compileOnly("net.mamoe:mirai-core:2.12.0")
-    compileOnly("net.mamoe:mirai-core-utils:2.12.0")
-    compileOnly("xyz.cssxsh.mirai:mirai-administrator:1.2.0")
+    compileOnly("net.mamoe:mirai-core:2.12.1")
+    compileOnly("net.mamoe:mirai-core-utils:2.12.1")
+    compileOnly("xyz.cssxsh.mirai:mirai-administrator:1.2.6")
     // SQL/ORM
     api("org.hibernate.orm:hibernate-core:6.1.1.Final")
     api("org.hibernate.orm:hibernate-hikaricp:6.1.1.Final") {
@@ -43,8 +43,8 @@ dependencies {
     api("mysql:mysql-connector-java:8.0.29")
     api("org.postgresql:postgresql:42.4.0")
 
-    testImplementation(kotlin("test", "1.6.21"))
-    testImplementation("net.mamoe:mirai-core-utils:2.12.0")
+    testImplementation(kotlin("test"))
+    testImplementation("net.mamoe:mirai-core-utils:2.12.1")
     testImplementation("net.mamoe:mirai-slf4j-bridge:1.2.0")
 }
 
@@ -54,10 +54,6 @@ mirai {
 
 kotlin {
     explicitApi()
-}
-
-noArg {
-    annotation("jakarta.persistence.Entity")
 }
 
 tasks {
