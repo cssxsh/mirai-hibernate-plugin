@@ -56,6 +56,10 @@ kotlin {
     explicitApi()
 }
 
+noArg {
+    annotation("jakarta.persistence.Entity")
+}
+
 tasks {
     test {
         useJUnitPlatform()
