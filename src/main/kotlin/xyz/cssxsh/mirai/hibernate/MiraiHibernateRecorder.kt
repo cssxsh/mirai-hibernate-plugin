@@ -44,11 +44,11 @@ public object MiraiHibernateRecorder : SimpleListenerHost() {
         }
     }
 
+    @Suppress("INVISIBLE_MEMBER")
     @EventHandler(priority = EventPriority.HIGHEST)
     internal fun MessagePostSendEvent<*>.record() {
         launch {
             val source = source
-            @Suppress("INVISIBLE_REFERENCE", "INVISIBLE_MEMBER")
             val message = with(LightMessageRefiner) { message.dropMiraiInternalFlags() }
             if (source != null) {
                 MessageRecord.fromSuccess(source = source, message = message).merge()
@@ -74,16 +74,17 @@ public object MiraiHibernateRecorder : SimpleListenerHost() {
         }
     }
 
-    private fun Throwable.causes() = sequence {
-        var cause = this@causes
-        while (isActive) {
-            yield(cause)
-            cause = cause.cause ?: break
+    private inline fun <reified T : Throwable> Throwable.unwrap(): T? {
+        var current = this
+        while (true) {
+            if (current is T) return current
+            current = current.cause ?: break
         }
+        return null
     }
 
     override fun handleException(context: CoroutineContext, exception: Throwable) {
-        when (val cause = exception.causes().findLast { it is SQLException || it is PersistenceException } ?: exception) {
+        when (val cause = exception.unwrap<SQLException>() ?: exception.unwrap<PersistenceException>() ?: exception) {
             is SQLException -> {
                 logger.warning({ "SQLException in Recorder" }, cause)
             }
