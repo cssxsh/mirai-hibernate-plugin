@@ -32,10 +32,8 @@ abstract class DatabaseTest {
 
     @BeforeAll
     fun insert() {
-        factory.openSession().use { session ->
-            session.transaction.begin()
-            val random = Random(System.currentTimeMillis())
-
+        val random = Random(System.currentTimeMillis())
+        factory.fromTransaction { session ->
             repeat(100) { index ->
                 val md5 = random.nextLong().toByteArray().md5().toUHexString("")
                 val face = FaceRecord(
@@ -62,14 +60,12 @@ abstract class DatabaseTest {
 
                 session.persist(message)
             }
-
-            session.transaction.commit()
         }
     }
 
     @Test
     fun rand() {
-        val num = factory.openSession().use { session ->
+        val num = factory.fromSession { session ->
             session.withCriteria<Double> { criteria ->
                 criteria.select(rand())
             }.uniqueResult()
@@ -78,7 +74,7 @@ abstract class DatabaseTest {
         Assertions.assertTrue(num >= 0.0, "< 0.0")
         Assertions.assertTrue(num <= 1.0, "> 1.0")
 
-        val list = factory.openSession().use { session ->
+        val list = factory.fromSession { session ->
             session.withCriteria<FaceRecord> { criteria ->
                 val record = criteria.from<FaceRecord>()
                 criteria.select(record)
@@ -90,7 +86,7 @@ abstract class DatabaseTest {
 
     @Test
     fun dice() {
-        val num = factory.openSession().use { session ->
+        val num = factory.fromSession { session ->
             session.withCriteria<Long> { criteria ->
                 criteria.select(dice(literal(1000)))
             }.uniqueResult()
@@ -99,7 +95,7 @@ abstract class DatabaseTest {
         Assertions.assertTrue(num >= 0, "< 0")
         Assertions.assertTrue(num <= 1000, "> 1000")
 
-        val list = factory.openSession().use { session ->
+        val list = factory.fromSession { session ->
             session.withCriteria<MessageRecord> { criteria ->
                 val record = criteria.from<MessageRecord>()
                 val id = record.get<Long>("id")
@@ -118,7 +114,7 @@ abstract class DatabaseTest {
 
     @Test
     fun join() {
-        factory.openSession().use { session ->
+        factory.inSession { session ->
             val face = session.withCriteria<FaceRecord> { criteria ->
                 val root = criteria.from<FaceRecord>()
                 criteria.select(root)
