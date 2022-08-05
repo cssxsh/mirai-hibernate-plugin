@@ -9,7 +9,7 @@ import xyz.cssxsh.mirai.test.entry.Work;
 public class MiraiHibernateDemo extends JavaPlugin {
     public MiraiHibernateDemo() {
         super(new JvmPluginDescriptionBuilder("xyz.cssxsh.mirai.plugin.mirai-hibernate-demo", "0.0.0")
-                .dependsOn("xyz.cssxsh.mirai.plugin.mirai-hibernate-demo", false)
+                .dependsOn("xyz.cssxsh.mirai.plugin.mirai-hibernate-plugin", false)
                 .build());
     }
 
