@@ -32,18 +32,18 @@ dependencies {
     compileOnly("net.mamoe:mirai-core-utils:2.12.1")
     compileOnly("xyz.cssxsh.mirai:mirai-administrator:1.2.6")
     // SQL/ORM
-    api("org.hibernate.orm:hibernate-core:6.1.1.Final")
-    api("org.hibernate.orm:hibernate-hikaricp:6.1.1.Final") {
+    api("org.hibernate.orm:hibernate-core:6.1.2.Final")
+    api("org.hibernate.orm:hibernate-hikaricp:6.1.2.Final") {
         exclude("org.slf4j")
     }
-    api("org.hibernate.orm:hibernate-community-dialects:6.1.1.Final")
+    api("org.hibernate.orm:hibernate-community-dialects:6.1.2.Final")
     api("com.zaxxer:HikariCP:5.0.1") {
         exclude("org.slf4j")
     }
     api("com.h2database:h2:2.1.214")
-    api("org.xerial:sqlite-jdbc:3.36.0.3")
-    api("mysql:mysql-connector-java:8.0.29")
-    api("org.postgresql:postgresql:42.4.0")
+    api("org.xerial:sqlite-jdbc:3.39.2.0")
+    api("mysql:mysql-connector-java:8.0.30")
+    api("org.postgresql:postgresql:42.4.1")
 
     testImplementation(kotlin("test"))
     testImplementation("net.mamoe:mirai-core-utils:2.12.1")
