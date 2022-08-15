@@ -2,6 +2,7 @@ package xyz.cssxsh.mirai.hibernate
 
 import jakarta.persistence.*
 import kotlinx.coroutines.*
+import kotlinx.coroutines.sync.*
 import net.mamoe.mirai.*
 import net.mamoe.mirai.contact.*
 import net.mamoe.mirai.event.*
@@ -28,6 +29,8 @@ public object MiraiHibernateRecorder : SimpleListenerHost() {
 
     private fun <E : Serializable> E.merge(): E = factory.fromTransaction { session -> session.merge(this@merge) }
 
+    private val mutex = Mutex()
+
     @EventHandler(priority = EventPriority.HIGHEST)
     internal fun MessageEvent.record() {
         launch {
@@ -35,10 +38,11 @@ public object MiraiHibernateRecorder : SimpleListenerHost() {
             MessageRecord.fromSuccess(source = source, message = message).merge()
         }
         launch {
-            for (item in message) {
+            for (item in message) mutex.withLock {
                 when {
                     item is Image && item.isEmoji -> FaceRecord.fromImage(image = item).merge()
                     item is MarketFace && item !is Dice -> FaceRecord.fromMarketFace(face = item).merge()
+                    else -> null
                 }
             }
         }
