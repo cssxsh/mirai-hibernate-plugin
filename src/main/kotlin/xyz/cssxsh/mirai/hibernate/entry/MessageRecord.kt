@@ -9,7 +9,7 @@ import net.mamoe.mirai.message.data.*
 import net.mamoe.mirai.utils.*
 
 @Entity
-@Table(name = "message_record")
+@Table(name = "message_record", indexes = [Index(columnList = "from_id"), Index(columnList = "target_id")])
 @Serializable
 public data class MessageRecord(
     @Id
