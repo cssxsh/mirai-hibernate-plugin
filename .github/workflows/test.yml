@@ -59,7 +59,7 @@ jobs:
           brew info postgresql
           brew services start postgresql -v
           sleep 3s
-          tail -n 100 /usr/local/var/log/postgres.log
+          tail -n 100 /usr/local/var/log/postgres*.log
           createuser -U runner -s postgres
           createdb mirai
           psql -c "ALTER USER postgres PASSWORD 'root';"
