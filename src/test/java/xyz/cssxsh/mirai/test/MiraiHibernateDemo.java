@@ -1,8 +1,14 @@
 package xyz.cssxsh.mirai.test;
 
+import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.console.plugin.jvm.JavaPlugin;
 import net.mamoe.mirai.console.plugin.jvm.JvmPluginDescriptionBuilder;
+import net.mamoe.mirai.message.data.MessageChain;
+import net.mamoe.mirai.message.data.MessageSource;
+import org.hibernate.SessionFactory;
 import xyz.cssxsh.mirai.hibernate.MiraiHibernateConfiguration;
+import xyz.cssxsh.mirai.hibernate.MiraiHibernateRecorder;
+import xyz.cssxsh.mirai.hibernate.entry.MessageRecord;
 import xyz.cssxsh.mirai.test.entry.User;
 import xyz.cssxsh.mirai.test.entry.Work;
 
@@ -12,6 +18,8 @@ public class MiraiHibernateDemo extends JavaPlugin {
                 .dependsOn("xyz.cssxsh.mirai.plugin.mirai-hibernate-plugin", false)
                 .build());
     }
+
+    private SessionFactory factory;
 
 
     @Override
@@ -25,7 +33,7 @@ public class MiraiHibernateDemo extends JavaPlugin {
         configuration.addAnnotatedClass(User.class);
 
         // buildSessionFactory 时会自动建表
-        var factory = configuration.buildSessionFactory();
+        factory = configuration.buildSessionFactory();
 
         // 用这个方法能安全关闭 Session 不需要额外写 try catch
         var u = factory.fromSession((session) -> {
@@ -87,5 +95,32 @@ public class MiraiHibernateDemo extends JavaPlugin {
 
             return 0;
         });
+
+        // MiraiHibernateRecorder 的使用
+        // 返回一个流，请记得关闭这个流
+        try (var steam = MiraiHibernateRecorder.INSTANCE.get(Bot.findInstance(123456))) {
+            MessageRecord record = steam.findFirst().get();
+            // 转化成消息链
+            MessageChain message = record.toMessageChain();
+            // 转化消息引用
+            // 这里的 originalMessage 来自 上面的 toMessageChain
+            MessageSource source = record.toMessageSource();
+
+        } catch (Exception e) {
+            //
+        }
+
+        // 返回一个列表，第 2，3 参数是 开始时刻和结束时间
+        var list = MiraiHibernateRecorder.INSTANCE.get(Bot.getInstance(123456), 1600000, 1600001);
+        for (MessageRecord record : list) {
+            record.toMessageSource();
+            // or
+            record.toMessageChain();
+        }
+    }
+
+    @Override
+    public void onDisable() {
+        factory.close();
     }
 }

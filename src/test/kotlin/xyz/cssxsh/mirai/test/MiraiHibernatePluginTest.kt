@@ -1,9 +1,8 @@
 package xyz.cssxsh.mirai.test
 
-import kotlinx.coroutines.*
 import net.mamoe.mirai.console.plugin.jvm.*
 import net.mamoe.mirai.event.*
-import net.mamoe.mirai.message.data.MessageSource.Key.recall
+import org.hibernate.SessionFactory
 import xyz.cssxsh.mirai.hibernate.*
 
 object MiraiHibernatePluginTest : KotlinPlugin(
@@ -16,28 +15,44 @@ object MiraiHibernatePluginTest : KotlinPlugin(
     }
 ) {
 
-    override fun onEnable() {
+    private lateinit var factory: SessionFactory
 
-        val factory = MiraiHibernateConfiguration(plugin = this).buildSessionFactory()
+    override fun onEnable() {
+        factory = MiraiHibernateConfiguration(plugin = this).buildSessionFactory()
         val metadata = factory.openSession().use { session ->
             session.doReturningWork { connection -> connection.metaData }
         }
 
         println(metadata.driverName)
 
+        // MiraiHibernateRecorder 的使用
         globalEventChannel().subscribeMessages {
-            startsWith("撤销") {
-                delay(10_000)
+            startsWith("record") {
+                // 返回一个流，请记得关闭这个流
+                MiraiHibernateRecorder[subject].use { steam ->
+                    steam.forEach { record ->
+                        // 转化成消息链
+                        record.toMessageChain()
 
-                val source = MiraiHibernateRecorder[source].single().toMessageSource()
+                        // 转化消息引用
+                        // 这里的 originalMessage 来自 上面的 toMessageChain
+                        record.toMessageSource().originalMessage
+                    }
+                }
 
-                /**
-                 * 这里的原消息内容来自 [xyz.cssxsh.mirai.hibernate.entry.MessageRecord.code] 反序列化的结果
-                 */
-                println(source.originalMessage)
-
-                source.recall()
+                // 返回一个列表，第 2，3 参数是 开始时刻和结束时间
+                MiraiHibernateRecorder[subject, 16000000, 160000001].forEach { record ->
+                    // 转化成消息链
+                    record.toMessageChain()
+                    // 转化消息引用
+                    // 这里的 originalMessage 来自 上面的 toMessageChain
+                    record.toMessageSource().originalMessage
+                }
             }
         }
+    }
+
+    override fun onDisable() {
+        factory.close()
     }
 }
