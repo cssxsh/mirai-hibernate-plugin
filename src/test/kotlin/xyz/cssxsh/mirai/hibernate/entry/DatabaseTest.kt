@@ -7,12 +7,21 @@ import org.hibernate.cfg.Configuration
 import org.junit.jupiter.api.*
 import xyz.cssxsh.hibernate.*
 import java.io.File
+import java.util.ServiceLoader
 import kotlin.random.Random
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 abstract class DatabaseTest {
 
     protected val logger: MiraiLogger = MiraiLogger.Factory.create(this::class.java)
+
+    init {
+        ServiceLoader.load(java.sql.Driver::class.java)
+            .stream().forEach { provider ->
+                val driver = provider.get()
+                logger.info { "Driver: ${driver::class.java.name} Version ${driver.majorVersion}.${driver.minorVersion}" }
+            }
+    }
 
     protected val configuration = Configuration().apply {
         addAnnotatedClass(FaceRecord::class.java)
@@ -32,7 +41,7 @@ abstract class DatabaseTest {
 
     @BeforeAll
     fun insert() {
-        val random = Random(System.currentTimeMillis())
+        val random = Random(seed = System.currentTimeMillis())
         factory.fromTransaction { session ->
             repeat(100) { index ->
                 val md5 = random.nextLong().toByteArray().md5().toUHexString("")

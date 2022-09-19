@@ -68,7 +68,6 @@ public interface MiraiHibernateLoader {
             configuration = plugin.configFolder.resolve("hibernate.properties"),
             default = """
                 hibernate.connection.url=jdbc:h2:file:${plugin.database("hibernate.h2")}
-                hibernate.connection.driver_class=org.h2.Driver
                 hibernate.dialect=org.hibernate.dialect.H2Dialect
                 hibernate.connection.provider_class=org.hibernate.hikaricp.internal.HikariCPConnectionProvider
                 hibernate.hikari.connectionTimeout=180000
@@ -77,7 +76,6 @@ public interface MiraiHibernateLoader {
                 hibernate-connection-autocommit=${true}
                 hibernate.connection.show_sql=${false}
                 hibernate.autoReconnect=${true}
-                hibernate.current_session_context_class=thread
             """.trimIndent()
         )
     }

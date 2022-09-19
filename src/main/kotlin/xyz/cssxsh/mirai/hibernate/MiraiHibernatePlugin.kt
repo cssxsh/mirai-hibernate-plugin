@@ -5,6 +5,7 @@ import net.mamoe.mirai.console.plugin.jvm.*
 import net.mamoe.mirai.event.*
 import net.mamoe.mirai.utils.*
 import xyz.cssxsh.hibernate.*
+import java.util.*
 
 public object MiraiHibernatePlugin : KotlinPlugin(
     JvmPluginDescription(
@@ -20,6 +21,11 @@ public object MiraiHibernatePlugin : KotlinPlugin(
 
     override fun PluginComponentStorage.onLoad() {
         checkPlatform(folder = dataFolder)
+        ServiceLoader.load(java.sql.Driver::class.java, this@MiraiHibernatePlugin::class.java.classLoader)
+            .stream().forEach { provider ->
+                val driver = provider.get()
+                logger.info { "Driver: ${driver::class.java.name} Version ${driver.majorVersion}.${driver.minorVersion}" }
+            }
     }
 
     override fun onEnable() {
