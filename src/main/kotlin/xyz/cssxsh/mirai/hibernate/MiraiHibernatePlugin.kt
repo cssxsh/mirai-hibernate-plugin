@@ -21,9 +21,9 @@ public object MiraiHibernatePlugin : KotlinPlugin(
 
     override fun PluginComponentStorage.onLoad() {
         checkPlatform(folder = dataFolder)
-        ServiceLoader.load(java.sql.Driver::class.java, this@MiraiHibernatePlugin::class.java.classLoader)
-            .stream().forEach { provider ->
-                val driver = provider.get()
+        val classLoader = this@MiraiHibernatePlugin::class.java.classLoader
+        ServiceLoader.load(java.sql.Driver::class.java, classLoader)
+            .forEach { driver ->
                 logger.info { "Driver: ${driver::class.java.name} Version ${driver.majorVersion}.${driver.minorVersion}" }
             }
     }

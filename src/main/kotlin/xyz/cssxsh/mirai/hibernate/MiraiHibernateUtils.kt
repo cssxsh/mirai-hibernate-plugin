@@ -4,6 +4,7 @@ import net.mamoe.mirai.contact.*
 import net.mamoe.mirai.message.data.*
 import net.mamoe.mirai.utils.*
 import org.hibernate.*
+import org.hibernate.dialect.Dialect
 import org.sqlite.SQLiteJDBCLoader
 import xyz.cssxsh.hibernate.*
 import xyz.cssxsh.mirai.hibernate.entry.*
@@ -37,6 +38,11 @@ public fun checkPlatform(folder: File) {
         }
         SQLiteJDBCLoader.initialize()
     }
+}
+
+public fun dialects(): Set<Class<out Dialect>> {
+    return org.reflections.Reflections("org.hibernate.dialect", "org.hibernate.community.dialect")
+        .getSubTypesOf(Dialect::class.java)
 }
 
 internal lateinit var factory: SessionFactory

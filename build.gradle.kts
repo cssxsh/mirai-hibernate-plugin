@@ -43,6 +43,9 @@ dependencies {
     api("org.xerial:sqlite-jdbc:3.39.3.0")
     api("mysql:mysql-connector-java:8.0.30")
     api("org.postgresql:postgresql:42.5.0")
+    implementation("org.reflections:reflections:0.10.2") {
+        exclude("org.slf4j")
+    }
 
     testImplementation(kotlin("test"))
     testImplementation("org.slf4j:slf4j-simple:2.0.0")

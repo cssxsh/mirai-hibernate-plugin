@@ -5,7 +5,6 @@ import net.mamoe.mirai.console.plugin.jvm.*
 import org.hibernate.boot.registry.*
 import org.hibernate.cfg.*
 import xyz.cssxsh.hibernate.*
-import java.net.*
 import java.sql.*
 
 /**
@@ -36,43 +35,12 @@ public class MiraiHibernateConfiguration(private val loader: MiraiHibernateLoade
      * @see jakarta.persistence.MappedSuperclass
      */
     public fun scan(packageName: String) {
-        val path = packageName.replace('.', '/')
-        val connection = loader.classLoader.getResource(path)?.openConnection() ?: return
-        val annotations = arrayOf(Entity::class.java, Embeddable::class.java, MappedSuperclass::class.java)
-        when (connection) {
-            is JarURLConnection -> {
-                for (entry in connection.jarFile.entries()) {
-                    if (entry.name.startsWith(path) && entry.name.endsWith(".class")) {
-                        val name = entry.name.removeSuffix(".class").replace('/', '.')
-                        val clazz = try {
-                            loader.classLoader.loadClass(name)
-                        } catch (_: NoClassDefFoundError) {
-                            continue
-                        }
-                        if (annotations.any { clazz.isAnnotationPresent(it) }) {
-                            addAnnotatedClass(clazz)
-                        }
-                    }
-                }
-            }
-            else -> {
-                // XXX: FileURLConnection
-                connection.inputStream.reader().useLines { lines ->
-                    for (filename in lines) {
-                        if (filename.endsWith(".class")) {
-                            val name = filename.removeSuffix(".class")
-                            val clazz = try {
-                                loader.classLoader.loadClass("${packageName}.${name}")
-                            } catch (_: NoClassDefFoundError) {
-                                continue
-                            }
-                            if (annotations.any { clazz.isAnnotationPresent(it) }) {
-                                addAnnotatedClass(clazz)
-                            }
-                        }
-                    }
-                }
-            }
+        val reflections = org.reflections.Reflections(packageName)
+        val query = org.reflections.scanners.Scanners.TypesAnnotated
+            .of(Entity::class.java, Embeddable::class.java, MappedSuperclass::class.java)
+            .asClass<java.io.Serializable>(loader.classLoader)
+        query.apply(reflections.store).forEach { clazz ->
+            addAnnotatedClass(clazz)
         }
     }
 
