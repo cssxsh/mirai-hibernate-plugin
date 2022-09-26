@@ -1,5 +1,6 @@
 package xyz.cssxsh.mirai.hibernate.entry
 
+import jakarta.persistence.*
 import net.mamoe.mirai.message.data.*
 import net.mamoe.mirai.utils.*
 import org.hibernate.SessionFactory
@@ -24,10 +25,13 @@ abstract class DatabaseTest {
     }
 
     protected val configuration = Configuration().apply {
-        addAnnotatedClass(FaceRecord::class.java)
-        addAnnotatedClass(FaceTagRecord::class.java)
-        addAnnotatedClass(MessageRecord::class.java)
-        addAnnotatedClass(NudgeRecord::class.java)
+        val reflections = org.reflections.Reflections("xyz.cssxsh.mirai.hibernate.entry")
+        val query = org.reflections.scanners.Scanners.TypesAnnotated
+            .of(Entity::class.java, Embeddable::class.java, MappedSuperclass::class.java)
+            .asClass<java.io.Serializable>()
+        query.apply(reflections.store).forEach { clazz ->
+            addAnnotatedClass(clazz)
+        }
 
         setProperty("hibernate.show_sql", "true")
     }
