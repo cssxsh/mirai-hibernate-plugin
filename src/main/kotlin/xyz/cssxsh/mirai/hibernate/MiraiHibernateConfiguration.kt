@@ -35,7 +35,10 @@ public class MiraiHibernateConfiguration(private val loader: MiraiHibernateLoade
      * @see jakarta.persistence.MappedSuperclass
      */
     public fun scan(packageName: String) {
-        val reflections = org.reflections.Reflections(packageName)
+        val reflections = org.reflections.Reflections(
+            org.reflections.util.ConfigurationBuilder()
+            .forPackage(packageName, loader.classLoader)
+        )
         val query = org.reflections.scanners.Scanners.TypesAnnotated
             .of(Entity::class.java, Embeddable::class.java, MappedSuperclass::class.java)
             .asClass<java.io.Serializable>(loader.classLoader)
@@ -53,6 +56,9 @@ public class MiraiHibernateConfiguration(private val loader: MiraiHibernateLoade
      */
     private fun load() {
         if (loader.autoScan) scan(packageName = loader.packageName)
+        // 设置默认连接池
+        setProperty("hibernate.connection.provider_class", "org.hibernate.hikaricp.internal.HikariCPConnectionProvider")
+        // 载入文件
         loader.configuration.apply { if (exists().not()) writeText(loader.default) }.inputStream().use(properties::load)
         // 设置 rand 别名
         addRandFunction()
