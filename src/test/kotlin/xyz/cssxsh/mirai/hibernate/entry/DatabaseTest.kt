@@ -18,8 +18,7 @@ abstract class DatabaseTest {
 
     init {
         ServiceLoader.load(java.sql.Driver::class.java)
-            .stream().forEach { provider ->
-                val driver = provider.get()
+            .forEach { driver ->
                 logger.info { "Driver: ${driver::class.java.name} Version ${driver.majorVersion}.${driver.minorVersion}" }
             }
     }

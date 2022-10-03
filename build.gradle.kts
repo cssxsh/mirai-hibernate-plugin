@@ -1,9 +1,9 @@
 plugins {
-    kotlin("jvm") version "1.7.10"
-    kotlin("plugin.serialization") version "1.7.10"
-    kotlin("plugin.jpa") version "1.7.10"
+    kotlin("jvm") version "1.7.20"
+    kotlin("plugin.serialization") version "1.7.20"
+    kotlin("plugin.jpa") version "1.7.20"
 
-    id("net.mamoe.mirai-console") version "2.12.3"
+    id("net.mamoe.mirai-console") version "2.13.0-RC"
     id("me.him188.maven-central-publish") version "1.0.0-dev-3"
 }
 
@@ -27,8 +27,8 @@ repositories {
 }
 
 dependencies {
-    compileOnly("net.mamoe:mirai-core:2.12.3")
-    compileOnly("net.mamoe:mirai-core-utils:2.12.3")
+    compileOnly("net.mamoe:mirai-core:2.13.0-RC")
+    compileOnly("net.mamoe:mirai-core-utils:2.13.0-RC")
     compileOnly("xyz.cssxsh.mirai:mirai-administrator:1.2.8")
     // SQL/ORM
     api("org.hibernate.orm:hibernate-core:6.1.3.Final")
@@ -48,9 +48,9 @@ dependencies {
     }
 
     testImplementation(kotlin("test"))
-    testImplementation("org.slf4j:slf4j-simple:2.0.0")
-    testImplementation("net.mamoe:mirai-logging-slf4j:2.12.3")
-    testImplementation("net.mamoe:mirai-core-utils:2.12.3")
+    testImplementation("org.slf4j:slf4j-simple:2.0.1")
+    testImplementation("net.mamoe:mirai-logging-slf4j:2.13.0-RC")
+    testImplementation("net.mamoe:mirai-core-utils:2.13.0-RC")
 }
 
 mirai {
@@ -59,10 +59,6 @@ mirai {
 
 kotlin {
     explicitApi()
-}
-
-noArg {
-    annotation("jakarta.persistence.Entity")
 }
 
 tasks {
