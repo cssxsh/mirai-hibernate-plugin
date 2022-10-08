@@ -10,6 +10,7 @@ import kotlinx.serialization.modules.*
 import net.mamoe.mirai.message.data.*
 import net.mamoe.mirai.internal.message.data.*
 import net.mamoe.mirai.internal.message.image.*
+import net.mamoe.mirai.message.*
 import net.mamoe.mirai.message.data.Image.Key.queryUrl
 import net.mamoe.mirai.utils.*
 
@@ -41,68 +42,13 @@ public data class FaceRecord(
 
     public fun toMessageContent(): MessageContent = json.decodeFromString(serializer, code)
 
-    private object ImageSerializer : KSerializer<Image> {
-        private val delegate = ImageDelegate.serializer()
-
-        override val descriptor: SerialDescriptor = delegate.descriptor
-
-        override fun deserialize(decoder: Decoder): Image {
-            return delegate.deserialize(decoder).let { data ->
-                Image(data.imageId) {
-                    width = data.width
-                    height = data.height
-                    size = data.size
-                    type = data.imageType
-                    isEmoji = data.isEmoji
-                }
-            }
-        }
-
-        override fun serialize(encoder: Encoder, value: Image) {
-            delegate.serialize(
-                encoder,
-                ImageDelegate(
-                    imageId = value.imageId,
-                    width = value.width,
-                    height = value.height,
-                    size = value.size,
-                    imageType = value.imageType,
-                    isEmoji = value.isEmoji
-                )
-            )
-        }
-    }
-
     public companion object {
         @Suppress("INVISIBLE_REFERENCE", "INVISIBLE_MEMBER")
         private val json = Json {
-            serializersModule = SerializersModule {
-                polymorphic(MessageContent::class) {
-                    subclass(ImageSerializer)
-                    subclass(MarketFaceImpl.serializer())
-                }
-                @OptIn(ExperimentalSerializationApi::class)
-                polymorphicDefaultSerializer(MessageContent::class) { content ->
-                    when (content) {
-                        is MarketFace -> MarketFaceImpl.serializer()
-                        else -> ImageSerializer
-                    }.cast()
-                }
-            }
+            serializersModule = MessageSerializers.serializersModule
             ignoreUnknownKeys = true
         }
         private val serializer = PolymorphicSerializer(MessageContent::class)
-
-        @Serializable
-        @SerialName("Image")
-        private data class ImageDelegate(
-            val imageId: String,
-            val width: Int = 0,
-            val height: Int = 0,
-            val size: Long = 0,
-            val imageType: ImageType = ImageType.UNKNOWN,
-            val isEmoji: Boolean = true
-        )
 
         /**
          * from [OnlineImage.isEmoji]
