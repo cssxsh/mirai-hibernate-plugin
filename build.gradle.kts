@@ -31,11 +31,11 @@ dependencies {
     compileOnly("net.mamoe:mirai-core-utils:2.13.0-RC")
     compileOnly("xyz.cssxsh.mirai:mirai-administrator:1.2.8")
     // SQL/ORM
-    api("org.hibernate.orm:hibernate-core:6.1.3.Final")
-    api("org.hibernate.orm:hibernate-hikaricp:6.1.3.Final") {
+    api("org.hibernate.orm:hibernate-core:6.1.4.Final")
+    api("org.hibernate.orm:hibernate-hikaricp:6.1.4.Final") {
         exclude("org.slf4j")
     }
-    api("org.hibernate.orm:hibernate-community-dialects:6.1.3.Final")
+    api("org.hibernate.orm:hibernate-community-dialects:6.1.4.Final")
     api("com.zaxxer:HikariCP:5.0.1") {
         exclude("org.slf4j")
     }
