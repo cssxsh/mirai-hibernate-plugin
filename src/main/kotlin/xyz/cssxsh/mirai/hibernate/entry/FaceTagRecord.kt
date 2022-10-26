@@ -14,5 +14,5 @@ public data class FaceTagRecord(
     @Column(name = "md5", nullable = false, updatable = false, length = 32)
     public val md5: String,
     @Column(name = "tag", nullable = false, updatable = false, columnDefinition = "text")
-    public val tag: String,
+    public val tag: String
 ) : java.io.Serializable

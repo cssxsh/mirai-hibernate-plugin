@@ -1,6 +1,7 @@
 package xyz.cssxsh.mirai.hibernate.entry
 
 import jakarta.persistence.*
+import net.mamoe.mirai.contact.*
 import net.mamoe.mirai.message.data.*
 import net.mamoe.mirai.utils.*
 import org.hibernate.SessionFactory
@@ -71,6 +72,31 @@ abstract class DatabaseTest {
                 )
 
                 session.persist(message)
+
+                val friend = FriendRecord(
+                    bot = index * 10L,
+                    uid = index * 100L,
+                    remark = "好友",
+                    group = "我的好友",
+                    added = 0,
+                    deleted = Long.MAX_VALUE
+                )
+
+                session.persist(friend)
+
+                val member = GroupMemberRecord(
+                    group = index * 10L,
+                    uid = index * 100L,
+                    permission = MemberPermission.values().random(),
+                    name = "...",
+                    title = "😁",
+                    joined = 0,
+                    last = System.currentTimeMillis(),
+                    active = index,
+                    exited = Long.MAX_VALUE
+                )
+
+                session.persist(member)
             }
         }
     }

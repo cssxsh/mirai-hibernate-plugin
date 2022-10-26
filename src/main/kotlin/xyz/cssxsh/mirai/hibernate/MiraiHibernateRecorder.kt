@@ -74,6 +74,39 @@ public object MiraiHibernateRecorder : SimpleListenerHost() {
         }
     }
 
+    @EventHandler(priority = EventPriority.HIGHEST)
+    internal fun BotOnlineEvent.record() {
+        launch {
+            factory.fromTransaction { session ->
+                for (friend in bot.friends) {
+                    val record = FriendRecord.fromImpl(friend = friend)
+                    session.merge(record)
+                }
+                for (group in bot.groups) {
+                    for (member in group.members) {
+                        val record = GroupMemberRecord.fromImpl(member = member)
+                        session.merge(record)
+                    }
+                }
+            }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    internal fun FriendEvent.record() {
+        launch {
+            FriendRecord.fromEvent(event = this@record).merge()
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    internal fun GroupMemberEvent.record() {
+        if (member !is NormalMember) return
+        launch {
+            GroupMemberRecord.fromEvent(event = this@record).merge()
+        }
+    }
+
     private inline fun <reified T : Throwable> Throwable.unwrap(): T? {
         var current = this
         while (true) {
