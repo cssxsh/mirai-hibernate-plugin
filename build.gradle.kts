@@ -8,16 +8,16 @@ plugins {
 }
 
 group = "xyz.cssxsh.mirai"
-version = "2.4.4"
+version = "2.4.5"
 
 mavenCentralPublish {
     useCentralS01()
     singleDevGithubProject("cssxsh", "mirai-hibernate-plugin")
     licenseFromGitHubProject("AGPL-3.0")
     workingDir = System.getenv("PUBLICATION_TEMP")?.let { file(it).resolve(projectName) }
-        ?: project.buildDir.resolve("publishing-tmp")
+        ?: buildDir.resolve("publishing-tmp")
     publication {
-        artifact(tasks.getByName("buildPlugin"))
+        artifact(tasks["buildPlugin"])
     }
 }
 
@@ -29,7 +29,7 @@ repositories {
 dependencies {
     compileOnly("net.mamoe:mirai-core:2.13.0-RC")
     compileOnly("net.mamoe:mirai-core-utils:2.13.0-RC")
-    compileOnly("xyz.cssxsh.mirai:mirai-administrator:1.2.8")
+    compileOnly("xyz.cssxsh.mirai:mirai-administrator:1.2.9")
     // SQL/ORM
     api("org.hibernate.orm:hibernate-core:6.1.4.Final")
     api("org.hibernate.orm:hibernate-hikaricp:6.1.4.Final") {
@@ -41,14 +41,14 @@ dependencies {
     }
     api("com.h2database:h2:2.1.214")
     api("org.xerial:sqlite-jdbc:3.39.3.0")
-    api("mysql:mysql-connector-java:8.0.30")
+    api("mysql:mysql-connector-java:8.0.31")
     api("org.postgresql:postgresql:42.5.0")
-    implementation("org.reflections:reflections:0.10.2") {
+    api("org.reflections:reflections:0.10.2") {
         exclude("org.slf4j")
     }
 
     testImplementation(kotlin("test"))
-    testImplementation("org.slf4j:slf4j-simple:2.0.1")
+    testImplementation("org.slf4j:slf4j-simple:2.0.3")
     testImplementation("net.mamoe:mirai-logging-slf4j:2.13.0-RC")
     testImplementation("net.mamoe:mirai-core-utils:2.13.0-RC")
 }

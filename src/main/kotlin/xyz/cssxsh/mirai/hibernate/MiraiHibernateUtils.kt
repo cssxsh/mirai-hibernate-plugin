@@ -14,7 +14,7 @@ import java.net.URL
 internal val logger by lazy {
     try {
         MiraiHibernatePlugin.logger
-    } catch (_: Throwable) {
+    } catch (_: ExceptionInInitializerError) {
         MiraiLogger.Factory.create(MiraiHibernateRecorder::class)
     }
 }

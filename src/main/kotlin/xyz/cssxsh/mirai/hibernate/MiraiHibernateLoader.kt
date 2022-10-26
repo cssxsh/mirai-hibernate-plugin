@@ -41,7 +41,7 @@ public interface MiraiHibernateLoader {
                     .toAbsolutePath()
                     .relativize(resolveDataPath(filename))
                     .joinToString(separator = "/", prefix = "./")
-            } catch (_: Throwable) {
+            } catch (_: Exception) {
                 filename
             }
         }

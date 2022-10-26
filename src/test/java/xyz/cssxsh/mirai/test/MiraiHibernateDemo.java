@@ -21,7 +21,6 @@ public class MiraiHibernateDemo extends JavaPlugin {
 
     private SessionFactory factory;
 
-
     @Override
     public void onEnable() {
         // MiraiHibernateConfiguration 会自动扫描 entry, entity, entities, model, models, bean, beans, dto 的包类
