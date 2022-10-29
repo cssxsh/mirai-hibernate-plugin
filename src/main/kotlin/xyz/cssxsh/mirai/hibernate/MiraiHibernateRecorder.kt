@@ -32,6 +32,14 @@ public object MiraiHibernateRecorder : SimpleListenerHost() {
     internal fun MessageEvent.record() {
         launch {
             val message = message.asSequence().filterNot { it is MessageSource }.toMessageChain()
+            val source = if (this@record is MessageSyncEvent) {
+                message.source.copyAmend {
+                    fromId = bot.id
+                    targetId = subject.id
+                }
+            } else {
+                message.source
+            }
             MessageRecord.fromSuccess(source = source, message = message).merge()
         }
         launch {
