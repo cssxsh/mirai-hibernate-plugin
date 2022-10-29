@@ -5,6 +5,9 @@ import kotlinx.serialization.*
 import net.mamoe.mirai.contact.*
 import net.mamoe.mirai.event.events.*
 
+/**
+ * @since 2.5.0
+ */
 @Entity
 @Table(name = "friend_record")
 @Serializable
@@ -27,6 +30,9 @@ public data class FriendRecord(
     val index: FriendIndex = FriendIndex(bot = bot, uid = uid)
 
     public companion object {
+        /**
+         * From Friend Event
+         */
         public fun fromEvent(event: FriendEvent): FriendRecord = FriendRecord(
             bot = event.bot.id,
             uid = event.friend.id,
@@ -40,6 +46,9 @@ public data class FriendRecord(
             deleted = if (event is FriendDeleteEvent) System.currentTimeMillis() / 1_000 else Long.MAX_VALUE,
         )
 
+        /**
+         * From Friend Implement
+         */
         public fun fromImpl(friend: Friend): FriendRecord = FriendRecord(
             bot = friend.bot.id,
             uid = friend.id,

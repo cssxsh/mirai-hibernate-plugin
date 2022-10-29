@@ -63,7 +63,7 @@ public data class MessageRecord(
 
     public companion object {
         /**
-         * From Success Message
+         * From Success Send Message
          */
         public fun fromSuccess(source: MessageSource, message: MessageChain): MessageRecord = MessageRecord(
             bot = source.botId,
@@ -79,7 +79,7 @@ public data class MessageRecord(
         )
 
         /**
-         * From Failure Message
+         * From Failure Send Message
          */
         public fun fromFailure(target: Contact, message: MessageChain): MessageRecord = MessageRecord(
             bot = target.bot.id,

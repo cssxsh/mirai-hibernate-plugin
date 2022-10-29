@@ -5,6 +5,9 @@ import kotlinx.serialization.*
 import net.mamoe.mirai.contact.*
 import net.mamoe.mirai.event.events.*
 
+/**
+ * @since 2.5.0
+ */
 @Entity
 @Table(name = "group_member_record")
 @Serializable
@@ -34,6 +37,9 @@ public data class GroupMemberRecord(
     val index: GroupMemberIndex = GroupMemberIndex(group = group, uid = uid)
 
     public companion object {
+        /**
+         * From Group Member Event
+         */
         public fun fromEvent(event: GroupMemberEvent): GroupMemberRecord = GroupMemberRecord(
             group = event.group.id,
             uid = event.member.id,
@@ -53,6 +59,9 @@ public data class GroupMemberRecord(
             }
         )
 
+        /**
+         * From Normal Member Implement
+         */
         public fun fromImpl(member: NormalMember): GroupMemberRecord = GroupMemberRecord(
             group = member.group.id,
             uid = member.id,
