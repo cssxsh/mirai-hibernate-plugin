@@ -31,14 +31,13 @@ public fun checkPlatform(folder: File) {
     if ("termux" in System.getProperty("user.dir")) {
         logger.info { "change platform to Linux-Android" }
         System.setProperty("org.sqlite.lib.path", folder.path)
-        folder.resolve("libsqlitejdbc.so").apply {
-            if (exists().not()) {
-                val url = SQLiteJDBCLoader::class.java.classLoader
-                    .getResource("org/sqlite/native/Linux-Android/aarch64/libsqlitejdbc.so")
-                    ?: URL(SQLITE_JNI)
+        val lib = folder.resolve("libsqlitejdbc.so")
+        if (lib.exists().not()) {
+            val url = SQLiteJDBCLoader::class.java.classLoader
+                .getResource("org/sqlite/native/Linux-Android/aarch64/libsqlitejdbc.so")
+                ?: URL(SQLITE_JNI)
 
-                url.openStream().use { writeBytes(it.readAllBytes()) }
-            }
+            lib.writeBytes(url.readBytes())
         }
         SQLiteJDBCLoader.initialize()
     }
@@ -53,7 +52,11 @@ public fun dialects(): Set<Class<out Dialect>> {
         .getSubTypesOf(Dialect::class.java)
 }
 
-internal lateinit var factory: SessionFactory
+/**
+ * 插件的 SessionFactory
+ */
+public lateinit var factory: SessionFactory
+    internal set
 
 /**
  * 将消息记录打包为转发消息

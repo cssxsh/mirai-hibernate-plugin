@@ -6,6 +6,7 @@
 
 [![maven-central](https://img.shields.io/maven-central/v/xyz.cssxsh.mirai/mirai-hibernate-plugin)](https://search.maven.org/artifact/xyz.cssxsh.mirai/mirai-hibernate-plugin)
 [![Database Test](https://github.com/cssxsh/mirai-hibernate-plugin/actions/workflows/test.yml/badge.svg)](https://github.com/cssxsh/mirai-hibernate-plugin/actions/workflows/test.yml)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/f82572fd42324ce19df9d1639250127d)](https://www.codacy.com/gh/cssxsh/mirai-hibernate-plugin/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=cssxsh/mirai-hibernate-plugin&amp;utm_campaign=Badge_Grade)
 
 插件自带聊天记录器 [MiraiHibernateRecorder](src/main/kotlin/xyz/cssxsh/mirai/hibernate/MiraiHibernateLoader.kt),  
 会记录 `群聊/私聊` 的内容到数据库方便其他插件使用，默认是 `h2database` 数据库(since `2.2.0+`)  
@@ -24,7 +25,7 @@
 
 需要其他数据库驱动或连接池支持，请添加 `plugin-shared-libraries` 依赖，有两种方法
 
-1.  将 **Jar包** 放到 `plugin-shared-libraries` 目录中一同被 `mirai-console` 加载
+1.  将 **Jar包** 放到 `plugin-shared-libraries` 目录中一同被 `mirai-console` 加载  
 2.  在 `plugin-shared-libraries/libraries.txt` 中添加 maven 引用，  
     例如 `com.microsoft.sqlserver:mssql-jdbc:10.2.1.jre11`
 

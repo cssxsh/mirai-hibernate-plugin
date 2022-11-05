@@ -37,9 +37,10 @@ public object MiraiHibernatePlugin : KotlinPlugin(
         val configuration = MiraiHibernateConfiguration(plugin = this)
 
         with(configuration) {
-            if (getProperty("hibernate.connection.url").orEmpty().startsWith("jdbc:sqlite")) {
+            val url = getProperty("hibernate.connection.url").orEmpty()
+            if (url.startsWith("jdbc:sqlite")) {
                 logger.error { "Sqlite 不支持并发, 将替换为 H2Database" }
-                setProperty("hibernate.connection.url", getProperty("hibernate.connection.url").replace("sqlite", "h2"))
+                setProperty("hibernate.connection.url", url.replace("sqlite", "h2"))
                 setProperty("hibernate.connection.driver_class", "org.h2.Driver")
                 setProperty("hibernate.dialect", "org.hibernate.dialect.H2Dialect")
                 setProperty("hibernate.hikari.minimumIdle", "10")
