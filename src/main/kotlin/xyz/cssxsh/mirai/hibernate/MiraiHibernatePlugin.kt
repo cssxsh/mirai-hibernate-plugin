@@ -1,6 +1,7 @@
 package xyz.cssxsh.mirai.hibernate
 
 import net.mamoe.mirai.console.extension.*
+import net.mamoe.mirai.console.plugin.*
 import net.mamoe.mirai.console.plugin.jvm.*
 import net.mamoe.mirai.event.*
 import net.mamoe.mirai.utils.*
@@ -53,6 +54,17 @@ public object MiraiHibernatePlugin : KotlinPlugin(
         logger.info { "Database ${metadata.url} by ${metadata.driverName}." }
         if (metadata.url.startsWith("jdbc:sqlite")) {
             throw IllegalArgumentException("正在使用 Sqlite 数据库记录聊天内容，Sqlite 不支持并发，请更换为其他数据库")
+        }
+
+        for (plugin in PluginManager.plugins) {
+            if (plugin !is JvmPlugin) continue
+            when (plugin.id) {
+                "net.mamoe.mirai-api-http" -> {
+                    logger.info { "如果要使用 mirai-hibernate-plugin 为 mirai-api-http 提供消息持久化, 请安装 https://github.com/cssxsh/mirai-hibernate-http " }
+                }
+                "com.github.yyuueexxiinngg.onebot" -> continue
+                else -> continue
+            }
         }
 
         MiraiHibernateRecorder.registerTo(globalEventChannel())
