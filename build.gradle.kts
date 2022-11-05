@@ -31,21 +31,22 @@ dependencies {
     compileOnly("net.mamoe:mirai-core-utils:2.13.0-RC2")
     compileOnly("xyz.cssxsh.mirai:mirai-administrator:1.2.9")
     // SQL/ORM
-    api("org.hibernate.orm:hibernate-core:6.1.4.Final")
-    api("org.hibernate.orm:hibernate-hikaricp:6.1.4.Final") {
-        exclude("org.slf4j")
+    api("org.hibernate.orm:hibernate-core:6.1.5.Final")
+    api("org.hibernate.orm:hibernate-hikaricp:6.1.5.Final") {
+        exclude(group = "org.slf4j")
     }
-    api("org.hibernate.orm:hibernate-community-dialects:6.1.4.Final")
+    api("org.hibernate.orm:hibernate-community-dialects:6.1.5.Final")
     api("com.zaxxer:HikariCP:5.0.1") {
-        exclude("org.slf4j")
+        exclude(group = "org.slf4j")
     }
     api("com.h2database:h2:2.1.214")
     api("org.xerial:sqlite-jdbc:3.39.3.0")
     api("mysql:mysql-connector-java:8.0.31")
     api("org.postgresql:postgresql:42.5.0")
     api("org.reflections:reflections:0.10.2") {
-        exclude("org.slf4j")
+        exclude(group = "org.slf4j")
     }
+    implementation("com.google.protobuf:protobuf-java:3.21.9")
 
     testImplementation(kotlin("test"))
     testImplementation("org.slf4j:slf4j-simple:2.0.3")
