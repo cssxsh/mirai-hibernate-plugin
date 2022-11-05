@@ -6,16 +6,23 @@ import net.mamoe.mirai.contact.*
 import net.mamoe.mirai.event.events.*
 
 /**
+ * 群成员记录
+ * @param uuid 好友索引
+ * @param permission 权限
+ * @param name 名字
+ * @param title 头衔
+ * @param joined 加入时间戳
+ * @param last 最后发言时间戳
+ * @param active 活跃度
+ * @param exited 退出时间戳
  * @since 2.5.0
  */
 @Entity
 @Table(name = "group_member_record")
 @Serializable
 public data class GroupMemberRecord(
-    @jakarta.persistence.Transient
-    val group: Long,
-    @jakarta.persistence.Transient
-    val uid: Long,
+    @EmbeddedId
+    val uuid: GroupMemberIndex,
     @Column(name = "permission", nullable = false)
     @Enumerated(value = EnumType.ORDINAL)
     val permission: MemberPermission = MemberPermission.MEMBER,
@@ -32,17 +39,13 @@ public data class GroupMemberRecord(
     @Column(name = "exited", nullable = false)
     val exited: Long
 ) : java.io.Serializable {
-    @EmbeddedId
-    @kotlinx.serialization.Transient
-    val index: GroupMemberIndex = GroupMemberIndex(group = group, uid = uid)
 
     public companion object {
         /**
          * From Group Member Event
          */
         public fun fromEvent(event: GroupMemberEvent): GroupMemberRecord = GroupMemberRecord(
-            group = event.group.id,
-            uid = event.member.id,
+            uuid = GroupMemberIndex(group = event.group.id, uid = event.member.id),
             permission = event.member.permission,
             name = (event.member as NormalMember).nameCardOrNick,
             title = (event.member as NormalMember).specialTitle,
@@ -63,8 +66,7 @@ public data class GroupMemberRecord(
          * From Normal Member Implement
          */
         public fun fromImpl(member: NormalMember): GroupMemberRecord = GroupMemberRecord(
-            group = member.group.id,
-            uid = member.id,
+            uuid = GroupMemberIndex(group = member.group.id, uid = member.id),
             permission = member.permission,
             name = member.nameCardOrNick,
             title = member.specialTitle,

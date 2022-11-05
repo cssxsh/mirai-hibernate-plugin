@@ -1,6 +1,8 @@
 package xyz.cssxsh.mirai.hibernate.entry
 
 import jakarta.persistence.*
+import kotlinx.serialization.*
+import kotlinx.serialization.json.*
 import net.mamoe.mirai.contact.*
 import net.mamoe.mirai.message.data.*
 import net.mamoe.mirai.utils.*
@@ -48,7 +50,7 @@ abstract class DatabaseTest {
         val random = Random(seed = System.currentTimeMillis())
         factory.fromTransaction { session ->
             repeat(100) { index ->
-                val md5 = random.nextLong().toByteArray().md5().toUHexString("")
+                val md5 = random.nextBytes(16).toUHexString("")
                 val face = FaceRecord(
                     md5 = md5,
                     code = "{}",
@@ -65,7 +67,7 @@ abstract class DatabaseTest {
                     fromId = index * 100L,
                     targetId = index * 1000L,
                     ids = "$index",
-                    internalIds ="$index",
+                    internalIds = "$index",
                     time = (System.currentTimeMillis() / 1000).toInt(),
                     kind = MessageSourceKind.values().random(),
                     code = md5
@@ -74,23 +76,27 @@ abstract class DatabaseTest {
                 session.persist(message)
 
                 val friend = FriendRecord(
-                    bot = index * 10L,
-                    uid = index * 100L,
+                    uuid = FriendIndex(
+                        bot = random.nextLong(0, Long.MAX_VALUE),
+                        uid = random.nextLong(0, Long.MAX_VALUE)
+                    ),
                     remark = "好友",
-                    group = "我的好友",
-                    added = 0,
+                    category = "我的好友",
+                    added = random.nextLong(),
                     deleted = Long.MAX_VALUE
                 )
 
                 session.persist(friend)
 
                 val member = GroupMemberRecord(
-                    group = index * 10L,
-                    uid = index * 100L,
+                    uuid = GroupMemberIndex(
+                        group = random.nextLong(0, Long.MAX_VALUE),
+                        uid = random.nextLong(0, Long.MAX_VALUE)
+                    ),
                     permission = MemberPermission.values().random(),
                     name = "...",
                     title = "😁",
-                    joined = 0,
+                    joined = random.nextLong(),
                     last = System.currentTimeMillis(),
                     active = index,
                     exited = Long.MAX_VALUE
@@ -98,6 +104,20 @@ abstract class DatabaseTest {
 
                 session.persist(member)
             }
+        }
+    }
+
+    @Test
+    fun backup() {
+        factory.fromSession { session ->
+            session.withCriteria<FriendRecord> { criteria ->
+                val root = criteria.from<FriendRecord>()
+                criteria.select(root)
+            }.list()
+            session.withCriteria<GroupMemberRecord> { criteria ->
+                val root = criteria.from<GroupMemberRecord>()
+                criteria.select(root)
+            }.list()
         }
     }
 
