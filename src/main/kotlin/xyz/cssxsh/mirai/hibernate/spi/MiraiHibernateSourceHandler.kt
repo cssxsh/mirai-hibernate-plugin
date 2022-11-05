@@ -7,6 +7,12 @@ import xyz.cssxsh.mirai.hibernate.*
 import xyz.cssxsh.mirai.spi.*
 import kotlin.streams.asSequence
 
+/**
+ * 为 mirai-administrator 实现的消息记录
+ * @see xyz.cssxsh.mirai.admin.from
+ * @see xyz.cssxsh.mirai.admin.quote
+ * @see xyz.cssxsh.mirai.admin.target
+ */
 public class MiraiHibernateSourceHandler : MessageSourceHandler {
     override val id: String = "hibernate-recorder"
     override val level: Int by lazy { System.getProperty("xyz.cssxsh.mirai.hibernate.recorder", "10").toInt() }

@@ -7,6 +7,9 @@ import net.mamoe.mirai.utils.*
 import xyz.cssxsh.hibernate.*
 import java.util.*
 
+/**
+ * mirai-hibernate-plugin 插件主类
+ */
 public object MiraiHibernatePlugin : KotlinPlugin(
     JvmPluginDescription(
         id = "xyz.cssxsh.mirai.plugin.mirai-hibernate-plugin",

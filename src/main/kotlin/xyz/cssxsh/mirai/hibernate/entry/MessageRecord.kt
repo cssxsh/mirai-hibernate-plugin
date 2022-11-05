@@ -8,6 +8,19 @@ import net.mamoe.mirai.message.code.*
 import net.mamoe.mirai.message.data.*
 import net.mamoe.mirai.utils.*
 
+/**
+ * 戳一戳记录
+ * @param id 记录自增ID
+ * @param bot 机器人ID
+ * @param fromId 起始用户ID
+ * @param targetId 目标用户ID
+ * @param ids 消息ID
+ * @param internalIds 消息SEQ
+ * @param time Unix时间戳，秒单位
+ * @param kind 消息类型
+ * @param code 消息内容，JSON序列化
+ * @param recall 已撤销
+ */
 @Entity
 @Table(name = "message_record", indexes = [Index(columnList = "from_id"), Index(columnList = "target_id")])
 @Serializable

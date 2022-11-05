@@ -3,6 +3,12 @@ package xyz.cssxsh.mirai.hibernate.entry
 import jakarta.persistence.*
 import kotlinx.serialization.*
 
+/**
+ * 表情包标签记录
+ * @param id 记录自增ID
+ * @param md5 图片MD5, 同时用作外键关联
+ * @param tag 标签
+ */
 @Entity
 @Table(name = "face_tag_record")
 @Serializable

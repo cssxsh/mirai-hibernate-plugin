@@ -5,6 +5,9 @@ import java.io.*
 import java.sql.*
 import kotlin.io.path.*
 
+/**
+ * 加载和配置 Hibernate
+ */
 public interface MiraiHibernateLoader {
     /**
      * 是否自动扫描已标记注解的类
@@ -32,6 +35,10 @@ public interface MiraiHibernateLoader {
     public val default: String
 
     public companion object {
+        /**
+         * 根据 [plugin] 创建 MiraiHibernateLoader
+         * @see Impl
+         */
         @JvmStatic
         public operator fun invoke(plugin: JvmPlugin): MiraiHibernateLoader = Impl(plugin = plugin)
 
@@ -47,6 +54,9 @@ public interface MiraiHibernateLoader {
         }
     }
 
+    /**
+     * 简单的实现
+     */
     public data class Impl(
         override val autoScan: Boolean,
         override val packageName: String,

@@ -6,6 +6,19 @@ import net.mamoe.mirai.contact.*
 import net.mamoe.mirai.event.events.*
 import net.mamoe.mirai.message.data.*
 
+/**
+ * 戳一戳记录
+ * @param id 记录自增ID
+ * @param bot 机器人ID
+ * @param time Unix时间戳，秒单位
+ * @param fromId 起始用户ID
+ * @param targetId 目标用户ID
+ * @param kind 消息类型
+ * @param subject 会话所在ID
+ * @param action 戳一戳 `行为`
+ * @param suffix 戳一戳 `后缀`
+ * @param recall 已撤销
+ */
 @Entity
 @Table(name = "nudge_record")
 @Serializable

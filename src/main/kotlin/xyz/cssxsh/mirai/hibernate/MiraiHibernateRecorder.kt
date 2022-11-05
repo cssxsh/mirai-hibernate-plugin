@@ -146,6 +146,10 @@ public object MiraiHibernateRecorder : SimpleListenerHost() {
         }
     }
 
+    /**
+     * 通过 [md5] 获取表情包记录
+     * @see FaceRecord.md5
+     */
     public fun face(md5: String): FaceRecord? {
         return factory.fromSession { session ->
             session.get(FaceRecord::class.java, md5)

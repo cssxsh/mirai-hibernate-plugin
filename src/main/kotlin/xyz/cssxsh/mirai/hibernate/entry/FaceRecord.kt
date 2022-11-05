@@ -14,6 +14,16 @@ import net.mamoe.mirai.message.*
 import net.mamoe.mirai.message.data.Image.Key.queryUrl
 import net.mamoe.mirai.utils.*
 
+/**
+ * 表情包记录
+ * @param md5 图片MD5, 同时用作ID
+ * @param code 消息内容，JSON序列
+ * @param content 图片代替文本
+ * @param url 图片URL
+ * @param height 图片高
+ * @param width 图片宽
+ * @param disable 禁用
+ */
 @Entity
 @Table(name = "face_record")
 @Serializable
@@ -36,10 +46,18 @@ public data class FaceRecord(
     public val disable: Boolean = false
 ) : java.io.Serializable {
 
+    /**
+     * 表情包标签记录集
+     * @see md5
+     */
     @OneToMany(mappedBy = "md5")
     @kotlinx.serialization.Transient
     public val tags: List<FaceTagRecord> = emptyList()
 
+    /**
+     * [FaceRecord.code] 解码
+     * @see code
+     */
     public fun toMessageContent(): MessageContent = json.decodeFromString(serializer, code)
 
     public companion object {

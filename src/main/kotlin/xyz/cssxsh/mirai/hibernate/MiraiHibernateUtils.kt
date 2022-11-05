@@ -22,6 +22,10 @@ internal val logger by lazy {
 private const val SQLITE_JNI =
     "https://raw.fastgit.org/xerial/sqlite-jdbc/master/src/main/resources/org/sqlite/native/Linux-Android/aarch64/libsqlitejdbc.so"
 
+/**
+ * 检查当前平台，并修正问题
+ * @see SQLiteJDBCLoader
+ */
 public fun checkPlatform(folder: File) {
     // Termux
     if ("termux" in System.getProperty("user.dir")) {
@@ -40,6 +44,10 @@ public fun checkPlatform(folder: File) {
     }
 }
 
+/**
+ * 获取所有 [Dialect]
+ * @see Dialect
+ */
 public fun dialects(): Set<Class<out Dialect>> {
     return org.reflections.Reflections("org.hibernate.dialect", "org.hibernate.community.dialect")
         .getSubTypesOf(Dialect::class.java)
@@ -47,22 +55,36 @@ public fun dialects(): Set<Class<out Dialect>> {
 
 internal lateinit var factory: SessionFactory
 
-public fun List<MessageRecord>.toForwardMessage(context: Contact) {
-    buildForwardMessage(context) {
+/**
+ * 将消息记录打包为转发消息
+ * @param subject 上下文
+ * @see ForwardMessage
+ */
+public fun List<MessageRecord>.toForwardMessage(subject: Contact): ForwardMessage {
+    return buildForwardMessage(subject) {
         for (record in this@toForwardMessage) {
             record.fromId at record.time says record.toMessageChain()
         }
     }
 }
 
-public fun Sequence<MessageRecord>.toForwardMessage(context: Contact) {
-    buildForwardMessage(context) {
+/**
+ * 将消息记录打包为转发消息
+ * @param subject 上下文
+ * @see ForwardMessage
+ */
+public fun Sequence<MessageRecord>.toForwardMessage(subject: Contact): ForwardMessage {
+    return buildForwardMessage(subject) {
         for (record in this@toForwardMessage) {
             record.fromId at record.time says record.toMessageChain()
         }
     }
 }
 
+/**
+ * 随机得到一个表情包记录
+ * @see factory
+ */
 public fun FaceRecord.Companion.random(): FaceRecord {
     return factory.fromSession { session ->
         val count = session.withCriteria<Long> { criteria ->
@@ -79,6 +101,10 @@ public fun FaceRecord.Companion.random(): FaceRecord {
     }
 }
 
+/**
+ * 禁用指定 [md5] 的 表情包记录
+ * @see FaceRecord.md5
+ */
 public fun FaceRecord.Companion.disable(md5: String): FaceRecord {
     return factory.fromTransaction { session ->
         val result = session.withCriteriaUpdate<FaceRecord> { criteria ->
@@ -94,6 +120,10 @@ public fun FaceRecord.Companion.disable(md5: String): FaceRecord {
     }
 }
 
+/**
+ * 通过 [tag] 获取表情包记录
+ * @see FaceTagRecord.tag
+ */
 public fun FaceRecord.Companion.match(tag: String): List<FaceRecord> {
     return factory.fromSession { session ->
         session.withCriteria<FaceRecord> { criteria ->
@@ -105,6 +135,10 @@ public fun FaceRecord.Companion.match(tag: String): List<FaceRecord> {
     }
 }
 
+/**
+ * 通过 [md5] 获取表情包标签记录
+ * @see FaceTagRecord.md5
+ */
 public operator fun FaceTagRecord.Companion.get(md5: String): List<FaceTagRecord> {
     return factory.fromSession { session ->
         session.withCriteria<FaceTagRecord> { criteria ->
@@ -115,6 +149,10 @@ public operator fun FaceTagRecord.Companion.get(md5: String): List<FaceTagRecord
     }
 }
 
+/**
+ * 通过 [md5] 设置表情包标签记录
+ * @see FaceTagRecord.md5
+ */
 public operator fun FaceTagRecord.Companion.set(md5: String, tag: String): List<FaceTagRecord> {
     return factory.fromTransaction { session ->
         session.persist(FaceTagRecord(md5 = md5, tag = tag))
@@ -127,6 +165,10 @@ public operator fun FaceTagRecord.Companion.set(md5: String, tag: String): List<
     }
 }
 
+/**
+ * 通过 [md5] 移除表情包标签记录
+ * @see FaceTagRecord.md5
+ */
 public fun FaceTagRecord.Companion.remove(md5: String, tag: String): List<FaceTagRecord> {
     return factory.fromTransaction { session ->
         session.withCriteriaDelete<FaceTagRecord> { criteria ->

@@ -6,6 +6,9 @@ import kotlinx.serialization.descriptors.*
 import kotlinx.serialization.encoding.*
 
 /**
+ * 好友索引
+ * @param bot 机器人ID
+ * @param uid 好友ID
  * @since 2.5.0
  */
 @Embeddable

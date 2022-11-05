@@ -110,12 +110,24 @@ public inline fun <reified T> Session.withCriteriaUpdate(block: CriteriaBuilder.
 public inline fun <reified T> Session.withCriteriaDelete(block: CriteriaBuilder.(criteria: CriteriaDelete<T>) -> Unit): MutationQuery =
     createMutationQuery(with(criteriaBuilder) { createCriteriaDelete(T::class.java).also { block(it) } })
 
+/**
+ * 获得 Root<X>
+ */
 public inline fun <reified X> AbstractQuery<*>.from(): Root<X> = from(X::class.java)
 
+/**
+ * 获得 Root<X>
+ */
 public inline fun <reified T> CriteriaUpdate<T>.from(): Root<T> = from(T::class.java)
 
+/**
+ * 获得 Root<X>
+ */
 public inline fun <reified T> CriteriaDelete<T>.from(): Root<T> = from(T::class.java)
 
+/**
+ * 获得 Subquery<T>
+ */
 public inline fun <reified T> CommonAbstractCriteria.subquery(): Subquery<T> = subquery(T::class.java)
 
 /**
