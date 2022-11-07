@@ -23,11 +23,12 @@
 *   `com.h2database:h2:2.1.214` - [h2](example/h2.hibernate.properties)
 *   `com.zaxxer:HikariCP:5.0.1`
 
-需要其他数据库驱动或连接池支持，请添加 `plugin-shared-libraries` 依赖，有两种方法
+需要其他数据库驱动或连接池支持，请添加 `plugin-shared-libraries` 依赖，有2种方法
 
-1.  将 **Jar包** 放到 `plugin-shared-libraries` 目录中一同被 `mirai-console` 加载  
+1.  将 **Jar包** 放到 `plugin-shared-libraries` 目录中一同被 `mirai-console` 加载
+
 2.  在 `plugin-shared-libraries/libraries.txt` 中添加 maven 引用，  
-    例如 `com.microsoft.sqlserver:mssql-jdbc:10.2.1.jre11`
+    例如 `com.microsoft.sqlserver:mssql-jdbc:11.2.1.jre11`
 
 ## 在 Mirai Console Plugin 项目中引用
 
