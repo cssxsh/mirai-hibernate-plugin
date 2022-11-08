@@ -1,5 +1,6 @@
 package xyz.cssxsh.mirai.hibernate
 
+import net.mamoe.mirai.console.plugin.*
 import net.mamoe.mirai.console.plugin.jvm.*
 import java.io.*
 import java.sql.*
@@ -42,7 +43,7 @@ public interface MiraiHibernateLoader {
         @JvmStatic
         public operator fun invoke(plugin: JvmPlugin): MiraiHibernateLoader = Impl(plugin = plugin)
 
-        private fun JvmPlugin.database(filename: String): String {
+        private fun PluginFileExtensions.database(filename: String): String {
             return try {
                 Path(".")
                     .toAbsolutePath()
@@ -64,7 +65,7 @@ public interface MiraiHibernateLoader {
         override val configuration: File,
         override val default: String
     ) : MiraiHibernateLoader {
-        public constructor(plugin: JvmPlugin) : this(
+        public constructor(plugin: PluginFileExtensions) : this(
             autoScan = true,
             packageName = with(plugin::class.java) {
                 val packagePath = packageName.replace('.', '/')
