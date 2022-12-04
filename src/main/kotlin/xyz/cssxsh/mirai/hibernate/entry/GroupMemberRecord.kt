@@ -53,7 +53,7 @@ public data class GroupMemberRecord(
             last = (event.member as NormalMember).lastSpeakTimestamp.toLong(),
             active = try {
                 event.member.active.temperature
-            } catch (_: Throwable) {
+            } catch (_: NoSuchMethodError) {
                 0
             },
             exited = when (event) {
@@ -74,7 +74,7 @@ public data class GroupMemberRecord(
             last = member.lastSpeakTimestamp.toLong(),
             active = try {
                 member.active.temperature
-            } catch (_: Throwable) {
+            } catch (_: NoSuchMethodError) {
                 0
             },
             exited = Long.MAX_VALUE

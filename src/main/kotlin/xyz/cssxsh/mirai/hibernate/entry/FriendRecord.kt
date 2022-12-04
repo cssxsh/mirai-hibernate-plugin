@@ -39,7 +39,7 @@ public data class FriendRecord(
             remark = event.friend.remarkOrNick,
             category = try {
                 event.friend.friendGroup.name
-            } catch (_: Throwable) {
+            } catch (_: NoSuchMethodError) {
                 "我的好友"
             },
             added = if (event is FriendAddEvent) System.currentTimeMillis() / 1_000 else 0,
@@ -54,7 +54,7 @@ public data class FriendRecord(
             remark = friend.remarkOrNick,
             category = try {
                 friend.friendGroup.name
-            } catch (_: Throwable) {
+            } catch (_: NoSuchMethodError) {
                 "我的好友"
             },
             added = 0,

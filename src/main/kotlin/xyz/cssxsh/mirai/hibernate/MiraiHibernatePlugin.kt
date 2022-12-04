@@ -1,5 +1,6 @@
 package xyz.cssxsh.mirai.hibernate
 
+import kotlinx.coroutines.*
 import net.mamoe.mirai.console.extension.*
 import net.mamoe.mirai.console.plugin.*
 import net.mamoe.mirai.console.plugin.jvm.*
@@ -13,7 +14,7 @@ internal object MiraiHibernatePlugin : KotlinPlugin(
     JvmPluginDescription(
         id = "xyz.cssxsh.mirai.plugin.mirai-hibernate-plugin",
         name = "mirai-hibernate-plugin",
-        version = "2.5.0",
+        version = "2.5.1",
     ) {
         author("cssxsh")
 
@@ -70,7 +71,7 @@ internal object MiraiHibernatePlugin : KotlinPlugin(
     }
 
     override fun onDisable() {
-        MiraiHibernateRecorder.cancelAll()
+        MiraiHibernateRecorder.cancel()
         factory.close()
     }
 }
