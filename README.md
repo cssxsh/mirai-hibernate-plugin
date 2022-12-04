@@ -18,8 +18,8 @@
 本插件打包了以下版本的数据库驱动和连接池
 
 *   `mysql:mysql-connector-java:8.0.31` - [mysql](example/mysql.hibernate.properties)
-*   `org.xerial:sqlite-jdbc:3.39.3.0` - [sqlite](example/sqlite.hibernate.properties)
-*   `org.postgresql:postgresql:42.5.0` - [postgresql](example/postgresql.hibernate.properties)
+*   `org.xerial:sqlite-jdbc:3.40.0.0` - [sqlite](example/sqlite.hibernate.properties)
+*   `org.postgresql:postgresql:42.5.1` - [postgresql](example/postgresql.hibernate.properties)
 *   `com.h2database:h2:2.1.214` - [h2](example/h2.hibernate.properties)
 *   `com.zaxxer:HikariCP:5.0.1`
 
