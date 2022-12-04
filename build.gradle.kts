@@ -35,6 +35,7 @@ dependencies {
     compileOnly("net.mamoe:mirai-core-utils")
     testImplementation("net.mamoe:mirai-logging-slf4j")
     testImplementation("net.mamoe:mirai-core-mock")
+    testImplementation("net.mamoe:mirai-core-utils")
     //
     implementation(platform("org.slf4j:slf4j-parent:2.0.5"))
     testImplementation("org.slf4j:slf4j-simple")
