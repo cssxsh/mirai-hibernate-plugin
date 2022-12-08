@@ -40,9 +40,9 @@ dependencies {
     implementation(platform("org.slf4j:slf4j-parent:2.0.5"))
     testImplementation("org.slf4j:slf4j-simple")
     // SQL/ORM
-    api("org.hibernate.orm:hibernate-core:6.1.5.Final")
-    api("org.hibernate.orm:hibernate-hikaricp:6.1.5.Final")
-    api("org.hibernate.orm:hibernate-community-dialects:6.1.5.Final")
+    api("org.hibernate.orm:hibernate-core:6.1.6.Final")
+    api("org.hibernate.orm:hibernate-hikaricp:6.1.6.Final")
+    api("org.hibernate.orm:hibernate-community-dialects:6.1.6.Final")
     api("com.zaxxer:HikariCP:5.0.1")
     api("com.h2database:h2:2.1.214")
     api("org.xerial:sqlite-jdbc:3.40.0.0")
