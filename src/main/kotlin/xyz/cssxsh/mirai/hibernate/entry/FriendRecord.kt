@@ -41,6 +41,8 @@ public data class FriendRecord(
                 event.friend.friendGroup.name
             } catch (_: NoSuchMethodError) {
                 "我的好友"
+            } catch (_: NullPointerException) {
+                "我的好友"
             },
             added = if (event is FriendAddEvent) System.currentTimeMillis() / 1_000 else 0,
             deleted = if (event is FriendDeleteEvent) System.currentTimeMillis() / 1_000 else Long.MAX_VALUE,
@@ -55,6 +57,8 @@ public data class FriendRecord(
             category = try {
                 friend.friendGroup.name
             } catch (_: NoSuchMethodError) {
+                "我的好友"
+            } catch (_: NullPointerException) {
                 "我的好友"
             },
             added = 0,
