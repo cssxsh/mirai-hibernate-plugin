@@ -72,8 +72,6 @@ jobs:
       - name: Start PostgreSQL
         run: |
           brew info postgresql
-          initdb /usr/local/var/postgres -E utf8
-          createuser -U runner -s postgres
           brew services start postgresql -v
           tail -n 100 /usr/local/var/log/postgres*.log
         env:
@@ -88,6 +86,7 @@ jobs:
 
       - name: Set Database User
         run: |
+           createuser -U runner -s postgres
            createdb mirai
            psql -c "ALTER USER postgres PASSWORD 'root';"
            mysqladmin -uroot create mirai
