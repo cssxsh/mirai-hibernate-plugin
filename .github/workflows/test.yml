@@ -64,11 +64,7 @@ jobs:
           brew info postgresql
           initdb /usr/local/var/postgres -E utf8
           brew services start postgresql -v
-          sleep 3s
           tail -n 100 /usr/local/var/log/postgres*.log
-          createuser -U runner -s postgres
-          createdb mirai
-          psql -c "ALTER USER postgres PASSWORD 'root';"
         env:
           PGUSER: postgres
           PGDATABASE: postgres
@@ -78,9 +74,17 @@ jobs:
           brew install mysql
           brew info mysql
           brew services restart mysql -v
-          sleep 3s
-          mysqladmin -uroot create mirai
-          mysqladmin -uroot password root
+
+      - name: Set Database User
+        run: |
+           createuser -U runner -s postgres
+           createdb mirai
+           psql -c "ALTER USER postgres PASSWORD 'root';"
+           mysqladmin -uroot create mirai
+           mysqladmin -uroot password root
+         env:
+           PGUSER: postgres
+           PGDATABASE: postgres
 
       - name: Checkout
         uses: actions/checkout@v3
