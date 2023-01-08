@@ -51,18 +51,29 @@ jobs:
         run: ./gradlew test --tests "xyz.cssxsh.mirai.hibernate.entry.PostgreSqlTest" --scan --info
 
   macos:
-    runs-on: macos-latest
+    runs-on: macos-12
     steps:
+
+      - name: Brew Update
+        run: |
+          brew update
+          rm '/usr/local/bin/2to3-3.11'
+          rm '/usr/local/bin/idle3.11'
+          rm '/usr/local/bin/pydoc3.11'
+          rm '/usr/local/bin/python3.11'
+          rm '/usr/local/bin/python3.11-config'
+          rm '/usr/local/bin/2to3'
+          rm '/usr/local/bin/idle3'
+          rm '/usr/local/bin/pydoc3'
+          rm '/usr/local/bin/python3'
+          rm '/usr/local/bin/python3-config'
+          brew upgrade
 
       - name: Start PostgreSQL
         run: |
           brew info postgresql
           brew services start postgresql -v
-          sleep 3s
           tail -n 100 /usr/local/var/log/postgres*.log
-          createuser -U runner -s postgres
-          createdb mirai
-          psql -c "ALTER USER postgres PASSWORD 'root';"
         env:
           PGUSER: postgres
           PGDATABASE: postgres
@@ -72,9 +83,6 @@ jobs:
           brew install mysql
           brew info mysql
           brew services restart mysql -v
-          sleep 3s
-          mysqladmin -uroot create mirai
-          mysqladmin -uroot password root
 
       - name: Checkout
         uses: actions/checkout@v3
@@ -90,6 +98,17 @@ jobs:
 
       - name: Init gradle project
         run: ./gradlew clean --scan
+
+      - name: Set Database User
+        run: |
+          createuser -U runner -s postgres
+          createdb mirai
+          psql -c "ALTER USER postgres PASSWORD 'root';"
+          mysqladmin -uroot create mirai
+          mysqladmin -uroot password root
+        env:
+          PGUSER: postgres
+          PGDATABASE: postgres
 
       - name: Build all
         run: ./gradlew assemble --scan
