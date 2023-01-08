@@ -57,6 +57,7 @@ jobs:
       - name: Brew Update
         run: |
           brew update
+          brew upgrade
 
       - name: Start PostgreSQL
         run: |
