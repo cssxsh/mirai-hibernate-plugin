@@ -20,7 +20,7 @@ internal val logger by lazy {
 }
 
 private const val SQLITE_JNI =
-    "https://github.com/xerial/sqlite-jdbc/blob/master/src/main/resources/org/sqlite/native/Linux-Android/aarch64/libsqlitejdbc.so"
+    "https://raw.githubusercontent.com/xerial/sqlite-jdbc/master/src/main/resources/org/sqlite/native/Linux-Android/aarch64/libsqlitejdbc.so"
 
 /**
  * 检查当前平台，并修正问题
