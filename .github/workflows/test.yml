@@ -82,7 +82,7 @@ jobs:
            psql -c "ALTER USER postgres PASSWORD 'root';"
            mysqladmin -uroot create mirai
            mysqladmin -uroot password root
-         env:
+        env:
            PGUSER: postgres
            PGDATABASE: postgres
 
