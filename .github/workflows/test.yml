@@ -84,17 +84,6 @@ jobs:
           brew info mysql
           brew services restart mysql -v
 
-      - name: Set Database User
-        run: |
-           createuser -U runner -s postgres
-           createdb mirai
-           psql -c "ALTER USER postgres PASSWORD 'root';"
-           mysqladmin -uroot create mirai
-           mysqladmin -uroot password root
-        env:
-           PGUSER: postgres
-           PGDATABASE: postgres
-
       - name: Checkout
         uses: actions/checkout@v3
 
@@ -109,6 +98,17 @@ jobs:
 
       - name: Init gradle project
         run: ./gradlew clean --scan
+
+      - name: Set Database User
+        run: |
+          createuser -U runner -s postgres
+          createdb mirai
+          psql -c "ALTER USER postgres PASSWORD 'root';"
+          mysqladmin -uroot create mirai
+          mysqladmin -uroot password root
+        env:
+          PGUSER: postgres
+          PGDATABASE: postgres
 
       - name: Build all
         run: ./gradlew assemble --scan
