@@ -51,12 +51,18 @@ jobs:
         run: ./gradlew test --tests "xyz.cssxsh.mirai.hibernate.entry.PostgreSqlTest" --scan --info
 
   macos:
-    runs-on: macos-latest
+    runs-on: macos-12
     steps:
+
+      - name: Brew Update
+        run: |
+          brew update
 
       - name: Start PostgreSQL
         run: |
+          brew upgrade postgresql
           brew info postgresql
+          initdb /usr/local/var/postgres -E utf8
           brew services start postgresql -v
           sleep 3s
           tail -n 100 /usr/local/var/log/postgres*.log
