@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "xyz.cssxsh.mirai"
-version = "2.5.1"
+version = "2.5.2"
 
 mavenCentralPublish {
     useCentralS01()
@@ -49,7 +49,7 @@ dependencies {
     api("mysql:mysql-connector-java:8.0.31")
     api("org.postgresql:postgresql:42.5.1")
     api("org.reflections:reflections:0.10.2")
-    api("com.google.protobuf:protobuf-java:3.21.9")
+    implementation("com.google.protobuf:protobuf-java:3.21.12")
 }
 
 mirai {
