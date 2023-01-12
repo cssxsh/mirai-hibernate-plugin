@@ -94,13 +94,20 @@ public data class FaceRecord(
                     .get(face).cast()
             }
             val md5 = delegate.faceId.toUHexString("").lowercase()
+            val size = if (delegate.tabId < 10_0000) 200 else 300
+            val url = when (delegate.subType) {
+                1 -> "https://gxh.vip.qq.com/club/item/parcel/item/${md5.substring(0, 2)}/$md5/raw${size}.gif"
+                2 -> "https://gxh.vip.qq.com/club/item/parcel/item/${md5.substring(0, 2)}/$md5/raw${size}.png"
+                3 -> "https://gxh.vip.qq.com/club/item/parcel/item/${md5.substring(0, 2)}/$md5/raw${size}.gif"
+                else -> "https://gxh.vip.qq.com/club/item/parcel/item/${md5.substring(0, 2)}/$md5/${size}x${size}.png"
+            }
             return FaceRecord(
                 md5 = md5,
                 code = json.encodeToString(serializer, face),
                 height = delegate.imageHeight,
                 width = delegate.imageWidth,
                 content = face.name,
-                url = "https://gxh.vip.qq.com/club/item/parcel/item/${md5.substring(0..1)}/$md5/300x300.png"
+                url = url
             )
         }
     }
