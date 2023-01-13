@@ -69,8 +69,12 @@ public data class MessageRecord(
     public fun toMessageChain(): MessageChain {
         return try {
             MessageChain.deserializeFromJsonString(code)
-        } catch (_: SerializationException) {
-            MiraiCode.deserializeMiraiCode(code)
+        } catch (cause: SerializationException) {
+            try {
+                MiraiCode.deserializeMiraiCode(code)
+            } catch (_: Throwable) {
+                throw cause
+            }
         }
     }
 
