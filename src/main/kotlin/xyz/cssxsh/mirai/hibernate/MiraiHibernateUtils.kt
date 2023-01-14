@@ -177,16 +177,13 @@ public fun FaceTagRecord.Companion.remove(md5: String, tag: String): List<FaceTa
         session.withCriteriaDelete<FaceTagRecord> { criteria ->
             val root = criteria.from()
             criteria
-                .where(equal(root.get<String>("md5"), md5))
+                .where(equal(root.get<String>("md5"), md5), equal(root.get<String>("tag"), tag))
         }.executeUpdate()
 
         session.withCriteria<FaceTagRecord> { criteria ->
             val root = criteria.from<FaceTagRecord>()
             criteria.select(root)
-                .where(
-                    equal(root.get<String>("md5"), md5),
-                    equal(root.get<String>("tag"), tag)
-                )
+                .where(equal(root.get<String>("md5"), md5))
         }.list()
     }
 }
