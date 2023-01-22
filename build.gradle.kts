@@ -36,8 +36,9 @@ dependencies {
     testImplementation("net.mamoe:mirai-logging-slf4j")
     testImplementation("net.mamoe:mirai-core-mock")
     testImplementation("net.mamoe:mirai-core-utils")
+    testCompileOnly("net.mamoe:mirai-console-compiler-common")
     //
-    implementation(platform("org.slf4j:slf4j-parent:2.0.5"))
+    implementation(platform("org.slf4j:slf4j-parent:2.0.6"))
     testImplementation("org.slf4j:slf4j-simple")
     // SQL/ORM
     api("org.hibernate.orm:hibernate-core:6.1.6.Final")
@@ -46,7 +47,7 @@ dependencies {
     api("com.zaxxer:HikariCP:5.0.1")
     api("com.h2database:h2:2.1.214")
     api("org.xerial:sqlite-jdbc:3.40.0.0")
-    api("mysql:mysql-connector-java:8.0.31")
+    api("com.mysql:mysql-connector-j:8.0.32")
     api("org.postgresql:postgresql:42.5.1")
     api("org.reflections:reflections:0.10.2")
     implementation("com.google.protobuf:protobuf-java:3.21.12")
