@@ -24,7 +24,7 @@ jobs:
         run: |
           choco install sql-server-express --no-progress
           sc.exe query | Select-String SQL
-          net start MSSQL$SQLEXPRESS
+          net start "SQL Server (SQLEXPRESS)"
           sqlcmd -Q "CREATE DATABASE mirai"
 
       - name: Checkout
