@@ -9,7 +9,7 @@ jobs:
       - name: Start PostgreSQL
         run: |
           sc config postgresql-x64-14 start= demand
-          sc start postgresql-x64-14
+          net start postgresql-x64-14
           & $Env:PGBIN/createdb -U postgres mirai
 
       - name: Start MySQL
@@ -23,6 +23,7 @@ jobs:
       - name: Start MSSQL
         run: |
           choco install sql-server-express --no-progress -y
+          net start 'MSSQL$SQLEXPRESS'
           sqlcmd -S .\SQLEXPRESS -Q "CREATE DATABASE mirai"
 
       - name: Checkout
