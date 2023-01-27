@@ -28,9 +28,7 @@ jobs:
 
       - name: Enable the TCP protocol on MSSQL$SQLEXPRESS
         run: |
-          Push-Location 
-          Import-Module Sqlps -DisableNameChecking
-          Pop-Location
+          Import-Module -Name SqlServer
           # https://learn.microsoft.com/en-us/sql/database-engine/configure-windows/enable-or-disable-a-server-network-protocol
           $Wmi = New-Object 'Microsoft.SqlServer.Management.Smo.Wmi.ManagedComputer'
           # Enable the TCP protocol on the default instance.  
