@@ -22,7 +22,7 @@ jobs:
 
       - name: Start MSSQL
         run: |
-          sc.exe query | Select-String sql
+          sc.exe query
           net start SQLSERVERAGENT
           sqlcmd -Q "CREATE DATABASE mirai"
 
