@@ -22,6 +22,7 @@ jobs:
 
       - name: Start MSSQL
         run: |
+          sqlcmd -S .\SQLExpress
           net start MSSQLSERVER
 
       - name: Checkout
