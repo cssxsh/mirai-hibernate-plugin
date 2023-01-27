@@ -24,7 +24,7 @@ jobs:
         env:
           SQLCMDSERVER: .\SQLEXPRESS
         run: |
-          choco install sql-server-express --no-progress
+          choco install sql-server-express --no-progress -ia '"/IACCEPTSQLSERVERLICENSETERMS /FEATURES=SQLEngine /Q /ACTION=install /INSTANCENAME=SQLCHEMETER /FILESTREAMLEVEL=1 /SECURITYMODE=SQL /SAPWD=mirai /UPDATEENABLED=FALSE"' -o -y
           net start SQLSERVER
           sqlcmd -Q "CREATE DATABASE mirai"
 
@@ -58,7 +58,7 @@ jobs:
       - name: PostgreSqlTest
         run: ./gradlew test --tests "xyz.cssxsh.mirai.hibernate.entry.PostgreSqlTest" --scan --info
 
-      - name: PostgreSqlTest
+      - name: MSSqlTest
         run: ./gradlew test --tests "xyz.cssxsh.mirai.hibernate.entry.MSSqlTest" --scan --info
 
   macos:
