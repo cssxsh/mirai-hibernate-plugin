@@ -24,8 +24,10 @@ jobs:
         run: |
           choco install sql-server-express --no-progress -y
           sc qc 'MSSQL$SQLEXPRESS'
-          net start 'MSSQL$SQLEXPRESS'
           sqlcmd -S .\SQLEXPRESS -Q "CREATE DATABASE mirai"
+
+      - name: Enable the TCP protocol on MSSQL$SQLEXPRESS
+        run: |
           # https://learn.microsoft.com/en-us/sql/database-engine/configure-windows/enable-or-disable-a-server-network-protocol
           $Wmi = New-Object ('Microsoft.SqlServer.Management.Smo.Wmi.ManagedComputer').
           # List the object properties, including the instance names.  
