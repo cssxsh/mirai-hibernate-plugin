@@ -28,19 +28,17 @@ jobs:
 
       - name: Enable the TCP protocol on MSSQL$SQLEXPRESS
         run: |
-          Install-Module -Name SqlServer
-          (Get-Module SqlServer).Version
-          Import-Module SqlServer
+          Push-Location 
+          Import-Module Sqlps -DisableNameChecking
+          Pop-Location
           # https://learn.microsoft.com/en-us/sql/database-engine/configure-windows/enable-or-disable-a-server-network-protocol
-          $Wmi = New-Object ('Microsoft.SqlServer.Management.Smo.Wmi.ManagedComputer').
-          # List the object properties, including the instance names.  
-          $Wmi
+          $Wmi = New-Object 'Microsoft.SqlServer.Management.Smo.Wmi.ManagedComputer'
           # Enable the TCP protocol on the default instance.  
-          $Uri = "ManagedComputer[@Name='$env:COMPUTERNAME']/ServerInstance[@Name='SQLEXPRESS']/ServerProtocol[@Name='Tcp']"
+          $Uri = "ManagedComputer[@Name='$Env:COMPUTERNAME']/ServerInstance[@Name='SQLEXPRESS']/ServerProtocol[@Name='Tcp']"
           $Tcp = $Wmi.GetSmoObject($Uri)
-          $Tcp.IsEnabled = $true
+          $Tcp.IsEnabled = $True
           $Tcp.Alter()
-          $Tcp
+          Restart-Service 'MSSQL$SQLEXPRESS' -Force
 
       - name: Checkout
         uses: actions/checkout@v3
