@@ -22,8 +22,8 @@ jobs:
 
       - name: Start MSSQL
         run: |
+          net start mssqlserver
           sqlcmd -S localhost -Q "CREATE DATABASE mirai"
-          net start MSSQLSERVER
 
       - name: Checkout
         uses: actions/checkout@v3
