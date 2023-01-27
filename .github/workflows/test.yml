@@ -22,7 +22,7 @@ jobs:
 
       - name: Start MSSQL
         run: |
-          sqlcmd -S .\SQLExpress
+          sqlcmd -S localhost -Q "CREATE DATABASE mirai"
           net start MSSQLSERVER
 
       - name: Checkout
