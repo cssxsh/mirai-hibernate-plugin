@@ -22,7 +22,7 @@ jobs:
 
       - name: Start MSSQL
         run: |
-          net start "SQL Server (MSSQLSERVER)"
+          net start SQLSERVERAGENT
           sqlcmd -Q "CREATE DATABASE mirai"
 
       - name: Checkout
