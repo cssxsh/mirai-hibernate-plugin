@@ -24,7 +24,8 @@ jobs:
         env:
           SQLCMDSERVER: .\SQLEXPRESS
         run: |
-          choco install sql-server-express --no-progress -ia '"/IACCEPTSQLSERVERLICENSETERMS /FEATURES=SQLEngine /Q /ACTION=install /INSTANCENAME=SQLCHEMETER /FILESTREAMLEVEL=1 /SECURITYMODE=SQL /SAPWD=mirai /UPDATEENABLED=FALSE"' -o -y
+          choco install sql-server-express --no-progress -ia '"/Q /ACTION=Install /IACCEPTSQLSERVERLICENSETERMS /FEATURES=SQLEngine /INSTANCENAME=MSSQLSERVER /SECURITYMODE=SQL /SAPWD=mirai /SQLCOLLATION=UTF-8"' -o -y
+          sc.exe query | Select-String SQL
           net start SQLSERVER
           sqlcmd -Q "CREATE DATABASE mirai"
 
