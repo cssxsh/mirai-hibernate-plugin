@@ -23,8 +23,19 @@ jobs:
       - name: Start MSSQL
         run: |
           choco install sql-server-express --no-progress -y
+          sc qc 'MSSQL$SQLEXPRESS'
           net start 'MSSQL$SQLEXPRESS'
           sqlcmd -S .\SQLEXPRESS -Q "CREATE DATABASE mirai"
+          # https://learn.microsoft.com/en-us/sql/database-engine/configure-windows/enable-or-disable-a-server-network-protocol
+          $Wmi = New-Object ('Microsoft.SqlServer.Management.Smo.Wmi.ManagedComputer').
+          # List the object properties, including the instance names.  
+          $Wmi
+          # Enable the TCP protocol on the default instance.  
+          $Uri = "ManagedComputer[@Name='$env:COMPUTERNAME']/ServerInstance[@Name='SQLEXPRESS']/ServerProtocol[@Name='Tcp']"
+          $Tcp = $wmi.GetSmoObject($Uri)
+          $Tcp.IsEnabled = $true
+          $Tcp.Alter()
+          $Tcp
 
       - name: Checkout
         uses: actions/checkout@v3
