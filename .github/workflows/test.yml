@@ -20,6 +20,10 @@ jobs:
           mysqladmin -uroot create mirai
           mysqladmin -uroot password root
 
+      - name: Start MSSQL
+        run: |
+          net start MSSQLSERVER
+
       - name: Checkout
         uses: actions/checkout@v3
 
@@ -49,6 +53,9 @@ jobs:
 
       - name: PostgreSqlTest
         run: ./gradlew test --tests "xyz.cssxsh.mirai.hibernate.entry.PostgreSqlTest" --scan --info
+
+      - name: PostgreSqlTest
+        run: ./gradlew test --tests "xyz.cssxsh.mirai.hibernate.entry.MSSqlTest" --scan --info
 
   macos:
     runs-on: macos-latest

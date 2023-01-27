@@ -38,6 +38,7 @@ dependencies {
     api("org.reflections:reflections:0.10.2")
     compileOnly("xyz.cssxsh.mirai:mirai-administrator:1.3.0")
     testImplementation(kotlin("test"))
+    testImplementation("com.microsoft.sqlserver:mssql-jdbc:11.2.3.jre11")
     //
     implementation(platform("net.mamoe:mirai-bom:2.14.0-RC"))
     compileOnly("net.mamoe:mirai-core")

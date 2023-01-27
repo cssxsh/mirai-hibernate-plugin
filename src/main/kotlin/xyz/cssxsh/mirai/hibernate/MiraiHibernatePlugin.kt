@@ -24,8 +24,15 @@ internal object MiraiHibernatePlugin : KotlinPlugin(
 
     override fun PluginComponentStorage.onLoad() {
         checkPlatform(folder = dataFolder)
-        val classLoader = this@MiraiHibernatePlugin::class.java.classLoader
-        ServiceLoader.load(java.sql.Driver::class.java, classLoader)
+        jvmPluginClasspath.runCatching {
+            downloadAndAddToPath(
+                classLoader = pluginSharedLibrariesClassLoader,
+                dependencies = listOf(mssql())
+            )
+        }.onFailure { cause ->
+            logger.warning({ "添加 MSSQL 驱动失败" }, cause)
+        }
+        ServiceLoader.load(java.sql.Driver::class.java, jvmPluginClasspath.pluginClassLoader)
             .forEach { driver ->
                 logger.info { "Driver: ${driver::class.java.name} Version ${driver.majorVersion}.${driver.minorVersion}" }
             }
