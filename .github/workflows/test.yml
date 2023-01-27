@@ -21,12 +21,10 @@ jobs:
           mysqladmin -uroot password root
 
       - name: Start MSSQL
-        env:
-          SQLCMDSERVER: .\SQLEXPRESS
         run: |
           choco install sql-server-express --no-progress
           sc.exe query | Select-String SQL
-          net start SQLSERVER
+          net start MSSQL$SQLEXPRESS
           sqlcmd -Q "CREATE DATABASE mirai"
 
       - name: Checkout
