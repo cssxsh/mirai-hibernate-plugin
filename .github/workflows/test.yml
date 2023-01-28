@@ -39,6 +39,7 @@ jobs:
           $Service
           $Tcp.Refresh()
           $Tcp
+          $Tcp.IPAddresses
 
       - name: Checkout
         uses: actions/checkout@v3
