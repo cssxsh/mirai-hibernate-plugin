@@ -31,12 +31,13 @@ jobs:
         run: |
           [reflection.assembly]::LoadWithPartialName("Microsoft.SqlServer.SqlWmiManagement")
           $ManagedComputer = New-Object -TypeName 'Microsoft.SqlServer.Management.Smo.Wmi.ManagedComputer'
+          $ManagedComputer
           $ServerInstance = $ManagedComputer.ServerInstances['SQLEXPRESS']
           $Tcp = $ServerInstance.ServerProtocols['Tcp']
           $Tcp.IsEnabled = $True
           $Tcp.Alter()
           $Tcp
-          $Service = $ManagedComputer.Services['SQLEXPRESS']
+          $Service = $ManagedComputer.Services[0]
           $Service.Stop()
           $Service.Refresh()
           $Service.Start()
