@@ -28,15 +28,17 @@ jobs:
 
       - name: Enable the TCP protocol on MSSQL$SQLEXPRESS
         run: |
+          # https://learn.microsoft.com/en-us/sql/powershell/download-sql-server-ps-module
+          Install-Module -Name SqlServer
           Import-Module -Name SqlServer
           # https://learn.microsoft.com/en-us/sql/database-engine/configure-windows/enable-or-disable-a-server-network-protocol
           $Wmi = New-Object 'Microsoft.SqlServer.Management.Smo.Wmi.ManagedComputer'
-          # Enable the TCP protocol on the default instance.  
           $Uri = "ManagedComputer[@Name='$Env:COMPUTERNAME']/ServerInstance[@Name='SQLEXPRESS']/ServerProtocol[@Name='Tcp']"
           $Tcp = $Wmi.GetSmoObject($Uri)
           $Tcp.IsEnabled = $True
           $Tcp.Alter()
-          Restart-Service 'MSSQL$SQLEXPRESS' -Force
+          net stop 'MSSQL$SQLEXPRESS'
+          net start 'MSSQL$SQLEXPRESS' -f -m
 
       - name: Checkout
         uses: actions/checkout@v3
