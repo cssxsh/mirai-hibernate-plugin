@@ -29,7 +29,7 @@ jobs:
       - name: Enable the TCP protocol on MSSQL$SQLEXPRESS
         run: |
           # https://learn.microsoft.com/en-us/sql/powershell/download-sql-server-ps-module
-          Install-Module -Name SqlServer
+          Install-Module -Name SqlServer -AcceptLicense -Force -Verbose
           Import-Module -Name SqlServer
           # https://learn.microsoft.com/en-us/sql/database-engine/configure-windows/enable-or-disable-a-server-network-protocol
           $Wmi = New-Object 'Microsoft.SqlServer.Management.Smo.Wmi.ManagedComputer'
