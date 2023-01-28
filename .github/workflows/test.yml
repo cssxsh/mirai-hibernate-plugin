@@ -15,19 +15,9 @@ jobs:
       - name: Enable the TCP protocol on MSSQL$SQLEXPRESS
         run: |
           [System.Reflection.Assembly]::LoadWithPartialName('Microsoft.SqlServer.SqlWmiManagement')
-          $ManagedComputer = New-Object -TypeName 'Microsoft.SqlServer.Management.Smo.Wmi.ManagedComputer'
-          $ManagedComputer
-          $ServerInstance = $ManagedComputer.ServerInstances['SQLEXPRESS']
-          $Tcp = $ServerInstance.ServerProtocols['Tcp']
-          $Tcp.IsEnabled = $True
-          $IPv4 = $Tcp.IPAddresses['IP4']
-          $IPv4.IPAddressProperties['Enabled'].Value = $True
-          $Tcp.Alter()
-          $Tcp.Refresh()
-          $Tcp
-          $Service = $ManagedComputer.Services['MSSQL$SQLEXPRESS']
-          $Service.AdvancedProperties
-          Restart-Service -Name 'MSSQL$SQLEXPRESS' -Force
+          Set-SqlNetworkConfiguration -ServerInstance 'SQLEXPRESS' -Protocol TCP -Port 1433 -NoServiceRestart
+          Add-SqlLogin -ServerInstance 'SQLEXPRESS' -LoginType 'SqlLogin' -Enable -LoginName 'mirai'
+          Get-SqlLogin -ServerInstance 'SQLEXPRESS'
 
       - name: Start PostgreSQL
         run: |
@@ -60,7 +50,7 @@ jobs:
           & $Env:PGBIN/createdb -U postgres mirai
           mysqladmin -uroot create mirai
           mysqladmin -uroot password root
-          sqlcmd -S tcp:127.0.0.1,1433 -Q "CREATE DATABASE mirai"
+          sqlcmd -S tcp:127.0.0.1,1433 -Q "CREATE DATABASE mirai" -U 'sa'
 
       - name: Build all
         run: ./gradlew assemble --scan
