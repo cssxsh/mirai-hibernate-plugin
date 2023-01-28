@@ -26,8 +26,6 @@ jobs:
           $Tcp.Alter()
           $Tcp.Refresh()
           $Tcp
-          $Server = New-Object -TypeName 'Microsoft.SqlServer.Management.Smo.Server'
-          $Server.Logins
           Restart-Service -Name 'MSSQL$SQLEXPRESS' -Force
 
       - name: Start PostgreSQL
