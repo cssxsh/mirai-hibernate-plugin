@@ -33,19 +33,12 @@ jobs:
           $Tcp.IsEnabled = $True
           $Tcp.Alter()
           $Service = $ManagedComputer.Services['MSSQL$SQLEXPRESS']
-          $Service
           $Service.Stop()
           $Service.Refresh()
           $Service.Start()
+          $Service
           $Tcp.Refresh()
           $Tcp
-
-      - name: Create Database and Account
-        run: |
-          & $Env:PGBIN/createdb -U postgres mirai
-          mysqladmin -uroot create mirai
-          mysqladmin -uroot password root
-          sqlcmd -S tcp:127.0.0.1,1433 -Q "CREATE DATABASE mirai"
 
       - name: Checkout
         uses: actions/checkout@v3
@@ -55,6 +48,13 @@ jobs:
         with:
           distribution: 'adopt'
           java-version: '11'
+
+      - name: Create Database and Account
+        run: |
+          & $Env:PGBIN/createdb -U postgres mirai
+          mysqladmin -uroot create mirai
+          mysqladmin -uroot password root
+          sqlcmd -S tcp:127.0.0.1\SQLEXPRESS,1433 -Q "CREATE DATABASE mirai"
 
       - name: chmod -R 777 *
         run: chmod -R 777 *
