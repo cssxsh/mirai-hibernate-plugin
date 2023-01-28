@@ -47,18 +47,18 @@ jobs:
           distribution: 'adopt'
           java-version: '11'
 
+      - name: chmod -R 777 *
+        run: chmod -R 777 *
+
+      - name: Init gradle project
+        run: ./gradlew clean --scan
+
       - name: Create Database and Account
         run: |
           & $Env:PGBIN/createdb -U postgres mirai
           mysqladmin -uroot create mirai
           mysqladmin -uroot password root
           sqlcmd -S tcp:127.0.0.1\SQLEXPRESS,1433 -Q "CREATE DATABASE mirai"
-
-      - name: chmod -R 777 *
-        run: chmod -R 777 *
-
-      - name: Init gradle project
-        run: ./gradlew clean --scan
 
       - name: Build all
         run: ./gradlew assemble --scan
