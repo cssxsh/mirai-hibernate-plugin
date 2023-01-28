@@ -6,17 +6,6 @@ jobs:
     runs-on: windows-latest
     steps:
 
-      - name: Start PostgreSQL
-        run: |
-          sc config postgresql-x64-14 start= demand
-          sc start postgresql-x64-14
-
-      - name: Start MySQL
-        run: |
-          mysqld --initialize-insecure
-          mysqld --install
-          sc start MySQL
-
       - name: Start MSSQL
         run: |
           choco install sql-server-express --no-progress -y
@@ -37,9 +26,17 @@ jobs:
           $Service.Refresh()
           $Service.Start()
           $Service
-          $Tcp.Refresh()
-          $Tcp
-          $Tcp.IPAddresses
+
+      - name: Start PostgreSQL
+        run: |
+          sc config postgresql-x64-14 start= demand
+          sc start postgresql-x64-14
+
+      - name: Start MySQL
+        run: |
+          mysqld --initialize-insecure
+          mysqld --install
+          sc start MySQL
 
       - name: Checkout
         uses: actions/checkout@v3
