@@ -21,8 +21,8 @@ jobs:
           $Tcp = $ServerInstance.ServerProtocols['Tcp']
           $Tcp.IsEnabled = $True
           $IPv4 = $Tcp.IPAddresses['IP4']
-          $IPv4.IPAddressProperties
           $IPv4.IPAddressProperties['Enabled'].Value = $True
+          $IPv4.IPAddressProperties['TcpPort'].Value = '1433'
           $Tcp.Alter()
           Restart-Service -Name 'MSSQL$SQLEXPRESS' -Force
 
