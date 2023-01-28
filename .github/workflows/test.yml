@@ -20,6 +20,7 @@ jobs:
           $ServerInstance = $ManagedComputer.ServerInstances['SQLEXPRESS']
           $Tcp = $ServerInstance.ServerProtocols['Tcp']
           $Tcp.IsEnabled = $True
+          $Tcp.IPAddresses['IP4'].IPAddressProperties
           $Tcp.Alter()
           Restart-Service -Name 'MSSQL$SQLEXPRESS' -Force
 
