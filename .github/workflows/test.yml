@@ -26,18 +26,17 @@ jobs:
           sc qc 'MSSQL$SQLEXPRESS'
           sqlcmd -S .\SQLEXPRESS -Q "CREATE DATABASE mirai"
 
-
       # https://learn.microsoft.com/en-us/sql/database-engine/configure-windows/enable-or-disable-a-server-network-protocol
       - name: Enable the TCP protocol on MSSQL$SQLEXPRESS
-        run: |
-          Import-Module -Name SqlServer
-          $Wmi = New-Object 'Microsoft.SqlServer.Management.Smo.Wmi.ManagedComputer'
-          $Uri = "ManagedComputer[@Name='$Env:COMPUTERNAME']/ServerInstance[@Name='SQLEXPRESS']/ServerProtocol[@Name='Tcp']"
-          $Tcp = $Wmi.GetSmoObject($Uri)
-          $Tcp.IsEnabled = $True
-          $Tcp.Alter()
-          net stop 'MSSQL$SQLEXPRESS'
-          net start 'MSSQL$SQLEXPRESS' -f -m
+        run: >
+          Import-Module -Name SqlServer ;
+          $Wmi = New-Object 'Microsoft.SqlServer.Management.Smo.Wmi.ManagedComputer' ;
+          $Uri = "ManagedComputer[@Name='$Env:COMPUTERNAME']/ServerInstance[@Name='SQLEXPRESS']/ServerProtocol[@Name='Tcp']" ;
+          $Tcp = $Wmi.GetSmoObject($Uri) ;
+          $Tcp.IsEnabled = $True ;
+          $Tcp.Alter() ;
+          net stop 'MSSQL$SQLEXPRESS' ;
+          net start 'MSSQL$SQLEXPRESS' -f -m ;
 
       - name: Checkout
         uses: actions/checkout@v3
