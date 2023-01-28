@@ -9,16 +9,13 @@ jobs:
       - name: Start PostgreSQL
         run: |
           sc config postgresql-x64-14 start= demand
-          net start postgresql-x64-14
-          & $Env:PGBIN/createdb -U postgres mirai
+          sc start postgresql-x64-14
 
       - name: Start MySQL
         run: |
           mysqld --initialize-insecure
           mysqld --install
-          net start MySQL
-          mysqladmin -uroot create mirai
-          mysqladmin -uroot password root
+          sc start MySQL
 
       - name: Start MSSQL
         run: |
@@ -36,10 +33,18 @@ jobs:
           $Tcp.IsEnabled = $True
           $Tcp.Alter()
           $Service = $ManagedComputer.Services['MSSQL$SQLEXPRESS']
+          $Service
           $Service.Stop()
           $Service.Refresh()
           $Service.Start()
+          $Tcp.Refresh()
           $Tcp
+
+      - name: Create Database and Account
+        run: |
+          & $Env:PGBIN/createdb -U postgres mirai
+          mysqladmin -uroot create mirai
+          mysqladmin -uroot password root
           sqlcmd -S tcp:127.0.0.1,1433 -Q "CREATE DATABASE mirai"
 
       - name: Checkout
