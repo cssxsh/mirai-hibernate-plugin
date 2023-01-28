@@ -25,7 +25,6 @@ jobs:
           choco install sql-server-express --no-progress -y
           sc qc 'MSSQL$SQLEXPRESS'
           sqlcmd -S .\SQLEXPRESS -Q "CREATE DATABASE mirai"
-          net stop 'MSSQL$SQLEXPRESS'
 
       # https://learn.microsoft.com/en-us/sql/database-engine/configure-windows/enable-or-disable-a-server-network-protocol
       - name: Enable the TCP protocol on MSSQL$SQLEXPRESS
@@ -36,7 +35,9 @@ jobs:
           $Tcp = $ManagedComputer.GetSmoObject($Uri)
           $Tcp.IsEnabled = $True
           $Tcp.Alter()
-          net start 'MSSQL$SQLEXPRESS' /f /m
+          $Tcp
+#          net stop 'MSSQL$SQLEXPRESS'
+#          net start 'MSSQL$SQLEXPRESS' /f /m
 
       - name: Checkout
         uses: actions/checkout@v3
