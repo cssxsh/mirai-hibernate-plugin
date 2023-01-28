@@ -31,10 +31,10 @@ jobs:
         run: |
           Install-Module -Name SqlServer -Force -Verbose
           Import-Module -Name SqlServer -MinimumVersion 21.1.18256
-          Get-Module -Name SqlServer
-          $Wmi = New-Object 'Microsoft.SqlServer.Management.Smo.Wmi.ManagedComputer'
+          [reflection.assembly]::LoadWithPartialName("Microsoft.SqlServer.SqlWmiManagement")
+          $ManagedComputer = New-Object -TypeName 'Microsoft.SqlServer.Management.Smo.Wmi.ManagedComputer'
           $Uri = "ManagedComputer[@Name='$Env:COMPUTERNAME']/ServerInstance[@Name='SQLEXPRESS']/ServerProtocol[@Name='Tcp']"
-          $Tcp = $Wmi.GetSmoObject($Uri)
+          $Tcp = $ManagedComputer.GetSmoObject($Uri)
           $Tcp.IsEnabled = $True
           $Tcp.Alter()
           net stop 'MSSQL$SQLEXPRESS'
@@ -64,8 +64,8 @@ jobs:
       - name: H2Test
         run: ./gradlew test --tests "xyz.cssxsh.mirai.hibernate.entry.H2Test" --scan --info
 
-      - name: MysqlTest
-        run: ./gradlew test --tests "xyz.cssxsh.mirai.hibernate.entry.MysqlTest" --scan --info
+      - name: MySqlTest
+        run: ./gradlew test --tests "xyz.cssxsh.mirai.hibernate.entry.MySqlTest" --scan --info
 
       - name: PostgreSqlTest
         run: ./gradlew test --tests "xyz.cssxsh.mirai.hibernate.entry.PostgreSqlTest" --scan --info
@@ -127,8 +127,8 @@ jobs:
       - name: H2Test
         run: ./gradlew test --tests "xyz.cssxsh.mirai.hibernate.entry.H2Test" --scan --info
 
-      - name: MysqlTest
-        run: ./gradlew test --tests "xyz.cssxsh.mirai.hibernate.entry.MysqlTest" --scan --info
+      - name: MySqlTest
+        run: ./gradlew test --tests "xyz.cssxsh.mirai.hibernate.entry.MySqlTest" --scan --info
 
       - name: PostgreSqlTest
         run: ./gradlew test --tests "xyz.cssxsh.mirai.hibernate.entry.PostgreSqlTest" --scan --info
@@ -172,8 +172,8 @@ jobs:
       - name: H2Test
         run: ./gradlew test --tests "xyz.cssxsh.mirai.hibernate.entry.H2Test" --scan --info
 
-      - name: MysqlTest
-        run: ./gradlew test --tests "xyz.cssxsh.mirai.hibernate.entry.MysqlTest" --scan --info
+      - name: MySqlTest
+        run: ./gradlew test --tests "xyz.cssxsh.mirai.hibernate.entry.MySqlTest" --scan --info
 
       - name: PostgreSqlTest
         run: ./gradlew test --tests "xyz.cssxsh.mirai.hibernate.entry.PostgreSqlTest" --scan --info
