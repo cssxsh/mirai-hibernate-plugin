@@ -31,15 +31,15 @@ jobs:
         run: |
           [reflection.assembly]::LoadWithPartialName("Microsoft.SqlServer.SqlWmiManagement")
           $ManagedComputer = New-Object -TypeName 'Microsoft.SqlServer.Management.Smo.Wmi.ManagedComputer'
-          $Uri = "ManagedComputer[@Name='$Env:COMPUTERNAME']/ServerInstance[@Name='SQLEXPRESS']"
-          $ServerInstance = $ManagedComputer.GetSmoObject($Uri)
+          $ServerInstance = $ManagedComputer.ServerInstances['SQLEXPRESS']
           $Tcp = $ServerInstance.ServerProtocols['Tcp']
           $Tcp.IsEnabled = $True
           $Tcp.Alter()
           $Tcp
-          $ServerInstance.Stop()
-          $ServerInstance.Refresh()
-          $ServerInstance.Start()
+          $Service = $ManagedComputer.Services['SQLEXPRESS']
+          $Service.Stop()
+          $Service.Refresh()
+          $Service.Start()
 
       - name: Checkout
         uses: actions/checkout@v3
