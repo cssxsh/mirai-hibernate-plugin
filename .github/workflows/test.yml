@@ -14,10 +14,21 @@ jobs:
       # https://learn.microsoft.com/en-us/sql/powershell/how-to-enable-tcp-sqlps
       - name: Enable the TCP protocol on MSSQL$SQLEXPRESS
         run: |
+          [System.Reflection.Assembly]::LoadWithPartialName('Microsoft.SqlServer.Smo')
           [System.Reflection.Assembly]::LoadWithPartialName('Microsoft.SqlServer.SqlWmiManagement')
-          Set-SqlNetworkConfiguration -ServerInstance 'SQLEXPRESS' -Protocol TCP -Port 1433 -NoServiceRestart
-          Add-SqlLogin -ServerInstance 'SQLEXPRESS' -LoginType 'SqlLogin' -Enable -LoginName 'mirai'
-          Get-SqlLogin -ServerInstance 'SQLEXPRESS'
+          $ManagedComputer = New-Object -TypeName 'Microsoft.SqlServer.Management.Smo.Wmi.ManagedComputer'
+          $ManagedComputer
+          $ServerInstance = $ManagedComputer.ServerInstances['SQLEXPRESS']
+          $Tcp = $ServerInstance.ServerProtocols['Tcp']
+          $Tcp.IsEnabled = $True
+          $IPv4 = $Tcp.IPAddresses['IP4']
+          $IPv4.IPAddressProperties['Enabled'].Value = $True
+          $Tcp.Alter()
+          $Tcp.Refresh()
+          $Tcp
+          $Server = New-Object -TypeName 'Microsoft.SqlServer.Management.Smo.Server'
+          $Server.Logins
+          Restart-Service -Name 'MSSQL$SQLEXPRESS' -Force
 
       - name: Start PostgreSQL
         run: |
