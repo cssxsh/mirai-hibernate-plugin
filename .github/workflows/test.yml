@@ -14,7 +14,6 @@ jobs:
       # https://learn.microsoft.com/en-us/sql/powershell/how-to-enable-tcp-sqlps
       - name: Enable the TCP protocol on MSSQL$SQLEXPRESS
         run: |
-          [System.Reflection.Assembly]::LoadWithPartialName('Microsoft.SqlServer.Smo')
           [System.Reflection.Assembly]::LoadWithPartialName('Microsoft.SqlServer.SqlWmiManagement')
           $ManagedComputer = New-Object -TypeName 'Microsoft.SqlServer.Management.Smo.Wmi.ManagedComputer'
           $ManagedComputer
@@ -26,7 +25,11 @@ jobs:
           $Tcp.Alter()
           $Tcp.Refresh()
           $Tcp
-          Restart-Service -Name 'MSSQL$SQLEXPRESS' -Force
+          $Np = $ServerInstance.ServerProtocols['Np']
+          $Np.IsEnabled = $True
+          $Np.Alter()
+          $Np.Refresh()
+          $Np
 
       - name: Start PostgreSQL
         run: |
@@ -59,7 +62,7 @@ jobs:
           & $Env:PGBIN/createdb -U postgres mirai
           mysqladmin -uroot create mirai
           mysqladmin -uroot password root
-          sqlcmd -S tcp:127.0.0.1,1433 -Q "CREATE DATABASE mirai" -U 'sa'
+          sqlcmd -S '.\SQLEXPRESS' -Q 'CREATE DATABASE mirai'
 
       - name: Build all
         run: ./gradlew assemble --scan
