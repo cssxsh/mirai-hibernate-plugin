@@ -30,7 +30,8 @@ jobs:
       - name: Enable the TCP protocol on MSSQL$SQLEXPRESS
         run: |
           Install-Module -Name SqlServer -Force -Verbose
-          Import-Module -Name SqlServer
+          Import-Module -Name SqlServer -MinimumVersion 21.1.18256
+          Get-Module -Name SqlServer
           $Wmi = New-Object 'Microsoft.SqlServer.Management.Smo.Wmi.ManagedComputer'
           $Uri = "ManagedComputer[@Name='$Env:COMPUTERNAME']/ServerInstance[@Name='SQLEXPRESS']/ServerProtocol[@Name='Tcp']"
           $Tcp = $Wmi.GetSmoObject($Uri)
