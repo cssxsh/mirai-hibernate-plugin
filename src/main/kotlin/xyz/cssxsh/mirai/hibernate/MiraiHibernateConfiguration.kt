@@ -47,9 +47,9 @@ public class MiraiHibernateConfiguration(private val loader: MiraiHibernateLoade
         }
     }
 
-    private fun setDialectIfNull(dialect: String) {
-        if (getProperty("hibernate.dialect") == null) {
-            setProperty("hibernate.dialect", dialect)
+    private fun setPropertyIfAbsent(propertyName: String, value: String) {
+        if (propertyName !in properties) {
+            properties.setProperty(propertyName, value)
         }
     }
 
@@ -71,25 +71,26 @@ public class MiraiHibernateConfiguration(private val loader: MiraiHibernateLoade
         addRandFunction()
         // 设置 dice 宏
         addDiceFunction()
-        val url = getProperty("hibernate.connection.url").orEmpty()
+        val url = getProperty("hibernate.connection.url") ?: throw NoSuchElementException("jdbc url no found!")
         when {
             url.startsWith("jdbc:h2") -> {
-                setDialectIfNull("org.hibernate.dialect.H2Dialect")
+                setPropertyIfAbsent("hibernate.dialect", "org.hibernate.dialect.H2Dialect")
             }
             url.startsWith("jdbc:sqlite") -> {
                 // SQLite 是单文件数据库，最好只有一个连接
-                setProperty("hibernate.hikari.minimumIdle", "1")
-                setProperty("hibernate.hikari.maximumPoolSize", "1")
-                setDialectIfNull("org.hibernate.community.dialect.SQLiteDialect")
+                setPropertyIfAbsent("hibernate.hikari.minimumIdle", "1")
+                setPropertyIfAbsent("hibernate.hikari.maximumPoolSize", "1")
+                setPropertyIfAbsent("hibernate.dialect", "org.hibernate.community.dialect.SQLiteDialect")
             }
             url.startsWith("jdbc:mysql") -> {
-                setDialectIfNull("org.hibernate.dialect.MariaDBDialect")
+                setPropertyIfAbsent("hibernate.dialect", "org.hibernate.dialect.MariaDBDialect")
             }
             url.startsWith("jdbc:postgresql") -> {
-                setDialectIfNull("org.hibernate.dialect.PostgreSQLDialect")
+                setPropertyIfAbsent("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect")
             }
             url.startsWith("jdbc:sqlserver") -> {
-                setDialectIfNull("org.hibernate.dialect.SQLServerDialect")
+                setPropertyIfAbsent("hibernate.dialect", "org.hibernate.dialect.SQLServerDialect")
+                setPropertyIfAbsent("hibernate.globally_quoted_identifiers", "true")
             }
         }
     }
