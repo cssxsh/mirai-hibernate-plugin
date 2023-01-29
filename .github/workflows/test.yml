@@ -69,7 +69,7 @@ jobs:
           mysqladmin -uroot create mirai
           mysqladmin -uroot password root
           sqlcmd -S '.\SQLEXPRESS' -Q "CREATE DATABASE mirai"
-          sqlcmd -S '.\SQLEXPRESS' -Q "ALTER LOGIN [sa] WITH PASSWORD = N'root'"
+          sqlcmd -S '.\SQLEXPRESS' -Q "ALTER LOGIN [sa] WITH PASSWORD = 'root'"
           sqlcmd -S '.\SQLEXPRESS' -Q "ALTER LOGIN [sa] ENABLE"
 
       - name: Build all
