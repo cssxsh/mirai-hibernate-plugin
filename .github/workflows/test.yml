@@ -25,7 +25,6 @@ jobs:
           $IP4.IPAddressProperties['Enabled'].Value = $True
           $IP4.IPAddressProperties['TcpPort'].Value = '1433'
           $IPAll = $Tcp.IPAddresses['IPALL']
-          $IPAll.IPAddressProperties['Enabled'].Value = $True
           $IPAll.IPAddressProperties['TcpPort'].Value = '1433'
           $Tcp.Alter()
           $Tcp.Refresh()
