@@ -10,6 +10,7 @@ jobs:
         run: |
           choco install sql-server-express --no-progress -y
           sc qc 'MSSQL$SQLEXPRESS'
+          sc stop 'MSSQL$SQLEXPRESS'
 
       # https://learn.microsoft.com/en-us/sql/powershell/how-to-enable-tcp-sqlps
       - name: Enable the TCP protocol on MSSQL$SQLEXPRESS
@@ -18,6 +19,8 @@ jobs:
           $ManagedComputer = New-Object -TypeName 'Microsoft.SqlServer.Management.Smo.Wmi.ManagedComputer'
           $ManagedComputer
           $ServerInstance = $ManagedComputer.ServerInstances['SQLEXPRESS']
+          $Service = $ManagedComputer.Services['MSSQL$SQLEXPRESS']
+          $Service.Stop()
           $Tcp = $ServerInstance.ServerProtocols['Tcp']
           $Tcp.IsEnabled = $True
           $IPv4 = $Tcp.IPAddresses['IP4']
@@ -30,6 +33,7 @@ jobs:
           $Np.Alter()
           $Np.Refresh()
           $Np
+          $Service.Start()
 
       - name: Start PostgreSQL
         run: |
