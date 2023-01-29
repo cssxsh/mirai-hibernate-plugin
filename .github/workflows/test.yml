@@ -33,7 +33,7 @@ jobs:
           $Np.Alter()
           $Np.Refresh()
           $Np
-          sqlcmd -S '.\SQLEXPRESS' -Q "ALTER LOGIN [sa] WITH PASSWORD = 'root'"
+          sqlcmd -S '.\SQLEXPRESS' -Q "ALTER LOGIN [sa] WITH PASSWORD = '$Env:COMPUTERNAME'"
           sqlcmd -S '.\SQLEXPRESS' -Q "ALTER LOGIN [sa] ENABLE"
           Set-ItemProperty -Path 'HKLM:\Software\Microsoft\Microsoft SQL Server\MSSQL15.*\MSSQLServer\' -Name LoginMode -Value 2
           Restart-Service -Name 'MSSQL$SQLEXPRESS'
