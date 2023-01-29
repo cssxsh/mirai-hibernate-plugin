@@ -34,9 +34,10 @@ jobs:
           $Np.Alter()
           $Np.Refresh()
           $Np
+          sqlcmd -S '.\SQLEXPRESS' -Q "ALTER LOGIN [sa] WITH PASSWORD = 'root'"
+          sqlcmd -S '.\SQLEXPRESS' -Q "ALTER LOGIN [sa] ENABLE"
           Set-ItemProperty -Path 'HKLM:\Software\Microsoft\Microsoft SQL Server\MSSQL15.*\MSSQLServer\' -Name LoginMode -Value 2
           Restart-Service -Name 'MSSQL$SQLEXPRESS'
-          Restart-Service -Name 'SQLAgent$SQLEXPRESS'
 
       - name: Start PostgreSQL
         run: |
@@ -69,9 +70,7 @@ jobs:
           & $Env:PGBIN/createdb -U postgres mirai
           mysqladmin -uroot create mirai
           mysqladmin -uroot password root
-          sqlcmd -S '.\SQLEXPRESS' -Q "CREATE DATABASE mirai"
-          sqlcmd -S '.\SQLEXPRESS' -Q "ALTER LOGIN [sa] WITH PASSWORD = 'root'"
-          sqlcmd -S '.\SQLEXPRESS' -Q "ALTER LOGIN [sa] ENABLE"
+          sqlcmd -S 'localhost\SQLEXPRESS,1433' -Q "CREATE DATABASE mirai" -U sa -P root
 
       - name: Build all
         run: ./gradlew assemble --scan
