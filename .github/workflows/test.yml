@@ -21,8 +21,12 @@ jobs:
           $ServerInstance = $ManagedComputer.ServerInstances['SQLEXPRESS']
           $Tcp = $ServerInstance.ServerProtocols['Tcp']
           $Tcp.IsEnabled = $True
-          $IPv4 = $Tcp.IPAddresses['IP4']
-          $IPv4.IPAddressProperties['Enabled'].Value = $True
+          $IP4 = $Tcp.IPAddresses['IP4']
+          $IP4.IPAddressProperties['Enabled'].Value = $True
+          $IP4.IPAddressProperties['TcpPort'].Value = '1433'
+          $IPAll = $Tcp.IPAddresses['IPALL']
+          $IPAll.IPAddressProperties['Enabled'].Value = $True
+          $IPAll.IPAddressProperties['TcpPort'].Value = '1433'
           $Tcp.Alter()
           $Tcp.Refresh()
           $Tcp
