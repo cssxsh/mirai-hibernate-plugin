@@ -36,6 +36,7 @@ jobs:
           $Np
           Set-ItemProperty -Path 'HKLM:\Software\Microsoft\Microsoft SQL Server\MSSQL15.*\MSSQLServer\' -Name LoginMode -Value 2
           Restart-Service -Name 'MSSQL$SQLEXPRESS'
+          Restart-Service -Name 'SQLAgent$SQLEXPRESS'
 
       - name: Start PostgreSQL
         run: |
