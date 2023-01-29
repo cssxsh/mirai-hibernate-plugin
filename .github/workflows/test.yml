@@ -19,8 +19,6 @@ jobs:
           $ManagedComputer = New-Object -TypeName 'Microsoft.SqlServer.Management.Smo.Wmi.ManagedComputer'
           $ManagedComputer
           $ServerInstance = $ManagedComputer.ServerInstances['SQLEXPRESS']
-          $Service = $ManagedComputer.Services['MSSQL$SQLEXPRESS']
-          $Service.Stop()
           $Tcp = $ServerInstance.ServerProtocols['Tcp']
           $Tcp.IsEnabled = $True
           $IPv4 = $Tcp.IPAddresses['IP4']
@@ -33,7 +31,7 @@ jobs:
           $Np.Alter()
           $Np.Refresh()
           $Np
-          $Service.Start()
+          Restart-Service 'MSSQL$SQLEXPRESS'
 
       - name: Start PostgreSQL
         run: |
@@ -66,7 +64,9 @@ jobs:
           & $Env:PGBIN/createdb -U postgres mirai
           mysqladmin -uroot create mirai
           mysqladmin -uroot password root
-          sqlcmd -S '.\SQLEXPRESS' -Q 'CREATE DATABASE mirai'
+          sqlcmd -S '.\SQLEXPRESS' -Q "CREATE DATABASE mirai"
+          sqlcmd -S '.\SQLEXPRESS' -Q "ALTER LOGIN [sa] WITH PASSWORD = N'root'"
+          sqlcmd -S '.\SQLEXPRESS' -Q "ALTER LOGIN [sa] ENABLE"
 
       - name: Build all
         run: ./gradlew assemble --scan
