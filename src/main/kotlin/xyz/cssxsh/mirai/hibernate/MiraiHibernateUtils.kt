@@ -53,6 +53,22 @@ public fun dialects(): Set<Class<out Dialect>> {
 }
 
 /**
+ * 获取 MSSQL 驱动 artifact id
+ *
+ * version by Property xyz.cssxsh.mirai.hibernate.mssql.version
+ */
+@PublishedApi
+internal fun mssql(): String {
+    val java = System.getProperty("java.version")
+    val version = System.getProperty("xyz.cssxsh.mirai.hibernate.mssql.version", "11.2.3")
+    return when {
+        java.startsWith("17") -> "com.microsoft.sqlserver:mssql-jdbc:${version}.jre17"
+        java.startsWith("11") -> "com.microsoft.sqlserver:mssql-jdbc:${version}.jre11"
+        else -> "com.microsoft.sqlserver:mssql-jdbc:${version}.jre11"
+    }
+}
+
+/**
  * 插件的 SessionFactory
  */
 public lateinit var factory: SessionFactory
