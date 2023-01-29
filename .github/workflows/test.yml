@@ -69,7 +69,7 @@ jobs:
           & $Env:PGBIN/createdb -U postgres mirai
           mysqladmin -uroot create mirai
           mysqladmin -uroot password root
-          sqlcmd -S tcp:localhost\SQLEXPRESS,1433 -Q "CREATE DATABASE mirai" -U sa -P root
+          sqlcmd -S tcp:localhost\SQLEXPRESS,1433 -Q "CREATE DATABASE mirai" -U sa -P $Env:COMPUTERNAME
 
       - name: Build all
         run: ./gradlew assemble --scan
