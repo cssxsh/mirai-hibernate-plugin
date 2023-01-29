@@ -35,8 +35,8 @@ jobs:
           $Np
           sqlcmd -S '.\SQLEXPRESS' -Q "ALTER LOGIN [sa] WITH PASSWORD = '$Env:COMPUTERNAME'"
           sqlcmd -S '.\SQLEXPRESS' -Q "ALTER LOGIN [sa] ENABLE"
-          Get-ItemProperty -Path 'HKLM:\Software\Microsoft\Microsoft SQL Server\MSSQL13E.*\MSSQLServer\'
-          Set-ItemProperty -Path 'HKLM:\Software\Microsoft\Microsoft SQL Server\MSSQL15D.*\MSSQLServer\' -Name LoginMode -Value 2
+          Get-ItemProperty -Path 'HKLM:\Software\Microsoft\Microsoft SQL Server\MSSQL*\MSSQLServer\'
+          Set-ItemProperty -Path 'HKLM:\Software\Microsoft\Microsoft SQL Server\MSSQL*\MSSQLServer\' -Name LoginMode -Value 2
           Restart-Service -Name 'MSSQL$SQLEXPRESS'
           echo "SQLCMDPASSWORD=$Env:COMPUTERNAME" >> $GITHUB_ENV
 
