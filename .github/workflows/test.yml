@@ -38,7 +38,7 @@ jobs:
           Get-ItemProperty -Path 'HKLM:\Software\Microsoft\Microsoft SQL Server\MSSQL*\MSSQLServer\'
           Set-ItemProperty -Path 'HKLM:\Software\Microsoft\Microsoft SQL Server\MSSQL*\MSSQLServer\' -Name LoginMode -Value 2
           Restart-Service -Name 'MSSQL$SQLEXPRESS'
-          echo "SQLCMDPASSWORD=$Env:COMPUTERNAME" >> $GITHUB_ENV
+          echo "SQLCMDPASSWORD=$Env:COMPUTERNAME" >> $Env:GITHUB_ENV
 
       - name: Start PostgreSQL
         run: |

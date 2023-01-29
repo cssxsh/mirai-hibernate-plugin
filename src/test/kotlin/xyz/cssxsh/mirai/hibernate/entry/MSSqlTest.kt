@@ -8,7 +8,7 @@ class MSSqlTest : DatabaseTest() {
             File("./example/sqlserver.hibernate.properties").inputStream().use(properties::load)
 
             if (System.getenv("CI") == "true") {
-                setProperty("hibernate.connection.password", System.getenv("COMPUTERNAME"))
+                setProperty("hibernate.connection.password", System.getenv("SQLCMDPASSWORD"))
             }
         }
     }
