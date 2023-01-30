@@ -13,6 +13,7 @@ import xyz.cssxsh.hibernate.*
 import xyz.cssxsh.mirai.hibernate.entry.*
 import java.sql.*
 import java.io.*
+import java.util.*
 import java.util.stream.*
 import kotlin.coroutines.*
 
@@ -86,14 +87,14 @@ public object MiraiHibernateRecorder : SimpleListenerHost() {
     internal fun BotOnlineEvent.record() {
         launch {
             factory.fromTransaction { session ->
+                session.merge(BotRecord.fromImpl(bot))
                 for (friend in bot.friends) {
-                    val record = FriendRecord.fromImpl(friend = friend)
-                    session.merge(record)
+                    session.merge(FriendRecord.fromImpl(friend = friend))
                 }
                 for (group in bot.groups) {
+                    session.merge(GroupMemberRecord.fromImpl(member = group.botAsMember))
                     for (member in group.members) {
-                        val record = GroupMemberRecord.fromImpl(member = member)
-                        session.merge(record)
+                        session.merge(GroupMemberRecord.fromImpl(member = member))
                     }
                 }
             }
@@ -101,7 +102,23 @@ public object MiraiHibernateRecorder : SimpleListenerHost() {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
+    internal fun BotOfflineEvent.record() {
+        if (reconnect) return
+        launch {
+            BotRecord.fromImpl(bot).merge()
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    internal fun BotNickChangedEvent.record() {
+        launch {
+            BotRecord.fromImpl(bot).merge()
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
     internal fun FriendEvent.record() {
+        if (this is MessageEvent && ignore.add(friend.id).not()) return
         launch {
             FriendRecord.fromEvent(event = this@record).merge()
         }
@@ -110,10 +127,21 @@ public object MiraiHibernateRecorder : SimpleListenerHost() {
     @EventHandler(priority = EventPriority.HIGHEST)
     internal fun GroupMemberEvent.record() {
         if (member !is NormalMember) return
+        if (this is MessageEvent && ignore.add(member.id).not()) return
         launch {
             GroupMemberRecord.fromEvent(event = this@record).merge()
         }
     }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    internal fun GroupEvent.record() {
+        if (this is MessageEvent && ignore.add(group.id).not()) return
+        launch {
+            GroupRecord.fromImpl(group = group).merge()
+        }
+    }
+
+    private val ignore: MutableSet<Long> = Collections.newSetFromMap(WeakHashMap())
 
     private inline fun <reified T : Throwable> Throwable.unwrap(): T? {
         var current = this
