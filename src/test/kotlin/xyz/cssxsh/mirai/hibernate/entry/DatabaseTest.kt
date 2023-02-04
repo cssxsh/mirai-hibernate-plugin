@@ -110,13 +110,13 @@ abstract class DatabaseTest {
     @Test
     fun backup() {
         factory.fromSession { session ->
-            session.withCriteria<FriendRecord> { criteria ->
-                val root = criteria.from<FriendRecord>()
-                criteria.select(root)
+            session.withCriteria<FriendRecord> { query ->
+                val root = query.from<FriendRecord>()
+                query.select(root)
             }.list()
-            session.withCriteria<GroupMemberRecord> { criteria ->
-                val root = criteria.from<GroupMemberRecord>()
-                criteria.select(root)
+            session.withCriteria<GroupMemberRecord> { query ->
+                val root = query.from<GroupMemberRecord>()
+                query.select(root)
             }.list()
         }
     }
@@ -124,8 +124,8 @@ abstract class DatabaseTest {
     @Test
     fun rand() {
         val num = factory.fromSession { session ->
-            session.withCriteria<Double> { criteria ->
-                criteria.select(rand())
+            session.withCriteria<Double> { query ->
+                query.select(rand())
             }.uniqueResult()
         }
         logger.info("rand $num")
@@ -133,9 +133,9 @@ abstract class DatabaseTest {
         Assertions.assertTrue(num <= 1.0, "> 1.0")
 
         val list = factory.fromSession { session ->
-            session.withCriteria<FaceRecord> { criteria ->
-                val record = criteria.from<FaceRecord>()
-                criteria.select(record)
+            session.withCriteria<FaceRecord> { query ->
+                val record = query.from<FaceRecord>()
+                query.select(record)
                     .orderBy(asc(rand()))
             }.setMaxResults(3).list()
         }
@@ -145,8 +145,8 @@ abstract class DatabaseTest {
     @Test
     fun dice() {
         val num = factory.fromSession { session ->
-            session.withCriteria<Long> { criteria ->
-                criteria.select(dice(literal(1000)))
+            session.withCriteria<Long> { query ->
+                query.select(dice(literal(1000)))
             }.uniqueResult()
         }
         logger.info("dice $num")
@@ -154,14 +154,14 @@ abstract class DatabaseTest {
         Assertions.assertTrue(num <= 1000, "> 1000")
 
         val list = factory.fromSession { session ->
-            session.withCriteria<MessageRecord> { criteria ->
-                val record = criteria.from<MessageRecord>()
+            session.withCriteria<MessageRecord> { query ->
+                val record = query.from<MessageRecord>()
                 val id = record.get<Long>("id")
-                val max = criteria.subquery<Long>().apply {
+                val max = query.subquery<Long>().apply {
                     select(max(from<MessageRecord>().get("id")))
                 }
 
-                criteria.select(record)
+                query.select(record)
                     .where(
                         ge(id, dice(max))
                     )
@@ -173,9 +173,9 @@ abstract class DatabaseTest {
     @Test
     fun join() {
         factory.inSession { session ->
-            val face = session.withCriteria<FaceRecord> { criteria ->
-                val root = criteria.from<FaceRecord>()
-                criteria.select(root)
+            val face = session.withCriteria<FaceRecord> { query ->
+                val root = query.from<FaceRecord>()
+                query.select(root)
             }.setMaxResults(1).uniqueResult()
 
             session.transaction.begin()

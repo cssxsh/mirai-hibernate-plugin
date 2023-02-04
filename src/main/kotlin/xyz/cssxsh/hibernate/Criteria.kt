@@ -95,19 +95,19 @@ public fun Configuration.addDiceFunction() {
 /**
  * 构造一个 Criteria 查询
  */
-public inline fun <reified T> Session.withCriteria(block: CriteriaBuilder.(criteria: CriteriaQuery<T>) -> Unit): Query<T> =
+public inline fun <reified T> Session.withCriteria(block: CriteriaBuilder.(query: CriteriaQuery<T>) -> Unit): Query<T> =
     createQuery(with(criteriaBuilder) { createQuery(T::class.java).also { block(it) } })
 
 /**
  * 构造一个 Criteria 查询
  */
-public inline fun <reified T> Session.withCriteriaUpdate(block: CriteriaBuilder.(criteria: CriteriaUpdate<T>) -> Unit): MutationQuery =
+public inline fun <reified T> Session.withCriteriaUpdate(block: CriteriaBuilder.(query: CriteriaUpdate<T>) -> Unit): MutationQuery =
     createMutationQuery(with(criteriaBuilder) { createCriteriaUpdate(T::class.java).also { block(it) } })
 
 /**
  * 构造一个 Criteria 查询
  */
-public inline fun <reified T> Session.withCriteriaDelete(block: CriteriaBuilder.(criteria: CriteriaDelete<T>) -> Unit): MutationQuery =
+public inline fun <reified T> Session.withCriteriaDelete(block: CriteriaBuilder.(query: CriteriaDelete<T>) -> Unit): MutationQuery =
     createMutationQuery(with(criteriaBuilder) { createCriteriaDelete(T::class.java).also { block(it) } })
 
 /**
