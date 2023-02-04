@@ -17,10 +17,11 @@
 
 本插件打包了以下版本的数据库驱动和连接池
 
-*   `mysql:mysql-connector-java:8.0.31` - [mysql](example/mysql.hibernate.properties)
+*   `com.mysql:mysql-connector-j:8.0.32` - [mysql](example/mysql.hibernate.properties)
 *   `org.xerial:sqlite-jdbc:3.40.0.0` - [sqlite](example/sqlite.hibernate.properties)
 *   `org.postgresql:postgresql:42.5.1` - [postgresql](example/postgresql.hibernate.properties)
 *   `com.h2database:h2:2.1.214` - [h2](example/h2.hibernate.properties)
+*   `com.microsoft.sqlserver:mssql-jdbc:11.2.3.jre11` - [sqlserver](example/sqlserver.hibernate.properties)
 *   `com.zaxxer:HikariCP:5.0.1`
 
 需要其他数据库驱动或连接池支持，请添加 `plugin-shared-libraries` 依赖，有2种方法
@@ -28,7 +29,7 @@
 1.  将 **Jar包** 放到 `plugin-shared-libraries` 目录中一同被 `mirai-console` 加载
 
 2.  在 `plugin-shared-libraries/libraries.txt` 中添加 maven 引用，  
-    例如 `com.microsoft.sqlserver:mssql-jdbc:11.2.1.jre11`
+    例如 `com.oracle.database.jdbc:ojdbc11:21.8.0.0`
 
 ## 在 Mirai Console Plugin 项目中引用
 
