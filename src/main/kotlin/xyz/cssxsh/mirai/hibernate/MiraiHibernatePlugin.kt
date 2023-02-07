@@ -14,7 +14,7 @@ internal object MiraiHibernatePlugin : KotlinPlugin(
     JvmPluginDescription(
         id = "xyz.cssxsh.mirai.plugin.mirai-hibernate-plugin",
         name = "mirai-hibernate-plugin",
-        version = "2.6.0",
+        version = "2.6.1",
     ) {
         author("cssxsh")
 
@@ -65,7 +65,7 @@ internal object MiraiHibernatePlugin : KotlinPlugin(
 
         for (plugin in PluginManager.plugins) {
             if (plugin !is JvmPlugin) continue
-            when (plugin.id) {
+            when (plugin.description.id) {
                 "net.mamoe.mirai-api-http" -> {
                     logger.info { "如果要使用 mirai-hibernate-plugin 为 mirai-api-http 提供消息持久化, 请安装 https://github.com/cssxsh/mirai-hibernate-http " }
                 }

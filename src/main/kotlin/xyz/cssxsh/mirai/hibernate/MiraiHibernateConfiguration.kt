@@ -59,6 +59,7 @@ public class MiraiHibernateConfiguration(private val loader: MiraiHibernateLoade
      * @see org.hibernate.dialect.H2Dialect
      * @see org.hibernate.dialect.PostgreSQLDialect
      * @see org.hibernate.dialect.SQLServerDialect
+     * @see org.hibernate.dialect.OracleDialect
      * @see org.hibernate.community.dialect.SQLiteDialect
      */
     private fun load() {
@@ -91,6 +92,9 @@ public class MiraiHibernateConfiguration(private val loader: MiraiHibernateLoade
             url.startsWith("jdbc:sqlserver") -> {
                 setPropertyIfAbsent("hibernate.dialect", "org.hibernate.dialect.SQLServerDialect")
                 setPropertyIfAbsent("hibernate.globally_quoted_identifiers", "true")
+            }
+            url.startsWith("jdbc:oracle") -> {
+                setPropertyIfAbsent("hibernate.dialect", "org.hibernate.dialect.OracleDialect")
             }
         }
     }
