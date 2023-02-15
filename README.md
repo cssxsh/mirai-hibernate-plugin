@@ -10,16 +10,17 @@
 
 插件自带聊天记录器 [MiraiHibernateRecorder](src/main/kotlin/xyz/cssxsh/mirai/hibernate/MiraiHibernateLoader.kt),  
 会记录 `群聊/私聊` 的内容到数据库方便其他插件使用，默认是 `h2database` 数据库(since `2.2.0+`)  
-数据库配置在 `config/xyz.cssxsh.mirai.plugin.mirai-hibernate-plugin/hibernate.properties`  
-`2.2.0` 之前的版本的 默认数据库 为 `sqlite`, 你可以直接删掉 `hibernate.properties`, 让其重新生成 `h2database` 配置  
+
+每个插件都有应有独立的数据库配置在其配置文件目录 `config/.../hibernate.properties`  
+例如，聊天记录器数据库配置在 `config/xyz.cssxsh.mirai.plugin.mirai-hibernate-plugin/hibernate.properties`
 
 ## 数据库支持
 
 本插件打包了以下版本的数据库驱动和连接池
 
 *   `com.mysql:mysql-connector-j:8.0.32` - [mysql.hibernate.properties](example/mysql.hibernate.properties)
-*   `org.xerial:sqlite-jdbc:3.40.0.0` - [sqlite.hibernate.properties](example/sqlite.hibernate.properties)
-*   `org.postgresql:postgresql:42.5.1` - [postgresql.hibernate.properties](example/postgresql.hibernate.properties)
+*   `org.xerial:sqlite-jdbc:3.40.1.0` - [sqlite.hibernate.properties](example/sqlite.hibernate.properties)
+*   `org.postgresql:postgresql:42.5.3` - [postgresql.hibernate.properties](example/postgresql.hibernate.properties)
 *   `com.h2database:h2:2.1.214` - [h2.hibernate.properties](example/h2.hibernate.properties)
 *   `com.microsoft.sqlserver:mssql-jdbc:11.2.3.jre11` - [sqlserver.hibernate.properties](example/sqlserver.hibernate.properties)
 *   `com.zaxxer:HikariCP:5.0.1`
