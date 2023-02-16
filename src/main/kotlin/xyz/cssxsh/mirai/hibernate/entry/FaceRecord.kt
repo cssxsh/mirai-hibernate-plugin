@@ -3,10 +3,7 @@ package xyz.cssxsh.mirai.hibernate.entry
 import jakarta.persistence.*
 import kotlinx.coroutines.*
 import kotlinx.serialization.*
-import kotlinx.serialization.descriptors.*
-import kotlinx.serialization.encoding.*
 import kotlinx.serialization.json.*
-import kotlinx.serialization.modules.*
 import net.mamoe.mirai.message.data.*
 import net.mamoe.mirai.internal.message.data.*
 import net.mamoe.mirai.internal.message.image.*
@@ -60,7 +57,6 @@ public data class FaceRecord(
     public fun toMessageContent(): MessageContent = json.decodeFromString(serializer, code)
 
     public companion object {
-        @Suppress("INVISIBLE_REFERENCE", "INVISIBLE_MEMBER")
         private val json = Json {
             serializersModule = MessageSerializers.serializersModule
             ignoreUnknownKeys = true
