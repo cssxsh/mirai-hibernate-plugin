@@ -7,6 +7,8 @@ import net.mamoe.mirai.contact.*
 import net.mamoe.mirai.message.code.*
 import net.mamoe.mirai.message.data.*
 import net.mamoe.mirai.utils.*
+import xyz.cssxsh.hibernate.*
+import xyz.cssxsh.mirai.hibernate.*
 
 /**
  * 戳一戳记录
@@ -75,6 +77,69 @@ public data class MessageRecord(
             } catch (_: Throwable) {
                 throw cause
             }
+        }
+    }
+
+    /**
+     * 获取消息记录对应发送人名称
+     * @param subject 上下文
+     * @since 2.7
+     */
+    @JvmOverloads
+    public fun name(subject: Contact? = null): String {
+        val context = subject ?: when (kind) {
+            MessageSourceKind.GROUP -> Bot.getInstanceOrNull(qq = bot)?.getGroup(id = targetId)
+            MessageSourceKind.FRIEND -> Bot.getInstanceOrNull(qq = bot)?.getFriend(id = targetId)
+            MessageSourceKind.TEMP -> Bot.getInstanceOrNull(qq = bot)?.getFriend(id = targetId)
+            MessageSourceKind.STRANGER -> Bot.getInstanceOrNull(qq = bot)?.getStranger(id = targetId)
+        }
+        val sender = when (context) {
+            is Group -> if (fromId == bot) context.botAsMember else context[fromId]
+            is Friend -> if (fromId == bot) context.bot else context
+            is Stranger -> if (fromId == bot) context.bot else context
+            null -> if (fromId == bot) Bot.getInstanceOrNull(qq = bot) else null
+            else -> null
+        }
+        return sender?.nameCardOrNick ?: runCatching(::remark).getOrNull() ?: "$fromId"
+    }
+
+    private fun remark(): String? {
+        return when (kind) {
+            MessageSourceKind.GROUP -> factory.fromSession { session ->
+                val record = session.withCriteria<GroupMemberRecord> { query ->
+                    val root = query.from<GroupMemberRecord>()
+                    val index = root.get<GroupMemberIndex>("uuid")
+                    query.select(root)
+                        .where(
+                            equal(index, GroupMemberIndex(targetId, fromId))
+                        )
+                }.singleResultOrNull
+                record?.name
+            }
+            MessageSourceKind.FRIEND -> factory.fromSession { session ->
+                val record = session.withCriteria<FriendRecord> { query ->
+                    val root = query.from<FriendRecord>()
+                    val index = root.get<FriendIndex>("uuid")
+                    query.select(root)
+                        .where(
+                            equal(index, FriendIndex(bot, fromId))
+                        )
+                }.singleResultOrNull
+                record?.remark
+            }
+            MessageSourceKind.TEMP -> factory.fromSession { session ->
+                val record = session.withCriteria<GroupMemberRecord> { query ->
+                    val root = query.from<GroupMemberRecord>()
+                    val index = root.get<GroupMemberIndex>("uuid")
+                    val uid = index.get<Long>("uid")
+                    query.select(root)
+                        .where(
+                            equal(uid, targetId)
+                        )
+                }.singleResultOrNull
+                record?.name
+            }
+            MessageSourceKind.STRANGER -> null
         }
     }
 

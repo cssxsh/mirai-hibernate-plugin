@@ -82,7 +82,7 @@ public lateinit var factory: SessionFactory
 public fun List<MessageRecord>.toForwardMessage(subject: Contact): ForwardMessage {
     return buildForwardMessage(subject) {
         for (record in this@toForwardMessage) {
-            record.fromId at record.time says record.toMessageChain()
+            record.fromId named record.name(subject) at record.time says record.toMessageChain()
         }
     }
 }
@@ -95,7 +95,7 @@ public fun List<MessageRecord>.toForwardMessage(subject: Contact): ForwardMessag
 public fun Sequence<MessageRecord>.toForwardMessage(subject: Contact): ForwardMessage {
     return buildForwardMessage(subject) {
         for (record in this@toForwardMessage) {
-            record.fromId at record.time says record.toMessageChain()
+            record.fromId named record.name(subject) at record.time says record.toMessageChain()
         }
     }
 }
