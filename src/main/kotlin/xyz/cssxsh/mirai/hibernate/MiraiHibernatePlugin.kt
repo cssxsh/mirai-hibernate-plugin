@@ -63,6 +63,16 @@ internal object MiraiHibernatePlugin : KotlinPlugin(
             throw IllegalArgumentException("正在使用 Sqlite 数据库记录聊天内容，Sqlite 不支持并发，请更换为其他数据库")
         }
 
+        val backup = resolveConfigFile("hibernate.backup.properties")
+        if (backup.exists()) {
+            logger.info("发现备份配置，开始载入备份")
+            launch {
+                val properties = Properties()
+                backup.inputStream().use(properties::load)
+                configuration.restore(properties)
+            }
+        }
+
         for (plugin in PluginManager.plugins) {
             if (plugin !is JvmPlugin) continue
             when (plugin.description.id) {

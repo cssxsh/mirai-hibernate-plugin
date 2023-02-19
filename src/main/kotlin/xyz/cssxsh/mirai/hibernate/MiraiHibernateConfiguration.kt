@@ -2,10 +2,13 @@ package xyz.cssxsh.mirai.hibernate
 
 import jakarta.persistence.*
 import net.mamoe.mirai.console.plugin.jvm.*
+import org.hibernate.*
 import org.hibernate.boot.registry.*
 import org.hibernate.cfg.*
 import xyz.cssxsh.hibernate.*
 import java.sql.*
+import java.util.*
+import kotlin.streams.*
 
 /**
  * 适用于插件的 Hibernate [Configuration]
@@ -21,9 +24,10 @@ public class MiraiHibernateConfiguration(private val loader: MiraiHibernateLoade
     public constructor(plugin: JvmPlugin) : this(loader = MiraiHibernateLoader(plugin = plugin))
 
     init {
-        setProperty("hibernate.connection.provider_class", "org.hibernate.hikaricp.internal.HikariCPConnectionProvider")
-        setProperty("hibernate.connection.isolation", "${Connection.TRANSACTION_READ_UNCOMMITTED}")
-        load()
+        // 载入文件
+        loader.configuration.apply { if (exists().not()) writeText(loader.default) }.inputStream().use(properties::load)
+        if (loader.autoScan) scan(packageName = loader.packageName)
+        default()
     }
 
     /**
@@ -37,7 +41,7 @@ public class MiraiHibernateConfiguration(private val loader: MiraiHibernateLoade
     public fun scan(packageName: String) {
         val reflections = org.reflections.Reflections(
             org.reflections.util.ConfigurationBuilder()
-            .forPackage(packageName, loader.classLoader)
+                .forPackage(packageName, loader.classLoader)
         )
         val query = org.reflections.scanners.Scanners.TypesAnnotated
             .of(Entity::class.java, Embeddable::class.java, MappedSuperclass::class.java)
@@ -62,12 +66,11 @@ public class MiraiHibernateConfiguration(private val loader: MiraiHibernateLoade
      * @see org.hibernate.dialect.OracleDialect
      * @see org.hibernate.community.dialect.SQLiteDialect
      */
-    private fun load() {
-        if (loader.autoScan) scan(packageName = loader.packageName)
-        // 设置默认连接池
-        setProperty("hibernate.connection.provider_class", "org.hibernate.hikaricp.internal.HikariCPConnectionProvider")
-        // 载入文件
-        loader.configuration.apply { if (exists().not()) writeText(loader.default) }.inputStream().use(properties::load)
+    private fun Configuration.default() {
+        // 设置默认数据库连接池
+        setPropertyIfAbsent("hibernate.connection.provider_class", "org.hibernate.hikaricp.internal.HikariCPConnectionProvider")
+        // 设置默认事务隔离级别
+        setPropertyIfAbsent("hibernate.connection.isolation", "${Connection.TRANSACTION_READ_UNCOMMITTED}")
         // 设置 rand 别名
         addRandFunction()
         // 设置 dice 宏
@@ -96,6 +99,73 @@ public class MiraiHibernateConfiguration(private val loader: MiraiHibernateLoade
             url.startsWith("jdbc:oracle") -> {
                 setPropertyIfAbsent("hibernate.dialect", "org.hibernate.dialect.OracleDialect")
             }
+        }
+    }
+
+    /**
+     * 数据库还原
+     * @since 2.7.0
+     */
+    public fun restore(properties: Properties) {
+        val another = another(properties = properties)
+
+        buildSessionFactory().use { target ->
+            val entities = target.metamodel.entities
+            another.buildSessionFactory().use { source ->
+                for (entity in entities) {
+                    transfer(source, target, entity.javaType, 4096)
+                }
+            }
+        }
+    }
+
+    /**
+     * 数据库备份
+     * @since 2.7.0
+     */
+    public fun backup(properties: Properties) {
+        val another = another(properties = properties)
+
+        buildSessionFactory().use { source ->
+            val entities = source.metamodel.entities
+            another.buildSessionFactory().use { target ->
+                for (entity in entities) {
+                    transfer(source, target, entity.javaType, 4096)
+                }
+            }
+        }
+    }
+
+    @PublishedApi
+    internal fun another(properties: Properties): Configuration {
+        require(properties.getProperty("hibernate.connection.url") != getProperty("hibernate.connection.url")) {
+            "Both database url are the same!"
+        }
+        val another = Configuration(
+            BootstrapServiceRegistryBuilder()
+                .applyClassLoader(loader.classLoader)
+                .build()
+        )
+        another.addProperties(properties)
+        another.default()
+        buildSessionFactory().use { target ->
+            for (managedType in target.metamodel.managedTypes) {
+                another.addAnnotatedClass(managedType.javaType)
+            }
+        }
+        return another
+    }
+
+    @PublishedApi
+    internal fun transfer(source: SessionFactory, target: SessionFactory, entity: Class<*>, chunked: Int) {
+        source.fromSession { session ->
+            val query = session.criteriaBuilder.createQuery(entity)
+            query.from(entity)
+            session.createQuery(query).stream()
+                .asSequence().chunked(chunked)
+                .forEach { list ->
+                    target.fromTransaction { list.forEach(it::merge) }
+                }
         }
     }
 }
