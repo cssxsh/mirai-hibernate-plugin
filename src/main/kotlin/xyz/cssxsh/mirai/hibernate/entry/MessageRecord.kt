@@ -21,7 +21,8 @@ import xyz.cssxsh.mirai.hibernate.*
  * @param time Unix时间戳，秒单位
  * @param kind 消息类型
  * @param code 消息内容，JSON序列化
- * @param recall 已撤销
+ * @param recalled 撤销者
+ * @property recall 已撤销
  */
 @Entity
 @Table(name = "message_record", indexes = [Index(columnList = "from_id"), Index(columnList = "target_id")])
@@ -49,7 +50,7 @@ public data class MessageRecord(
     @Column(name = "code", nullable = false, updatable = false, columnDefinition = "text")
     val code: String,
     @Column(name = "recall", nullable = false, updatable = true)
-    val recall: Boolean = false
+    val recalled: Long = 0
 ) : java.io.Serializable {
     /**
      * [MessageSource.originalMessage] 来自 [MessageRecord.code] 的解码
@@ -87,6 +88,12 @@ public data class MessageRecord(
      */
     @JvmOverloads
     public fun name(subject: Contact? = null): String {
+        when (recalled) {
+            0L -> Unit
+            1L -> return "send-fail"
+            fromId -> return "${fromId}-recalled"
+            else -> return "${recalled}-recalled"
+        }
         val context = subject ?: when (kind) {
             MessageSourceKind.GROUP -> Bot.getInstanceOrNull(qq = bot)?.getGroup(id = targetId)
             MessageSourceKind.FRIEND -> Bot.getInstanceOrNull(qq = bot)?.getFriend(id = targetId)
@@ -143,6 +150,8 @@ public data class MessageRecord(
         }
     }
 
+    public val recall: Boolean get() = recalled != 0L
+
     public companion object {
         /**
          * From Success Send Message
@@ -181,7 +190,7 @@ public data class MessageRecord(
                 message.serializeToJsonString()
             },
             // XXX: fail send
-            recall = true
+            recalled = 1
         )
 
         private fun String?.toIntArray(): IntArray {
