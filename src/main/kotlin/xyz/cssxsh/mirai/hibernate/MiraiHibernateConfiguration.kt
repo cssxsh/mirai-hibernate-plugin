@@ -42,6 +42,7 @@ public class MiraiHibernateConfiguration(private val loader: MiraiHibernateLoade
         val reflections = org.reflections.Reflections(
             org.reflections.util.ConfigurationBuilder()
                 .forPackage(packageName, loader.classLoader)
+                .addClassLoaders(loader.classLoader)
         )
         val query = org.reflections.scanners.Scanners.TypesAnnotated
             .of(Entity::class.java, Embeddable::class.java, MappedSuperclass::class.java)

@@ -20,7 +20,7 @@
 
 *   `com.mysql:mysql-connector-j:8.0.32` - [mysql.hibernate.properties](example/mysql.hibernate.properties)
 *   `org.xerial:sqlite-jdbc:3.40.1.0` - [sqlite.hibernate.properties](example/sqlite.hibernate.properties)
-*   `org.postgresql:postgresql:42.5.3` - [postgresql.hibernate.properties](example/postgresql.hibernate.properties)
+*   `org.postgresql:postgresql:42.5.4` - [postgresql.hibernate.properties](example/postgresql.hibernate.properties)
 *   `com.h2database:h2:2.1.214` - [h2.hibernate.properties](example/h2.hibernate.properties)
 *   `com.microsoft.sqlserver:mssql-jdbc:11.2.3.jre11` - [sqlserver.hibernate.properties](example/sqlserver.hibernate.properties)
 *   `com.zaxxer:HikariCP:5.0.1`
@@ -100,6 +100,12 @@ dependencies {
 
 1.  从 [Releases](https://github.com/cssxsh/mirai-hibernate-plugin/releases) 或者 [Maven](https://repo1.maven.org/maven2/xyz/cssxsh/mirai/mirai-hibernate-plugin/) 下载 `mirai2.jar`
 2.  将其放入 `plugins` 文件夹中
+
+### 聊天数据迁移
+
+1.  将原 `config/xyz.cssxsh.mirai.plugin.mirai-hibernate-plugin/hibernate.properties` 改名备份为 `hibernate.backup.properties`
+2.  按照 [example](example) 中的例子写一份新的 `hibernate.properties`
+3.  重启 `mirai-console`
 
 ## [爱发电](https://afdian.net/@cssxsh)
 

@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "xyz.cssxsh.mirai"
-version = "2.6.1"
+version = "2.7.0"
 
 mavenCentralPublish {
     useCentralS01()
@@ -27,14 +27,14 @@ repositories {
 }
 
 dependencies {
-    api("org.hibernate.orm:hibernate-core:6.1.6.Final")
-    api("org.hibernate.orm:hibernate-hikaricp:6.1.6.Final")
-    api("org.hibernate.orm:hibernate-community-dialects:6.1.6.Final")
+    api("org.hibernate.orm:hibernate-core:6.1.7.Final")
+    api("org.hibernate.orm:hibernate-hikaricp:6.1.7.Final")
+    api("org.hibernate.orm:hibernate-community-dialects:6.1.7.Final")
     api("com.zaxxer:HikariCP:5.0.1")
     api("com.h2database:h2:2.1.214")
     api("org.xerial:sqlite-jdbc:3.40.1.0")
     api("com.mysql:mysql-connector-j:8.0.32")
-    api("org.postgresql:postgresql:42.5.3")
+    api("org.postgresql:postgresql:42.5.4")
     api("org.reflections:reflections:0.10.2")
     compileOnly("xyz.cssxsh.mirai:mirai-administrator:1.3.0")
     testImplementation(kotlin("test"))
