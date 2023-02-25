@@ -17,7 +17,8 @@ import net.mamoe.mirai.message.data.*
  * @param subject 会话所在ID
  * @param action 戳一戳 `行为`
  * @param suffix 戳一戳 `后缀`
- * @param recall 已撤销
+ * @param recalled 撤销者
+ * @property recall 已撤销
  */
 @Entity
 @Table(name = "nudge_record")
@@ -44,8 +45,9 @@ public data class NudgeRecord(
     val action: String,
     @Column(name = "suffix", nullable = false, updatable = false)
     val suffix: String,
-    @Column(name = "recall", nullable = false)
-    val recall: Boolean = false
+    @Serializable(RecalledKind.Serializer::class)
+    @Enumerated(value = EnumType.ORDINAL)
+    val recalled: RecalledKind = RecalledKind.NONE
 ) : java.io.Serializable {
     public constructor(event: NudgeEvent, time: Int = (System.currentTimeMillis() / 1000).toInt()) : this(
         bot = event.bot.id,
@@ -63,4 +65,6 @@ public data class NudgeRecord(
         action = event.action,
         suffix = event.suffix
     )
+
+    public val recall: Boolean get() = recalled != RecalledKind.NONE
 }

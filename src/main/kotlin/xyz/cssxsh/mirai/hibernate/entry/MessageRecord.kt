@@ -50,7 +50,9 @@ public data class MessageRecord(
     @Column(name = "code", nullable = false, updatable = false, columnDefinition = "text")
     val code: String,
     @Column(name = "recall", nullable = false, updatable = true)
-    val recalled: Long = 0
+    @Enumerated(value = EnumType.ORDINAL)
+    @Serializable(RecalledKind.Serializer::class)
+    val recalled: RecalledKind = RecalledKind.NONE
 ) : java.io.Serializable {
     /**
      * [MessageSource.originalMessage] 来自 [MessageRecord.code] 的解码
@@ -89,10 +91,10 @@ public data class MessageRecord(
     @JvmOverloads
     public fun name(subject: Contact? = null): String {
         when (recalled) {
-            0L -> Unit
-            1L -> return "send-fail"
-            fromId -> return "${fromId}-recalled"
-            else -> return "${recalled}-recalled"
+            RecalledKind.NONE -> Unit
+            RecalledKind.SEND_FAIL -> return "send-fail"
+            RecalledKind.SELF -> return "self-recalled"
+            RecalledKind.ADMIN -> return "admin-recalled"
         }
         val context = subject ?: when (kind) {
             MessageSourceKind.GROUP -> Bot.getInstanceOrNull(qq = bot)?.getGroup(id = targetId)
@@ -150,7 +152,7 @@ public data class MessageRecord(
         }
     }
 
-    public val recall: Boolean get() = recalled != 0L
+    public val recall: Boolean get() = recalled != RecalledKind.NONE
 
     public companion object {
         /**
@@ -189,8 +191,7 @@ public data class MessageRecord(
             code = with(MessageChain) {
                 message.serializeToJsonString()
             },
-            // XXX: fail send
-            recalled = 1
+            recalled = RecalledKind.SEND_FAIL
         )
 
         private fun String?.toIntArray(): IntArray {

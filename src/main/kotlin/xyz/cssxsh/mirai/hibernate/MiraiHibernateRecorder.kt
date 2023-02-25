@@ -69,9 +69,13 @@ public object MiraiHibernateRecorder : SimpleListenerHost() {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     internal fun MessageRecallEvent.record() {
-        val operatorId = when (this) {
-            is MessageRecallEvent.FriendRecall -> operatorId
-            is MessageRecallEvent.GroupRecall -> operator?.id ?: bot.id
+        val kind = when (this) {
+            is MessageRecallEvent.FriendRecall -> {
+                RecalledKind.SELF
+            }
+            is MessageRecallEvent.GroupRecall -> {
+                if ((operator?.id ?: bot.id) != authorId) RecalledKind.ADMIN else RecalledKind.SELF
+            }
         }
         launch {
             val targets = get(this@record)
@@ -79,7 +83,7 @@ public object MiraiHibernateRecorder : SimpleListenerHost() {
                 logger.warning { "No found origin message for ${this@record}" }
             }
             for (record in targets) {
-                record.copy(recalled = operatorId).merge()
+                record.copy(recalled = kind).merge()
             }
         }
     }
@@ -287,7 +291,7 @@ public object MiraiHibernateRecorder : SimpleListenerHost() {
      * @param end 结束时间
      */
     public operator fun get(group: Group, start: Int, end: Int): List<MessageRecord> {
-        return  factory.fromSession { session ->
+        return factory.fromSession { session ->
             session.withCriteria<MessageRecord> { query ->
                 val record = query.from<MessageRecord>()
                 query.select(record)
