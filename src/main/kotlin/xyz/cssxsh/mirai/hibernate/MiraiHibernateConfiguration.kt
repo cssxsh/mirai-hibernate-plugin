@@ -79,26 +79,29 @@ public class MiraiHibernateConfiguration(private val loader: MiraiHibernateLoade
         val url = getProperty("hibernate.connection.url") ?: throw NoSuchElementException("jdbc url no found!")
         when {
             url.startsWith("jdbc:h2") -> {
-                setPropertyIfAbsent("hibernate.dialect", "org.hibernate.dialect.H2Dialect")
+                // setPropertyIfAbsent("hibernate.dialect", "org.hibernate.dialect.H2Dialect")
             }
             url.startsWith("jdbc:sqlite") -> {
                 // SQLite 是单文件数据库，最好只有一个连接
                 setPropertyIfAbsent("hibernate.hikari.minimumIdle", "1")
                 setPropertyIfAbsent("hibernate.hikari.maximumPoolSize", "1")
-                setPropertyIfAbsent("hibernate.dialect", "org.hibernate.community.dialect.SQLiteDialect")
+                // setPropertyIfAbsent("hibernate.dialect", "org.hibernate.community.dialect.SQLiteDialect")
             }
             url.startsWith("jdbc:mysql") -> {
-                setPropertyIfAbsent("hibernate.dialect", "org.hibernate.dialect.MariaDBDialect")
+                // setPropertyIfAbsent("hibernate.dialect", "org.hibernate.dialect.MySQLDialect")
+            }
+            url.startsWith("jdbc:mariadb") -> {
+                // setPropertyIfAbsent("hibernate.dialect", "org.hibernate.dialect.MariaDBDialect")
             }
             url.startsWith("jdbc:postgresql") -> {
-                setPropertyIfAbsent("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect")
+                // setPropertyIfAbsent("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect")
             }
             url.startsWith("jdbc:sqlserver") -> {
-                setPropertyIfAbsent("hibernate.dialect", "org.hibernate.dialect.SQLServerDialect")
+                // setPropertyIfAbsent("hibernate.dialect", "org.hibernate.dialect.SQLServerDialect")
                 setPropertyIfAbsent("hibernate.globally_quoted_identifiers", "true")
             }
             url.startsWith("jdbc:oracle") -> {
-                setPropertyIfAbsent("hibernate.dialect", "org.hibernate.dialect.OracleDialect")
+                // setPropertyIfAbsent("hibernate.dialect", "org.hibernate.dialect.OracleDialect")
             }
         }
     }

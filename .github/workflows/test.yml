@@ -88,6 +88,9 @@ jobs:
       - name: H2Test
         run: ./gradlew test --tests "xyz.cssxsh.mirai.hibernate.entry.H2Test" --scan --info
 
+      - name: MariaDBTest
+        run: ./gradlew test --tests "xyz.cssxsh.mirai.hibernate.entry.MariaDBTest" --scan --info
+
       - name: MySqlTest
         run: ./gradlew test --tests "xyz.cssxsh.mirai.hibernate.entry.MySqlTest" --scan --info
 
@@ -151,6 +154,9 @@ jobs:
       - name: H2Test
         run: ./gradlew test --tests "xyz.cssxsh.mirai.hibernate.entry.H2Test" --scan --info
 
+      - name: MariaDBTest
+        run: ./gradlew test --tests "xyz.cssxsh.mirai.hibernate.entry.MariaDBTest" --scan --info
+
       - name: MySqlTest
         run: ./gradlew test --tests "xyz.cssxsh.mirai.hibernate.entry.MySqlTest" --scan --info
 
@@ -195,6 +201,9 @@ jobs:
 
       - name: H2Test
         run: ./gradlew test --tests "xyz.cssxsh.mirai.hibernate.entry.H2Test" --scan --info
+
+      - name: MariaDBTest
+        run: ./gradlew test --tests "xyz.cssxsh.mirai.hibernate.entry.MariaDBTest" --scan --info
 
       - name: MySqlTest
         run: ./gradlew test --tests "xyz.cssxsh.mirai.hibernate.entry.MySqlTest" --scan --info

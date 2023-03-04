@@ -34,6 +34,7 @@ dependencies {
     api("com.h2database:h2:2.1.214")
     api("org.xerial:sqlite-jdbc:3.41.0.0")
     api("com.mysql:mysql-connector-j:8.0.32")
+    api("org.mariadb.jdbc:mariadb-java-client:3.1.2")
     api("org.postgresql:postgresql:42.5.4")
     api("org.reflections:reflections:0.10.2")
     compileOnly("xyz.cssxsh.mirai:mirai-administrator:1.3.0")
@@ -49,6 +50,7 @@ dependencies {
     testCompileOnly("net.mamoe:mirai-console-compiler-common")
     //
     implementation(platform("org.slf4j:slf4j-parent:2.0.6"))
+    implementation("org.slf4j:jcl-over-slf4j:2.0.6")
     testImplementation("org.slf4j:slf4j-simple")
     //
     implementation(platform("com.google.protobuf:protobuf-bom:3.21.12"))
