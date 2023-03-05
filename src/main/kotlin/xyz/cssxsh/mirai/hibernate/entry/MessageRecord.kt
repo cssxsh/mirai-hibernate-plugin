@@ -152,6 +152,7 @@ public data class MessageRecord(
         }
     }
 
+    @get:jakarta.persistence.Transient
     public val recall: Boolean get() = recalled != RecalledKind.NONE
 
     public companion object {

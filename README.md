@@ -19,7 +19,8 @@
 本插件打包了以下版本的数据库驱动和连接池
 
 *   `com.mysql:mysql-connector-j:8.0.32` - [mysql.hibernate.properties](example/mysql.hibernate.properties)
-*   `org.xerial:sqlite-jdbc:3.40.1.0` - [sqlite.hibernate.properties](example/sqlite.hibernate.properties)
+*   `org.mariadb.jdbc:mariadb-java-client:3.1.2` - [mariadb.hibernate.properties](example/mariadb.hibernate.properties)
+*   `org.xerial:sqlite-jdbc:3.41.0.0` - [sqlite.hibernate.properties](example/sqlite.hibernate.properties)
 *   `org.postgresql:postgresql:42.5.4` - [postgresql.hibernate.properties](example/postgresql.hibernate.properties)
 *   `com.h2database:h2:2.1.214` - [h2.hibernate.properties](example/h2.hibernate.properties)
 *   `com.microsoft.sqlserver:mssql-jdbc:11.2.3.jre11` - [sqlserver.hibernate.properties](example/sqlserver.hibernate.properties)

@@ -3,7 +3,7 @@ plugins {
     kotlin("plugin.jpa") version "1.7.22"
     kotlin("plugin.serialization") version "1.7.22"
 
-    id("net.mamoe.mirai-console") version "2.14.0-RC"
+    id("net.mamoe.mirai-console") version "2.14.0"
     id("me.him188.maven-central-publish") version "1.0.0-dev-3"
 }
 
@@ -41,7 +41,7 @@ dependencies {
     testImplementation(kotlin("test"))
     testImplementation("com.microsoft.sqlserver:mssql-jdbc:12.2.0.jre11")
     //
-    implementation(platform("net.mamoe:mirai-bom:2.14.0-RC"))
+    implementation(platform("net.mamoe:mirai-bom:2.14.0"))
     compileOnly("net.mamoe:mirai-core")
     compileOnly("net.mamoe:mirai-core-utils")
     testImplementation("net.mamoe:mirai-logging-slf4j")
