@@ -45,6 +45,7 @@ public data class NudgeRecord(
     val action: String,
     @Column(name = "suffix", nullable = false, updatable = false)
     val suffix: String,
+    @Column(name = "recall", nullable = false)
     @Serializable(RecalledKind.Serializer::class)
     @Enumerated(value = EnumType.ORDINAL)
     val recalled: RecalledKind = RecalledKind.NONE
@@ -66,5 +67,6 @@ public data class NudgeRecord(
         suffix = event.suffix
     )
 
+    @get:jakarta.persistence.Transient
     public val recall: Boolean get() = recalled != RecalledKind.NONE
 }
