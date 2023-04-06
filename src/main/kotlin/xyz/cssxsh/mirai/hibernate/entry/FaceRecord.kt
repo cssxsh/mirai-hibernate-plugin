@@ -10,6 +10,7 @@ import net.mamoe.mirai.internal.message.image.*
 import net.mamoe.mirai.message.*
 import net.mamoe.mirai.message.data.Image.Key.queryUrl
 import net.mamoe.mirai.utils.*
+import xyz.cssxsh.mirai.hibernate.*
 
 /**
  * 表情包记录
@@ -46,9 +47,7 @@ public data class FaceRecord(
      * 表情包标签记录集
      * @see md5
      */
-    @OneToMany(mappedBy = "md5")
-    @kotlinx.serialization.Transient
-    public val tags: List<FaceTagRecord> = emptyList()
+    public val tags: List<FaceTagRecord> get() = FaceTagRecord.Companion.get(md5 = md5)
 
     /**
      * [FaceRecord.code] 解码
