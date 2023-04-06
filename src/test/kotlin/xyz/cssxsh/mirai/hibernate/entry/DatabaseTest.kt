@@ -182,12 +182,7 @@ abstract class DatabaseTest {
             session.merge(FaceTagRecord(md5 = face.md5, tag = "test"))
             session.transaction.commit()
 
-            val tags = session.withCriteria<FaceTagRecord> { query ->
-                val root = query.from<FaceTagRecord>()
-                query.select(root)
-                    .where(equal(root.get<String>("md5"), face.md5))
-            }.list()
-            println(tags.toString())
+            logger.info(face.tags.toString())
 
             session.transaction.begin()
             session.merge(face.copy(disable = true))
