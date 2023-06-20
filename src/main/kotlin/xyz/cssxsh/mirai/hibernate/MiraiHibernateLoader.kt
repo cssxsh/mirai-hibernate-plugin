@@ -42,7 +42,7 @@ public interface MiraiHibernateLoader {
         @JvmStatic
         public operator fun invoke(plugin: JvmPlugin): MiraiHibernateLoader = Impl(plugin = plugin)
 
-        private fun PluginFileExtensions.database(filename: String): String {
+        private fun PluginFileExtensions.path(filename: String): String {
             return try {
                 resolveDataFile(filename).toURI().schemeSpecificPart
                     .removePrefix(File(".").normalize().toURI().schemeSpecificPart)
@@ -76,7 +76,7 @@ public interface MiraiHibernateLoader {
             classLoader = plugin::class.java.classLoader,
             configuration = plugin.configFolder.resolve("hibernate.properties"),
             default = """
-                hibernate.connection.url=jdbc:h2:file:${plugin.database("hibernate.h2")}
+                hibernate.connection.url=jdbc:h2:file:${plugin.path("hibernate.h2")}
                 hibernate.dialect=org.hibernate.dialect.H2Dialect
                 hibernate.connection.provider_class=org.hibernate.hikaricp.internal.HikariCPConnectionProvider
                 hibernate.hikari.connectionTimeout=180000
