@@ -4,10 +4,10 @@ import jakarta.persistence.*
 import kotlinx.coroutines.*
 import kotlinx.serialization.*
 import kotlinx.serialization.json.*
-import net.mamoe.mirai.message.data.*
 import net.mamoe.mirai.internal.message.data.*
 import net.mamoe.mirai.internal.message.image.*
 import net.mamoe.mirai.message.*
+import net.mamoe.mirai.message.data.*
 import net.mamoe.mirai.message.data.Image.Key.queryUrl
 import net.mamoe.mirai.utils.*
 
@@ -47,7 +47,13 @@ public data class FaceRecord(
      * @see md5
      */
     @OneToMany(orphanRemoval = true)
-    @JoinColumn(name = "md5", referencedColumnName = "md5", updatable = false)
+    @JoinColumn(
+        name = "md5",
+        referencedColumnName = "md5",
+        updatable = false,
+        foreignKey = ForeignKey(ConstraintMode.NO_CONSTRAINT)
+    )
+    @kotlinx.serialization.Transient
     public val tags: List<FaceTagRecord> = emptyList()
 
     /**
