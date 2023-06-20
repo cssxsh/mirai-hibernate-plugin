@@ -79,7 +79,7 @@ jobs:
           mysqladmin -uroot password root
           sqlcmd -S tcp:localhost\SQLEXPRESS,1433 -Q "CREATE DATABASE mirai" -U sa
 
-      - name: Build all
+      - name: Assemble
         run: ./gradlew assemble --scan
 
       - name: SqliteTest
@@ -145,7 +145,7 @@ jobs:
           PGUSER: postgres
           PGDATABASE: postgres
 
-      - name: Build all
+      - name: Assemble
         run: ./gradlew assemble --scan
 
       - name: SqliteTest
@@ -193,7 +193,7 @@ jobs:
       - name: Init gradle project
         run: ./gradlew clean --scan
 
-      - name: Build all
+      - name: Assemble
         run: ./gradlew assemble --scan
 
       - name: SqliteTest
@@ -210,3 +210,28 @@ jobs:
 
       - name: PostgreSqlTest
         run: ./gradlew test --tests "xyz.cssxsh.mirai.hibernate.entry.PostgreSqlTest" --scan --info
+
+  build:
+    needs: [ windows, macos, linux ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup JDK 11
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'adopt'
+          java-version: '11'
+
+      - name: chmod -R 777 *
+        run: chmod -R 777 *
+
+      - name: Build Plugin
+        run: ./gradlew buildPlugin
+
+      - name: Upload
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-${{ github.run_id }}
+          path: build/mirai/*
