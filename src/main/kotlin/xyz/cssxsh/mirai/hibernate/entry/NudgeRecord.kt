@@ -48,6 +48,7 @@ public data class NudgeRecord(
     @Column(name = "recall", nullable = false)
     @Serializable(RecalledKind.Serializer::class)
     @Enumerated(value = EnumType.ORDINAL)
+    @org.hibernate.annotations.ColumnDefault("0")
     val recalled: RecalledKind = RecalledKind.NONE
 ) : java.io.Serializable {
     public constructor(event: NudgeEvent, time: Int = (System.currentTimeMillis() / 1000).toInt()) : this(

@@ -52,6 +52,7 @@ public data class MessageRecord(
     @Column(name = "recall", nullable = false, updatable = true)
     @Enumerated(value = EnumType.ORDINAL)
     @Serializable(RecalledKind.Serializer::class)
+    @org.hibernate.annotations.ColumnDefault("0")
     val recalled: RecalledKind = RecalledKind.NONE
 ) : java.io.Serializable {
     /**
