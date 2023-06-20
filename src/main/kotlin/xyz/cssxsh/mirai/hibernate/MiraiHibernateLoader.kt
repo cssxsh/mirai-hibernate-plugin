@@ -4,7 +4,6 @@ import net.mamoe.mirai.console.plugin.*
 import net.mamoe.mirai.console.plugin.jvm.*
 import java.io.*
 import java.sql.*
-import kotlin.io.path.*
 
 /**
  * 加载和配置 Hibernate
@@ -45,10 +44,9 @@ public interface MiraiHibernateLoader {
 
         private fun PluginFileExtensions.database(filename: String): String {
             return try {
-                Path(".")
-                    .toAbsolutePath()
-                    .relativize(resolveDataPath(filename))
-                    .joinToString(separator = "/", prefix = "./")
+                resolveDataFile(filename).toURI().schemeSpecificPart
+                    .removePrefix(File(".").normalize().toURI().schemeSpecificPart)
+                    .prependIndent("./")
             } catch (_: Exception) {
                 filename
             }
