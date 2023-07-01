@@ -3,6 +3,7 @@ package xyz.cssxsh.mirai.hibernate.entry
 import jakarta.persistence.*
 import kotlinx.serialization.*
 import net.mamoe.mirai.*
+import java.time.*
 
 /**
  * 机器人记录
@@ -34,8 +35,8 @@ public data class BotRecord(
         public fun fromImpl(bot: Bot): BotRecord = BotRecord(
             bot = bot.id,
             name = bot.nick,
-            init = System.currentTimeMillis() / 1_000,
-            latest = System.currentTimeMillis() / 1_000
+            init = Instant.now().epochSecond,
+            latest = Instant.now().epochSecond
         )
     }
 }

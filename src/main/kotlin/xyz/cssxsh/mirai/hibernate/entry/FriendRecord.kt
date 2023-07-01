@@ -4,6 +4,7 @@ import jakarta.persistence.*
 import kotlinx.serialization.*
 import net.mamoe.mirai.contact.*
 import net.mamoe.mirai.event.events.*
+import java.time.*
 
 /**
  * 好友记录
@@ -44,8 +45,8 @@ public data class FriendRecord(
             } catch (_: NullPointerException) {
                 "我的好友"
             },
-            added = if (event is FriendAddEvent) System.currentTimeMillis() / 1_000 else 0,
-            deleted = if (event is FriendDeleteEvent) System.currentTimeMillis() / 1_000 else Long.MAX_VALUE,
+            added = if (event is FriendAddEvent) Instant.now().epochSecond else Instant.MIN.epochSecond,
+            deleted = if (event is FriendDeleteEvent) Instant.now().epochSecond else Instant.MAX.epochSecond,
         )
 
         /**
@@ -61,8 +62,8 @@ public data class FriendRecord(
             } catch (_: NullPointerException) {
                 "我的好友"
             },
-            added = 0,
-            deleted = Long.MAX_VALUE,
+            added = Instant.MIN.epochSecond,
+            deleted = Instant.MAX.epochSecond,
         )
     }
 }

@@ -4,6 +4,7 @@ import jakarta.persistence.*
 import kotlinx.serialization.*
 import net.mamoe.mirai.contact.*
 import net.mamoe.mirai.event.events.*
+import java.time.*
 
 /**
  * 群成员记录
@@ -57,8 +58,8 @@ public data class GroupMemberRecord(
                 0
             },
             exited = when (event) {
-                is MemberLeaveEvent -> System.currentTimeMillis() / 1_000
-                else -> Long.MAX_VALUE
+                is MemberLeaveEvent -> Instant.now().epochSecond
+                else -> Instant.MAX.epochSecond
             }
         )
 
@@ -77,7 +78,7 @@ public data class GroupMemberRecord(
             } catch (_: NoSuchMethodError) {
                 0
             },
-            exited = Long.MAX_VALUE
+            exited = Instant.MAX.epochSecond
         )
     }
 }
