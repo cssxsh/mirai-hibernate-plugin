@@ -3,7 +3,7 @@ plugins {
     kotlin("plugin.jpa") version "1.8.10"
     kotlin("plugin.serialization") version "1.8.10"
 
-    id("net.mamoe.mirai-console") version "2.15.0-M1"
+    id("net.mamoe.mirai-console") version "2.15.0"
     id("me.him188.maven-central-publish") version "1.0.0-dev-3"
 }
 
@@ -27,9 +27,9 @@ repositories {
 }
 
 dependencies {
-    api("org.hibernate.orm:hibernate-core:6.2.4.Final")
-    api("org.hibernate.orm:hibernate-hikaricp:6.2.4.Final")
-    api("org.hibernate.orm:hibernate-community-dialects:6.2.4.Final")
+    api("org.hibernate.orm:hibernate-core:6.2.6.Final")
+    api("org.hibernate.orm:hibernate-hikaricp:6.2.6.Final")
+    api("org.hibernate.orm:hibernate-community-dialects:6.2.6.Final")
     api("com.zaxxer:HikariCP:5.0.1")
     api("com.h2database:h2:2.1.214")
     api("org.xerial:sqlite-jdbc:3.42.0.0")
@@ -41,18 +41,16 @@ dependencies {
     testImplementation(kotlin("test"))
     testImplementation("com.microsoft.sqlserver:mssql-jdbc:12.2.0.jre11")
     //
-    implementation(platform("net.mamoe:mirai-bom:2.15.0-M1"))
+    implementation(platform("net.mamoe:mirai-bom:2.15.0"))
     compileOnly("net.mamoe:mirai-core")
     compileOnly("net.mamoe:mirai-core-utils")
     testImplementation("net.mamoe:mirai-logging-slf4j")
     testImplementation("net.mamoe:mirai-core-mock")
     testImplementation("net.mamoe:mirai-core-utils")
-    testCompileOnly("net.mamoe:mirai-console-compiler-common")
+    testImplementation("net.mamoe:mirai-console-compiler-common")
     //
     implementation(platform("org.slf4j:slf4j-parent:2.0.7"))
     testImplementation("org.slf4j:slf4j-simple")
-    //
-    implementation(platform("com.google.protobuf:protobuf-bom:3.22.2"))
 }
 
 mirai {
