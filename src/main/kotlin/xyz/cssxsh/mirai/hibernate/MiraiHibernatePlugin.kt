@@ -53,11 +53,10 @@ internal object MiraiHibernatePlugin : KotlinPlugin(
                 setProperty("hibernate.hikari.maximumPoolSize", "10")
             }
         }
-        // TODO 检测第一次使用，并给出提示
 
         try {
             factory = configuration.buildSessionFactory()
-        } catch (exception : Exception) {
+        } catch (exception: Exception) {
             if ("Unsupported database file version" in exception.message.orEmpty()) {
                 val current = System.currentTimeMillis()
                 resolveDataFile("hibernate.h2.mv.db")
@@ -72,9 +71,7 @@ internal object MiraiHibernatePlugin : KotlinPlugin(
         val metadata = factory.fromSession { it.getDatabaseMetaData() }
 
         logger.info { "Database ${metadata.url} by ${metadata.driverName}." }
-        if (metadata.url.startsWith("jdbc:sqlite")) {
-            throw IllegalArgumentException("正在使用 Sqlite 数据库记录聊天内容，Sqlite 不支持并发，请更换为其他数据库")
-        }
+        logger.info { "如果你想使用其他类型的数据库，请自行修改:\n ${configuration.loader.configuration.toPath().toUri()}" }
 
         val backup = resolveConfigFile("hibernate.backup.properties")
         if (backup.exists()) {

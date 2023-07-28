@@ -15,7 +15,7 @@ import kotlin.streams.*
  * @param loader 加载器，定义一些加载行为
  * @see [Configuration.addRandFunction]
  */
-public class MiraiHibernateConfiguration(private val loader: MiraiHibernateLoader) :
+public class MiraiHibernateConfiguration(@PublishedApi internal val loader: MiraiHibernateLoader) :
     Configuration(
         BootstrapServiceRegistryBuilder()
             .applyClassLoader(loader.classLoader)
