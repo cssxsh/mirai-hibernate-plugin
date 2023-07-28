@@ -53,8 +53,21 @@ internal object MiraiHibernatePlugin : KotlinPlugin(
                 setProperty("hibernate.hikari.maximumPoolSize", "10")
             }
         }
+        // TODO 检测第一次使用，并给出提示
 
-        factory = configuration.buildSessionFactory()
+        try {
+            factory = configuration.buildSessionFactory()
+        } catch (exception : Exception) {
+            if ("Unsupported database file version" in exception.message.orEmpty()) {
+                val current = System.currentTimeMillis()
+                resolveDataFile("hibernate.h2.mv.db")
+                    .renameTo(resolveDataFile("backup.$current.h2.mv.db"))
+                resolveDataFile("hibernate.h2.trace.db")
+                    .renameTo(resolveDataFile("backup.$current.h2.trace.db"))
+                throw RuntimeException("本地文件和数据库版本不匹配，已备份，请重新启动", exception)
+            }
+            throw exception
+        }
 
         val metadata = factory.fromSession { it.getDatabaseMetaData() }
 
