@@ -80,6 +80,17 @@ public class MiraiHibernateConfiguration(@PublishedApi internal val loader: Mira
         when {
             url.startsWith("jdbc:h2") -> {
                 // setPropertyIfAbsent("hibernate.dialect", "org.hibernate.dialect.H2Dialect")
+                // XXX auto upgrade 2.1 to 2.2
+                try {
+                    DriverManager.getConnection(url, properties).close()
+                } catch (cause: org.h2.jdbc.JdbcSQLNonTransientConnectionException) {
+                    try {
+                        org.h2.tools.Upgrade.upgrade(url, properties, 214)
+                    } catch (suppressed: Throwable) {
+                        cause.addSuppressed(suppressed)
+                        throw cause
+                    }
+                }
             }
             url.startsWith("jdbc:sqlite") -> {
                 // SQLite 是单文件数据库，最好只有一个连接
