@@ -60,11 +60,11 @@ public fun dialects(): Set<Class<out Dialect>> {
 @PublishedApi
 internal fun mssql(): String {
     val java = System.getProperty("java.version")
-    val version = System.getProperty("xyz.cssxsh.mirai.hibernate.mssql.version", "11.2.3")
+    // val version = System.getProperty("xyz.cssxsh.mirai.hibernate.mssql.version", "11.2.3")
     return when {
-        java.startsWith("17") -> "com.microsoft.sqlserver:mssql-jdbc:${version}.jre17"
-        java.startsWith("11") -> "com.microsoft.sqlserver:mssql-jdbc:${version}.jre11"
-        else -> "com.microsoft.sqlserver:mssql-jdbc:${version}.jre11"
+        java.startsWith("17") -> "com.microsoft.sqlserver:mssql-jdbc:12.4.1.jre11"
+        java.startsWith("11") -> "com.microsoft.sqlserver:mssql-jdbc:12.4.1.jre11"
+        else -> "com.microsoft.sqlserver:mssql-jdbc:12.4.1.jre8"
     }
 }
 
