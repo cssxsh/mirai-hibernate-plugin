@@ -85,10 +85,11 @@ public class MiraiHibernateConfiguration(@PublishedApi internal val loader: Mira
                     DriverManager.getConnection(url, properties).close()
                 } catch (cause: org.h2.jdbc.JdbcSQLNonTransientConnectionException) {
                     try {
+                        println("try upgrade h2database file")
                         org.h2.tools.Upgrade.upgrade(url, properties, 214)
                     } catch (suppressed: Throwable) {
                         cause.addSuppressed(suppressed)
-                        throw cause
+                        cause.printStackTrace()
                     }
                 }
             }
