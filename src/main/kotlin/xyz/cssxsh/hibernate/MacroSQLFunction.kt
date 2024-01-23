@@ -1,11 +1,10 @@
 package xyz.cssxsh.hibernate
 
 import org.hibernate.dialect.function.*
+import org.hibernate.query.ReturnableType
 import org.hibernate.sql.ast.SqlAstTranslator
 import org.hibernate.sql.ast.spi.SqlAppender
 import org.hibernate.sql.ast.tree.SqlAstNode
-import org.hibernate.sql.ast.tree.predicate.Predicate
-import org.hibernate.sql.ast.tree.select.SortSpecification
 import org.hibernate.type.*
 
 /**
@@ -24,38 +23,9 @@ public class MacroSQLFunction(
     override fun render(
         sqlAppender: SqlAppender,
         sqlAstArguments: List<SqlAstNode>,
+        returnType: ReturnableType<*>,
         translator: SqlAstTranslator<*>
     ) {
         macro.invoke(sqlAppender, sqlAstArguments, translator)
-    }
-
-    override fun render(
-        sqlAppender: SqlAppender,
-        sqlAstArguments: List<SqlAstNode>,
-        filter: Predicate,
-        translator: SqlAstTranslator<*>
-    ) {
-        render(sqlAppender, sqlAstArguments, translator)
-    }
-
-    override fun render(
-        sqlAppender: SqlAppender,
-        sqlAstArguments: List<SqlAstNode>,
-        filter: Predicate?,
-        withinGroup: MutableList<SortSpecification>,
-        translator: SqlAstTranslator<*>
-    ) {
-        render(sqlAppender, sqlAstArguments, translator)
-    }
-
-    override fun render(
-        sqlAppender: SqlAppender,
-        sqlAstArguments: List<SqlAstNode>,
-        filter: Predicate,
-        respectNulls: Boolean,
-        fromFirst: Boolean,
-        translator: SqlAstTranslator<*>
-    ) {
-        render(sqlAppender, sqlAstArguments, translator)
     }
 }
