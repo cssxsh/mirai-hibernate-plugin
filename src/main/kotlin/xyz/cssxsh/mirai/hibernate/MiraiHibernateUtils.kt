@@ -62,9 +62,9 @@ internal fun mssql(): String {
     val java = System.getProperty("java.version")
     // val version = System.getProperty("xyz.cssxsh.mirai.hibernate.mssql.version", "11.2.3")
     return when {
-        java.startsWith("17") -> "com.microsoft.sqlserver:mssql-jdbc:12.4.1.jre11"
-        java.startsWith("11") -> "com.microsoft.sqlserver:mssql-jdbc:12.4.1.jre11"
-        else -> "com.microsoft.sqlserver:mssql-jdbc:12.4.1.jre8"
+        java.startsWith("17") -> "com.microsoft.sqlserver:mssql-jdbc:12.4.2.jre11"
+        java.startsWith("11") -> "com.microsoft.sqlserver:mssql-jdbc:12.4.2.jre11"
+        else -> "com.microsoft.sqlserver:mssql-jdbc:12.4.2.jre8"
     }
 }
 
