@@ -1,3 +1,11 @@
+## 2.8.0 (23/09/..)
+
+1.  update: dependency
+2.  fix: face record tags
+3.  fix: face_tag_record foreignKey
+4.  fix: epoch second
+5.  feat: handle database file backup
+
 ## 2.7.1 (23/03/05)
 
 1.  fix: nudge record

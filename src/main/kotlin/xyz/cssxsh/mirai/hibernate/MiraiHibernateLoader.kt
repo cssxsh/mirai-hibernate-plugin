@@ -77,7 +77,6 @@ public interface MiraiHibernateLoader {
             configuration = plugin.configFolder.resolve("hibernate.properties"),
             default = """
                 hibernate.connection.url=jdbc:h2:file:${plugin.path("hibernate.h2")}
-                hibernate.dialect=org.hibernate.dialect.H2Dialect
                 hibernate.connection.provider_class=org.hibernate.hikaricp.internal.HikariCPConnectionProvider
                 hibernate.hikari.connectionTimeout=180000
                 hibernate.connection.isolation=${Connection.TRANSACTION_READ_UNCOMMITTED}
