@@ -18,12 +18,12 @@
 
 本插件打包了以下版本的数据库驱动和连接池
 
-*   `com.mysql:mysql-connector-j:8.2.0` - [mysql.hibernate.properties](example/mysql.hibernate.properties)
-*   `org.mariadb.jdbc:mariadb-java-client:3.3.2` - [mariadb.hibernate.properties](example/mariadb.hibernate.properties)
-*   `org.xerial:sqlite-jdbc:3.44.1.0` - [sqlite.hibernate.properties](example/sqlite.hibernate.properties)
-*   `org.postgresql:postgresql:42.7.1` - [postgresql.hibernate.properties](example/postgresql.hibernate.properties)
+*   `com.mysql:mysql-connector-j:8.3.0` - [mysql.hibernate.properties](example/mysql.hibernate.properties)
+*   `org.mariadb.jdbc:mariadb-java-client:3.3.3` - [mariadb.hibernate.properties](example/mariadb.hibernate.properties)
+*   `org.xerial:sqlite-jdbc:3.45.1.0` - [sqlite.hibernate.properties](example/sqlite.hibernate.properties)
+*   `org.postgresql:postgresql:42.7.2` - [postgresql.hibernate.properties](example/postgresql.hibernate.properties)
 *   `com.h2database:h2:2.2.224` - [h2.hibernate.properties](example/h2.hibernate.properties)
-*   `com.microsoft.sqlserver:mssql-jdbc:12.4.2.jre11` - [sqlserver.hibernate.properties](example/sqlserver.hibernate.properties)
+*   `com.microsoft.sqlserver:mssql-jdbc:12.6.1.jre11` - [sqlserver.hibernate.properties](example/sqlserver.hibernate.properties)
 *   `com.zaxxer:HikariCP:5.0.1`
 
 需要其他数据库驱动或连接池支持，请添加 `plugin-shared-libraries` 依赖，有2种方法
