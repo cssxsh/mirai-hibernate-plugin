@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "xyz.cssxsh.mirai"
-version = "2.8.0"
+version = "2.8.1"
 
 mavenCentralPublish {
     useCentralS01()
@@ -57,6 +57,9 @@ dependencies {
 
 mirai {
     jvmTarget = JavaVersion.VERSION_11
+    if (System.getenv("CI").toBoolean()) {
+        useTestConsoleFrontEnd = null
+    }
 }
 
 kotlin {

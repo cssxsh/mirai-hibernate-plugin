@@ -1,4 +1,10 @@
-## 2.8.0 (23/09/..)
+## 2.8.1 (24/04/27)
+
+1.  update: hibernate-orm 6.4.8.Final
+2.  update: ci
+3.  update: jdbc driver
+
+## 2.8.0 (24/01/23)
 
 1.  update: dependency
 2.  fix: face record tags

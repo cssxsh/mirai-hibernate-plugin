@@ -28,8 +28,8 @@ private const val SQLITE_JNI =
  */
 public fun checkPlatform(folder: File) {
     // Termux
-    if ("termux" in System.getProperty("user.dir")) {
-        logger.info { "change platform to Linux-Android" }
+    System.getenv("TERMUX_VERSION")?.let { version ->
+        logger.info { "change platform: Linux-Android/aarch64, for termux $version" }
         System.setProperty("org.sqlite.lib.path", folder.path)
         val lib = folder.resolve("libsqlitejdbc.so")
         if (lib.exists().not()) {
