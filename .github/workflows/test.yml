@@ -106,8 +106,8 @@ jobs:
 
       - name: Start PostgreSQL
         run: |
-          brew info postgresql
-          brew services start postgresql -v
+          brew info postgresql@14
+          brew services start postgresql@14 -v
           tail -n 100 /usr/local/var/log/postgres*.log
         env:
           PGUSER: postgres
