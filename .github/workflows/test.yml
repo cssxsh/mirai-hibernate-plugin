@@ -106,6 +106,7 @@ jobs:
 
       - name: Start PostgreSQL
         run: |
+          brew install postgresql@14
           brew info postgresql@14
           brew services start postgresql@14 -v
           tail -n 100 /usr/local/var/log/postgres*.log
