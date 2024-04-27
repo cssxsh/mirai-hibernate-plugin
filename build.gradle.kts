@@ -46,7 +46,7 @@ dependencies {
     testImplementation("net.mamoe:mirai-core-utils")
     testImplementation("net.mamoe:mirai-console-compiler-common")
     //
-    implementation(platform("org.hibernate.orm:hibernate-platform:6.4.4.Final"))
+    implementation(platform("org.hibernate.orm:hibernate-platform:6.4.8.Final"))
     api("org.hibernate.orm:hibernate-core")
     api("org.hibernate.orm:hibernate-hikaricp")
     api("org.hibernate.orm:hibernate-community-dialects")
