@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "xyz.cssxsh.mirai"
-version = "2.8.1"
+version = "2.8.2"
 
 mavenCentralPublish {
     useCentralS01()
@@ -34,7 +34,7 @@ dependencies {
     api("org.mariadb.jdbc:mariadb-java-client:3.4.1")
     api("org.postgresql:postgresql:42.7.3")
     api("org.reflections:reflections:0.10.2")
-    compileOnly("xyz.cssxsh.mirai:mirai-administrator:1.4.3")
+    compileOnly("xyz.cssxsh.mirai:mirai-administrator:1.4.4")
     testImplementation(kotlin("test"))
     testImplementation("com.microsoft.sqlserver:mssql-jdbc:12.8.0.jre11")
     //
@@ -46,7 +46,7 @@ dependencies {
     testImplementation("net.mamoe:mirai-core-utils")
     testImplementation("net.mamoe:mirai-console-compiler-common")
     //
-    implementation(platform("org.hibernate.orm:hibernate-platform:6.6.0.Final"))
+    api(platform("org.hibernate.orm:hibernate-platform:6.6.0.Final"))
     api("org.hibernate.orm:hibernate-core")
     api("org.hibernate.orm:hibernate-hikaricp")
     api("org.hibernate.orm:hibernate-community-dialects")

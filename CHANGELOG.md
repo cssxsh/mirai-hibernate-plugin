@@ -1,3 +1,12 @@
+## 2.8.2 (24/08/11)
+
+1. update: hibernate-platform 6.6.0.Final
+2. update: h2 2.3.230
+3. update: sqlite-jdbc 3.46.0.1
+4. update: mysql-connector-j 9.0.0
+5. update: mariadb-java-client 3.4.1
+6. update: mssql-jdbc 12.8.0.jre11
+
 ## 2.8.1 (24/04/27)
 
 1.  update: hibernate-orm 6.4.8.Final
