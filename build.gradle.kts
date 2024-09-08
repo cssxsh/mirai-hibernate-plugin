@@ -28,15 +28,15 @@ repositories {
 
 dependencies {
     api("com.zaxxer:HikariCP:5.1.0")
-    api("com.h2database:h2:2.3.230")
-    api("org.xerial:sqlite-jdbc:3.46.0.1")
+    api("com.h2database:h2:2.3.232")
+    api("org.xerial:sqlite-jdbc:3.46.1.0")
     api("com.mysql:mysql-connector-j:9.0.0")
     api("org.mariadb.jdbc:mariadb-java-client:3.4.1")
-    api("org.postgresql:postgresql:42.7.3")
+    api("org.postgresql:postgresql:42.7.4")
     api("org.reflections:reflections:0.10.2")
     compileOnly("xyz.cssxsh.mirai:mirai-administrator:1.4.4")
     testImplementation(kotlin("test"))
-    testImplementation("com.microsoft.sqlserver:mssql-jdbc:12.8.0.jre11")
+    testImplementation("com.microsoft.sqlserver:mssql-jdbc:12.8.1.jre11")
     //
     implementation(platform("net.mamoe:mirai-bom:2.16.0"))
     compileOnly("net.mamoe:mirai-core")
