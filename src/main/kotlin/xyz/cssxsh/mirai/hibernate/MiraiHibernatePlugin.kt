@@ -94,11 +94,13 @@ internal object MiraiHibernatePlugin : KotlinPlugin(
             }
         }
 
+        MiraiH2.registerTo(globalEventChannel())
         MiraiHibernateRecorder.registerTo(globalEventChannel())
     }
 
     override fun onDisable() {
         MiraiHibernateRecorder.cancel()
+        MiraiH2.cancel()
         factory.close()
     }
 }

@@ -6,6 +6,7 @@ import net.mamoe.mirai.console.plugin.jvm.JvmPluginDescriptionBuilder;
 import net.mamoe.mirai.message.data.MessageChain;
 import net.mamoe.mirai.message.data.MessageSource;
 import org.hibernate.SessionFactory;
+import xyz.cssxsh.mirai.hibernate.MiraiH2;
 import xyz.cssxsh.mirai.hibernate.MiraiHibernateConfiguration;
 import xyz.cssxsh.mirai.hibernate.MiraiHibernateRecorder;
 import xyz.cssxsh.mirai.hibernate.entry.MessageRecord;
@@ -116,6 +117,9 @@ public class MiraiHibernateDemo extends JavaPlugin {
             // or
             record.toMessageChain();
         }
+
+        // 创建一个 网页会话，访问 h2 数据库
+        var url = factory.fromSession(MiraiH2.INSTANCE::url);
     }
 
     @Override

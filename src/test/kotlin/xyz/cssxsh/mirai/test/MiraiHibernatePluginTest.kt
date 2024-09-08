@@ -2,7 +2,7 @@ package xyz.cssxsh.mirai.test
 
 import net.mamoe.mirai.console.plugin.jvm.*
 import net.mamoe.mirai.event.*
-import org.hibernate.SessionFactory
+import org.hibernate.*
 import xyz.cssxsh.mirai.hibernate.*
 
 object MiraiHibernatePluginTest : KotlinPlugin(
@@ -19,7 +19,7 @@ object MiraiHibernatePluginTest : KotlinPlugin(
 
     override fun onEnable() {
         factory = MiraiHibernateConfiguration(plugin = this).buildSessionFactory()
-        val metadata = factory.openSession().use { session ->
+        val metadata = factory.fromSession { session ->
             session.doReturningWork { connection -> connection.metaData }
         }
 
@@ -50,6 +50,13 @@ object MiraiHibernatePluginTest : KotlinPlugin(
                 }
             }
         }
+
+        // MiraiH2 的使用
+        val url = factory.fromSession { session ->
+            MiraiH2.url(session = session)
+        }
+
+        println(url)
     }
 
     override fun onDisable() {
