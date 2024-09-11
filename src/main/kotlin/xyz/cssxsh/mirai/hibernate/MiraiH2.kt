@@ -11,6 +11,10 @@ import org.hibernate.*
 import java.sql.*
 import kotlin.coroutines.*
 
+/**
+ * H2 相关操作
+ * @since 2.9.0
+ */
 public object MiraiH2 : SimpleListenerHost() {
 
     override fun handleException(context: CoroutineContext, exception: Throwable) {
@@ -56,8 +60,10 @@ public object MiraiH2 : SimpleListenerHost() {
             } catch (_: SQLException) {
                 return@launch
             }
-            logger.info(message = "h2 web $url")
-            Server.openBrowser(url)
+            logger.info(message = "h2database editor $url")
+            if (System.getProperty("h2.web.browser", "false").toBoolean()) {
+                Server.openBrowser(url)
+            }
         }
     }
 }

@@ -1,3 +1,11 @@
+## 2.9.0 (24/09/11)
+
+1. update: h2 2.3.232
+2. update: sqlite-jdbc 3.46.1.0
+3. update: postgresql 42.7.4
+4. update: mssql-jdbc 12.8.1.jre1
+5. feat: MiraiH2
+
 ## 2.8.2 (24/08/11)
 
 1. update: hibernate-platform 6.6.0.Final

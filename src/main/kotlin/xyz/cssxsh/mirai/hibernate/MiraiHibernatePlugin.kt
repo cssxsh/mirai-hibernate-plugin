@@ -14,7 +14,7 @@ internal object MiraiHibernatePlugin : KotlinPlugin(
     JvmPluginDescription(
         id = "xyz.cssxsh.mirai.plugin.mirai-hibernate-plugin",
         name = "mirai-hibernate-plugin",
-        version = "2.8.1"
+        version = "2.9.0"
     ) {
         author("cssxsh")
 
@@ -64,6 +64,12 @@ internal object MiraiHibernatePlugin : KotlinPlugin(
                 resolveDataFile("hibernate.h2.trace.db")
                     .renameTo(resolveDataFile("backup.$current.h2.trace.db"))
                 throw RuntimeException("本地文件和数据库版本不匹配，已备份，请重新启动", exception)
+            }
+            if ("password" in exception.message.orEmpty()) {
+                throw RuntimeException(
+                    "配置错误:\n ${configuration.loader.configuration.toPath().toUri()}\"",
+                    exception
+                )
             }
             throw exception
         }
