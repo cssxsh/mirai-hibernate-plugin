@@ -115,8 +115,9 @@ jobs:
 
       - name: Start MySQL
         run: |
+          brew doctor
+          brew update
           brew install mysql
-          mysql -u root
           brew info mysql
           brew services restart mysql -v
 
