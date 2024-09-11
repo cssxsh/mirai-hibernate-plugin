@@ -115,8 +115,10 @@ jobs:
 
       - name: Start MySQL
         run: |
-          brew info mysql
-          brew services restart mysql -v
+          brew services stop mysql
+          brew install mysql@8.4
+          brew info mysql@8.4
+          brew services restart mysql@8.4 -v
 
       - name: Checkout
         uses: actions/checkout@v4
