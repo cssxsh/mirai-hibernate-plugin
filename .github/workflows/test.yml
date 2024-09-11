@@ -106,18 +106,15 @@ jobs:
 
       - name: Start PostgreSQL
         run: |
-          brew info postgresql@14
-          brew services start postgresql@14 -v
-          tail -n 100 /usr/local/var/log/postgres*.log
-        env:
-          PGUSER: postgres
-          PGDATABASE: postgres
+          brew install postgresql
+          brew info postgresql
+          brew services start postgresql -v
 
       - name: Start MySQL
         run: |
           brew install mysql
           brew info mysql
-          brew services restart mysql -v
+          brew services start mysql -v
 
       - name: Checkout
         uses: actions/checkout@v4
